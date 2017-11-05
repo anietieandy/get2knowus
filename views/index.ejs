@@ -2,10 +2,36 @@
 <html>
   <head>
     <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="/stylesheets/style.css" rel="stylesheet">
+    <link href="/stylesheets/secondary-styles.css" rel="stylesheet">  
+    <link href="/stylesheets/morris.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>    
+
   </head>
   <body>
     <h1><%= title %></h1>
     <p>Welcome to <%= title %></p>
+    <br>
+    <p>Start by submitting a query that you'd like us to look for in the database: <br></p>
+    <form action="/submit_query/" method="post">
+    	<label for="query_info">Enter query: </label>
+    	<input id="query_info" type="text" name="query_field" value="I'm a dad">
+    	<input type="submit" value="Submit!">
+    </form>
+
   </body>
 </html>

@@ -1,8 +1,142 @@
+/* Global Styles */
+
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+    margin-top: 100px;
+    background-color: #fff;
+}
+
+p {
+    margin-top: 10px;
+}
+@media(min-width:768px) {
+    body {
+        margin-top: 50px;
+    }
+}
+
+#footer-logo {
+    margin-left: auto;
+    margin-right: auto;
+    background-position: center;
+}
+
+#wrapper {
+    padding-left: 0;
+}
+
+#page-wrapper {
+    width: 100%;
+    padding: 0;
+    background-color: #fff;
+}
+
+.huge {
+    font-size: 50px;
+    line-height: normal;
+}
+
+@media(min-width:768px) {
+    #wrapper {
+        padding-left: 225px;
+    }
+
+    #page-wrapper {
+        padding: 10px;
+    }
+}
+
+/* Custom Colored Panels */
+
+.huge {
+    font-size: 40px;
+}
+
+.panel-body {
+    overflow-y: scroll;
+    max-height: 500px;
+    padding: 10px;
+}
+
+.panel-green {
+    border-color: #000000;
+}
+
+.panel-green > .panel-heading {
+    border-color: #000000;
+    color: #fff;
+    background-color: #8e3a51;  
+}
+
+.panel-green > a {
+    color: #5cb85c;
+}
+
+.panel-green > a:hover {
+    color: #3d8b3d;
+}
+
+.panel-red {
+    border-color: #000000;
+}
+
+.panel-red > .panel-heading {
+    border-color: #000000;
+    color: #fff;
+    background-color: #d9534f;
+}
+
+.panel-red > a {
+    color: #000000;
+}
+
+.panel-red > a:hover {
+    color: #b52b27;
+}
+
+.panel-yellow {
+    border-color: #000000;
+}
+
+.panel-yellow > .panel-heading {
+    border-color: #000000;
+    color: #fff;
+    background-color: #1e2c48;
+}
+
+.panel-yellow > a {
+    color: #f0ad4e;
+}
+
+.panel-yellow > a:hover {
+    color: #df8a13;
+}
+
+.panel-primary > .panel-heading {
+    border-color: #000000;
+    color: #fff;
+    background-color: #40304a;
 }
 
 a {
-  color: #00B7FF;
+    cursor: default;
 }
+
+.open-modal, .active-mentor {
+    cursor: pointer; 
+    cursor: hand;
+}
+
+.fa-check-circle:hover {
+    color: rgb(0, 158, 29);
+}
+
+.delete-mentor {
+    color: #2c0; 
+    opacity: 1;
+}
+
+
+/*footer {
+    bottom: 0;
+    position: fixed !important;
+}*/
