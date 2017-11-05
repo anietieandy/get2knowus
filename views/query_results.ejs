@@ -24,14 +24,13 @@
   </head>
   <body>
     <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+    <p>You submitted the query: <strong><%= query %></strong></p>
     <br>
-    <p>Start by submitting a query that you'd like us to look for in the database: <br></p>
-    <form action="/submit_query" method="post">
-    	<label for="query_info">Enter query: </label>
-    	<input id="query_info" type="text" name="query_field" value="I'm a dad">
-    	<input type="submit" value="Submit!">
-    </form>
+    <p>The following results were returned from our BigQuery database: <br></p>
+    <br>
+    <% for(var i = 0; i < results.length; i++) {%>
+    	<li><%= results[i] %></li>
+	<% } %>
 
   </body>
 </html>
