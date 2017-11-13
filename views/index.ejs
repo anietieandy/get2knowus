@@ -26,6 +26,9 @@
     <h1><%= title %></h1>
     <p>Welcome to <%= title %></p>
     <br>
+    <% if (err.length > 0) { %>
+    	<h3><%= err %></h3>
+    <% } %>
     <p>Start by submitting a query that you'd like us to look for in the database: <br></p>
     <form action="/submit_query" method="post">
     	<label for="query_info">Enter query: </label>

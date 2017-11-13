@@ -5,18 +5,14 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-// Imports the Google Cloud client library.
-const Storage = require('@google-cloud/storage');
-// Imports the Google Cloud client library
-const BigQuery = require('@google-cloud/bigquery');
-// The project ID to use, e.g. "your-project-id"
-const projectId = "green-entity-183800";
-
+var app = express();
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
-var app = express();
+// The project ID to use, e.g. "your-project-id"
+const projectId = "green-entity-183800";
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -82,17 +78,6 @@ const sqlQuery =
 "SELECT author, name, subreddit, body FROM `fh-bigquery.reddit_comments.2015_05` WHERE author != '[deleted]' AND author IN (SELECT author FROM `fh-bigquery.reddit_comments.2015_05` WHERE LENGTH(body) < 255 AND LENGTH(body) > 30 AND body LIKE '%m a dad%') LIMIT 500;";
 
 
-// Instantiates a client
-const bigquery = BigQuery({
-  projectId: projectId,
-  credentials: credentials
-});
-
-// Query options list: https://cloud.google.com/bigquery/docs/reference/v2/jobs/query
-const options = {
-  query: sqlQuery,
-  useLegacySql: false // Use standard SQL syntax for queries.
-};
 
 function printResult (rows) {
   console.log('Query Results:');
@@ -106,16 +91,7 @@ function printResult (rows) {
   }
 }
 
-// Runs the query
-bigquery
-  .query(options)
-  .then((results) => {
-    const rows = results[0];
-    printResult(rows);
-  })
-  .catch((err) => {
-    console.error('ERROR:', err);
-  });
+
 
 
 

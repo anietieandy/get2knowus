@@ -29,7 +29,10 @@
     <p>The following results were returned from our BigQuery database: <br></p>
     <br>
     <% for(var i = 0; i < results.length; i++) {%>
-    	<li><%= results[i] %></li>
+    	<li><%= results[i].author %> (<%= results[i].name %>)</li><br>
+    	<li><strong>Subreddit:</strong> <%= results[i].subreddit %></li><br>
+    	<li><strong>Post:</strong> <%= results[i].body %></li>
+    	<h1></h1>
 	<% } %>
 
   </body>
