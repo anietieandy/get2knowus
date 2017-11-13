@@ -40,7 +40,7 @@ const Storage = require('@google-cloud/storage');
 // specifying the private key file. All clients in google-cloud-node have this
 // helper, see https://googlecloudplatform.github.io/google-cloud-node/#/docs/google-cloud/latest/guides/authentication
 const storage = Storage({
-  keyFilename: '/Users/samanthacaby/Documents/SeniorFall/CIS400/BigQueryTest-e3f041e07c76.json'
+  keyFilename: 'My First Project-b75eb6aaa18f.json'
 });
 
 // Makes an authenticated API request.
