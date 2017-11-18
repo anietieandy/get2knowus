@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-var sqlQuery = "SELECT author, name, subreddit, body FROM `fh-bigquery.reddit_comments.2015_05` WHERE author != '[deleted]' AND author IN (SELECT author FROM `fh-bigquery.reddit_comments.2015_05` WHERE LENGTH(body) < 255 AND LENGTH(body) > 30 AND body LIKE '%";
+var sqlQuery = "SELECT author, name, subreddit, body FROM `fh-bigquery.reddit_comments.2015_05` WHERE LENGTH(body) < 255 AND LENGTH(body) > 30 AND body LIKE '%";
 
 // Imports the Google Cloud client library.
 const Storage = require('@google-cloud/storage');
@@ -36,7 +36,7 @@ router.post('/submit_query', function(req, res, next) {
 							  err: "Please provide a phrase that does not contain '."})
 	}
 	query_to_enter = sqlQuery + curr_query;
-	query_to_enter += "%') LIMIT 500;";
+	query_to_enter += "%' LIMIT 500;";
 	console.log(query_to_enter);
 	var options = {
 		query: query_to_enter,
