@@ -95,35 +95,6 @@ function printResult (rows) {
 
 
 
-// Instantiates a client. Explicitly use service account credentials by
-// specifying the private key file. All clients in google-cloud-node have this
-// helper, see https://googlecloudplatform.github.io/google-cloud-node/#/docs/google-cloud/latest/guides/authentication
-/*
-const storage = Storage({
-  keyFilename: 'My First Project-b75eb6aaa18f.json'
-});
-*/
-
-// Makes an authenticated API request.
-/*
-storage
-  .getBuckets()
-  .then((results) => {
-    const buckets = results[0];
-
-    console.log('Buckets:');
-    buckets.forEach((bucket) => {
-      console.log(bucket.name);
-    });
-  })
-  .catch((err) => {
-    console.error('ERROR:', err);
-  });	*/
-
-
-
-
-
 
 
 

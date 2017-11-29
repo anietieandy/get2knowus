@@ -9,6 +9,11 @@ const Storage = require('@google-cloud/storage');
 const BigQuery = require('@google-cloud/bigquery');
 // The project ID to use, e.g. "your-project-id"
 const projectId = "green-entity-183800";
+//Python shell library
+const PythonShell = require('python-shell');
+//For exec
+var exec = require('child_process').exec;
+
 
 var credentials = process.env;
 
@@ -30,6 +35,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/submit_query', function(req, res, next) {
+	runClassifier()
 	curr_query = req.body.query_field
 	if (curr_query.includes("'")) {
 		res.render('index', { title: 'Get2KnowUS', 
@@ -65,6 +71,16 @@ function runQuery(options) {
 	  .catch((err) => {
 	    console.error('ERROR:', err);
 	  });	
+}
+
+function runClassifier() {
+	exec('python classifier/nb1.py', function(err, stdout, stderr) {
+	  if (err) {
+	    return;
+	  }
+	  console.log(stdout);
+	  console.log(stderr);
+	});
 }
 
 module.exports = router;
