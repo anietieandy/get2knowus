@@ -15,7 +15,6 @@
     "express": "~4.13.4",
     "morgan": "~1.7.0",
     "natural": "^0.5.4",
-    "python-shell": "^0.4.0",
     "serve-favicon": "~2.3.0"
   }
 }

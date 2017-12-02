@@ -9,8 +9,6 @@ const Storage = require('@google-cloud/storage');
 const BigQuery = require('@google-cloud/bigquery');
 // The project ID to use, e.g. "your-project-id"
 const projectId = "green-entity-183800";
-//Python shell library
-const PythonShell = require('python-shell');
 //For exec
 var exec = require('child_process').exec;
 
