@@ -128,7 +128,9 @@ router.post('/submit_query', function(req, res, next) {
 								console.log(err);
 								return;
 							}
-							res.render('query_results', { title: 'Get2KnowUS', all_queries: all_queries, results: rows });
+							exec('python2 NLPMaybe/wordCloud2.py all_posts.txt', (err, stdout, stderr) => {
+								res.render('query_results', { title: 'Get2KnowUS', all_queries: all_queries, results: rows });
+							});
 						});
 					});
 				});
