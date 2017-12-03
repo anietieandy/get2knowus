@@ -1,7 +1,7 @@
 
 from __future__ import print_function
 
-
+import sys
 import pandas as pd
 import numpy as np
 from pprint import pprint
@@ -16,26 +16,6 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.pipeline import Pipeline
 
 
-logging.basicConfig(level=logging.INFO,
-                    format='%(asctime)s %(levelname)s %(message)s')
-
-
-# #############################################################################
-# Load some categories from the training set
-categories = [
-    'alt.atheism',
-    'talk.religion.misc',
-]
-# Uncomment the following to do the analysis on all the categories
-#categories = None
-
-print("Loading 20 newsgroups dataset for categories:")
-print(categories)
-
-data = fetch_20newsgroups(subset='train', categories=categories)
-print("%d documents" % len(data.filenames))
-print("%d categories" % len(data.target_names))
-print()
 
 # #############################################################################
 # Define a pipeline combining a text feature extractor with a simple
@@ -54,34 +34,38 @@ parameters = {
 }
 
 if __name__ == "__main__":
-    
+    if len(sys.argv) > 1: 
+        path = sys.argv[1]
+        input0 = []
+        with open(path) as f:
+            for line in f:
+                input0.append(line)
+    else: input0 =['Ha']
+#    input1 = ["I\'m a dad", 'I\'m a daddy, looking for a little girl who is 18', 'When I\'m a dad i will use this']
     datadf = pd.read_csv('Classyfications.csv')
     datadf.body = datadf.body.apply(lambda x : unicode(x, errors='replace'))
     data_new = list(datadf.body)
     data_target = np.array(datadf.classification)
     
-#    print "0's = ", len(datadf[datadf.classification == 0])
-#    print "1's = ", len(datadf[datadf.classification == 1])
-#    print "2's = ", len(datadf[datadf.classification == 2])
     
-    
-
     grid_search = GridSearchCV(pipeline, parameters, n_jobs=-1, verbose=1)
     pprint(parameters)
     t0 = time()
     
-
+    
     grid_search.fit(data_new, data_target)
-    print("done in %0.3fs" % (time() - t0))
-    print()
-
-    print("Best score: %0.3f" % grid_search.best_score_)
-    print("Best parameters set:")
+#    print("done in %0.3fs" % (time() - t0))
+#    print()
+#    
+#    print("Best score: %0.3f" % grid_search.best_score_)
+#    print("Best parameters set:")
     
     best_parameters = grid_search.best_estimator_.get_params()
-    for param_name in sorted(parameters.keys()):
-        print("\t%s: %r" % (param_name, best_parameters[param_name]))
+#    for param_name in sorted(parameters.keys()):
+#        print("\t%s: %r" % (param_name, best_parameters[param_name]))
         
-    grid_search.predict(["I\'m a dad", 'I\'m a daddy, looking for a little girl who is 18', 'When I\'m a dad i will use this'])
+    results = grid_search.predict(input0)
+    print('##########')
+    print(results)
         
         
