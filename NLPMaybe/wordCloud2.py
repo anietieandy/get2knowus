@@ -28,7 +28,7 @@ wc = WordCloud(background_color="white", max_words=2000, mask=alice_mask,
 wc.generate(text)
 
 # store to file
-wc.to_file(path.join(d, "wc2.png"))
+wc.to_file("public/images/wc2.png")
 
 # show
 # plt.imshow(wc, interpolation='bilinear')

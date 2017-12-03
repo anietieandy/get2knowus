@@ -3,7 +3,7 @@ var router = express.Router();
 
 var sqlQuery = "SELECT author, name, subreddit, body FROM `fh-bigquery.reddit_comments.2015_05` WHERE author != '[deleted]' AND LENGTH(body) < 255 AND LENGTH(body) > 30 AND body LIKE '%";
 
-var usernameQuery = "SELECT body FROM `fh-bigquery.reddit_comments.2015_05` WHERE author IN (";
+var usernameQuery = "SELECT body FROM `fh-bigquery.reddit_comments.2015_05` WHERE LENGTH(body) < 255 AND LENGTH(body) > 30 AND author IN (";
 
 // Imports the Google Cloud client library.
 const Storage = require('@google-cloud/storage');
@@ -128,7 +128,7 @@ router.post('/submit_query', function(req, res, next) {
 								console.log(err);
 								return;
 							}
-							exec('python2 NLPMaybe/wordCloud2.py all_posts.txt', (err, stdout, stderr) => {
+							exec('python2 NLPMaybe/wordCloud.py all_posts.txt', (err, stdout, stderr) => {
 								res.render('query_results', { title: 'Get2KnowUS', all_queries: all_queries, results: rows });
 							});
 						});
