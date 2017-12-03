@@ -8,7 +8,7 @@ from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 
 d = path.dirname(__file__)
-fname = sys.argv[1]
+fname = sys.argv[1] if len(sys.argv)>1 else 'output1.txt'
 text = open(path.join(d, fname)).read()
 
 wordcloud = WordCloud().generate(text)
