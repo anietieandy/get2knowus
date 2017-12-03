@@ -277,4 +277,27 @@ function getOptions(curr_query, callback) {
 	})
 }
 
+function getImportance(text, callback) {
+	var TfIdf = natural.TfIdf;
+	var tfidf = new TfIdf();
+	fs.readFile('corpus.txt', function read(err, data) {
+    					if (err) {
+        					throw err;
+    						}
+					    var corpus = data;
+					    tfidf.addDocument(corpus);
+						tfidf.addDocument(text);
+						var terms = tfidf.listTerms(0);
+						var output = []
+						for (item in terms) {
+							output.push({text:item.term, size:item.tfidf})
+						}
+						callback(output);
+						});
+	
+	// tfidf.listTerms(0).forEach(function(item) {
+ //    	console.log(item.term + ': ' + item.tfidf);
+	// });
+}
+
 module.exports = router;
