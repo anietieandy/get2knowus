@@ -62,14 +62,15 @@ router.get('/vis', function(req, res, next) {
 router.post('/submit_query', function(req, res, next) {
 	var curr_query = req.body.query_field;
 	if (!req.body.hidden) {
-		var new_options = ["I'm a father"]
-		if (new_options.length > 0) {
-			res.render('index', { title: 'Get2KnowUS',
-								  args: {help: "We found some other queries you may find helpful - check to see if you'd like to add them!",
-	  									 other_queries: new_options,
-	  									 query_to_enter: curr_query}
-	  							});
-		}
+		new_options = getOptions(curr_query, function(new_options) {
+			if (new_options.length > 0) {
+				res.render('index', { title: 'Get2KnowUS',
+									  args: {help: "We found some other queries you may find helpful - check to see if you'd like to add them!",
+		  									 other_queries: new_options,
+		  									 query_to_enter: curr_query}
+		  							});
+			}
+		});
 	} else {
 		var all_queries = [curr_query];
 		var new_query = curr_query.replace(/'/gi, "\\'");
@@ -139,14 +140,15 @@ router.post('/submit_query', function(req, res, next) {
 router.post('/classify_query', function(req, res, next) {
 	var curr_query = req.body.query_field;
 	if (!req.body.hidden) {
-		new_options = ["I'm a father"]
-		if (new_options.length > 0) {
-			res.render('index', { title: 'Get2KnowUS',
-								  args: {help: "We found some other queries you may find helpful - check to see if you'd like to add them!",
-	  									 other_queries: new_options,
-	  									 query_to_enter: curr_query}
-	  							});
-		}
+		new_options = getOptions(curr_query, function(new_options) {
+			if (new_options.length > 0) {
+				res.render('index', { title: 'Get2KnowUS',
+									  args: {help: "We found some other queries you may find helpful - check to see if you'd like to add them!",
+		  									 other_queries: new_options,
+		  									 query_to_enter: curr_query}
+		  							});
+			}
+		});
 	} else {
 		var all_queries = [];
 		all_queries.push(curr_query);		
@@ -252,7 +254,7 @@ function getOptions(curr_query, callback) {
 				if (Object.keys(options).length == num_nouns) {
 					combos = listCombos(options, 0, tokens); 
 					console.log("COMBOS = " + combos); 
-					callback(options);
+					callback(combos);
 				}	
 			});
 		}

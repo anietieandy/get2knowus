@@ -25,12 +25,11 @@
   <body>
     <h1><img src="/images/favicon" class="img-responsive" height="60" width="60" align="left"><%= title %></h1>
     <div class="well">
-        <h5>You submitted the following queries: <br>
+        <h5>You are now classifying the following queries: <br>
             <% for(var i = 0; i < all_queries.length; i++) {%>
                 <li><strong><%= all_queries[i] %></strong></li>
             <% } %>
         </h5>
-        <a href="/download">Download Anonymized Post Data</a>
     </div>
     <br>
     <h5>The following results were returned from our BigQuery database: <br></h5>
@@ -38,6 +37,8 @@
     <div class="list-group">
         <% for(var i = 0; i < results.length; i++) {%>
         <div class="list-group-item">
+        	<li class="list-group-item-heading"><%= results[i].author %> (<%= results[i].name %>)</li><br>
+        	<li class="list-group-item-text"><strong>Subreddit:</strong> <%= results[i].subreddit %></li><br>
         	<li class="list-group-item-text"><strong>Post:</strong> <%= results[i].body %></li>
         </div>
     	<% } %>

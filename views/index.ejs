@@ -9,13 +9,20 @@
     <link href="/stylesheets/secondary-styles.css" rel="stylesheet">  
     <link href="/stylesheets/morris.css" rel="stylesheet">
 
+    <!-- jQuery -->
+    <script src="/javascripts/jquery-2.2.4.min.js"></script>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
     <!-- Custom Fonts -->
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-    <!-- jQuery -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
-
-    <!-- Bootstrap Core JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
@@ -23,18 +30,44 @@
 
   </head>
   <body>
-    <h1><%= title %></h1>
+    <h1><img src="/images/favicon" class="img-responsive" height="60" width="60" align="left"><%= title %></h1>
     <p>Welcome to <%= title %></p>
     <br>
-    <% if (err.length > 0) { %>
-    	<h3><%= err %></h3>
+    <% if (args.err) { %>
+        <div class="alert alert-danger"><%= args.err %></div>
     <% } %>
-    <p>Start by submitting a query that you'd like us to look for in the database: <br></p>
-    <form action="/submit_query" method="post">
-    	<label for="query_info">Enter query: </label>
-    	<input id="query_info" type="text" name="query_field" value="I'm a dad">
-    	<input type="submit" value="Submit!">
-    </form>
+    <% if (args.help) { %>
+        <div class="alert alert-info"><%= args.help %></div>
+    <% } %>   
+    <div class="panel panel-primary">
+        <div class="panel-heading"> 
+            <p>Start by submitting a query that you'd like to take a look at - you can either analyze users that match that query type or help us classify queries as self-identifying! <br></p>
+        </div>
+        <div class="panel-body">
+            <form action="/submit_query" method="post">
+                <div class="form-group">
+                    <label for="query_info">Enter query: </label>
+                    <% if (args.query_to_enter) { %>
+                       <input id="query_info" type="text" name="query_field" value='<%= args.query_to_enter %>'><br>
+                    <% } else { %>
+                        <input id="query_info" type="text" name="query_field" value="I'm a dad"><br>
+                    <% } %>
+                </div>
+                <% if (args.other_queries) { %>
+                    <div class="form-group">
+                        <% for (var i = 0; i < args.other_queries.length; i++) {%>
+                            <input id="new_query" + <%= i %> type="checkbox" name='<%= args.other_queries[i] %>' value='<%= args.other_queries[i] %>'>
+                                <%= args.other_queries[i] %><br>
+                        <% } %>
+                    </div>
+                        <input id="finished" type="hidden" name="hidden" value="hidden">
+                <% } %>
+                <button class="btn btn-primary" type="submit" formaction="/submit_query">Analyze!</button>
+                <button class="btn btn-warning" type="submit" formaction="/classify_query">Classify!</button>
+            </form>            
+        </div>
+    </div>
+
 
   </body>
 </html>

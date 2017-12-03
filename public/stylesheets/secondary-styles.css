@@ -9,7 +9,9 @@ html {
 }
 
 body {
-  margin: 0;
+  margin: 10px;
+  padding-left: 25px;
+  padding-right: 25px;
 }
 
 article,
@@ -853,8 +855,16 @@ a, a:visited, a:hover, a:active {
   border: 1px solid rgba(86, 61, 124, 0.2);
 }
 
-p, li {
+li {
   color: #777;
+  font-family: "Open Sans",sans-serif;
+  font-weight: 300;
+  font-size: 1.1em;
+  line-height: 1.6em;
+}
+
+p {
+  color: #fff;
   font-family: "Open Sans",sans-serif;
   font-weight: 300;
   font-size: 1.1em;
