@@ -233,11 +233,26 @@ function listCombos(opts, i, tokens) {
 }
 
 function getOptions(curr_query, callback) {
-	var tokenizer = new natural.WordTokenizer();
+	var tokenizer = new natural.WordPunctTokenizer();
 	var wordnet = new natural.WordNet(); 
 
 	var tokens = tokenizer.tokenize(curr_query);
-	var tagged_tokens = tagger.tag(tokens)
+	var clean_tokens = []
+	for (var t = 0; t < tokens.length; t++) {
+		console.log("t = ", tokens[t+1]); 
+		if (tokens[t] == '\'') {
+			var new_t = tokens[t-1] + '\'' + tokens[t+1]; 
+			t++; 
+			clean_tokens[t-1] = new_t;
+			clean_tokens.splice(0, t-1); 
+			console.log("mid = ", clean_tokens);
+
+		} else {
+			clean_tokens.push(tokens[t])
+		}
+	}
+
+	var tagged_tokens = tagger.tag(clean_tokens)
 
 	var num_nouns = tagged_tokens.filter(getNouns).length
 
@@ -252,8 +267,7 @@ function getOptions(curr_query, callback) {
 				})
 				options[t] = curr_opts; 
 				if (Object.keys(options).length == num_nouns) {
-					combos = listCombos(options, 0, tokens); 
-					console.log("COMBOS = " + combos); 
+					combos = listCombos(options, 0, clean_tokens); 
 					callback(combos);
 				}	
 			});
