@@ -241,13 +241,11 @@ function getOptions(curr_query, callback) {
 	var tokens = tokenizer.tokenize(curr_query);
 	var clean_tokens = []
 	for (var t = 0; t < tokens.length; t++) {
-		console.log("t = ", tokens[t+1]); 
 		if (tokens[t] == '\'') {
 			var new_t = tokens[t-1] + '\'' + tokens[t+1]; 
 			t++; 
 			clean_tokens[t-1] = new_t;
 			clean_tokens.splice(0, t-1); 
-			console.log("mid = ", clean_tokens);
 
 		} else {
 			clean_tokens.push(tokens[t])
@@ -265,6 +263,8 @@ function getOptions(curr_query, callback) {
 			wordnet.lookup(tok[0], function(results) {
 				results.forEach(function(result) {
 					var syns = result.synonyms; 
+					var tok_idx = syns.indexOf(tok[0]);
+					syns.splice(tok_idx,1)
 					curr_opts = syns.slice(); 
 				})
 				options[t] = curr_opts; 
