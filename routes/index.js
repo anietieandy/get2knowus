@@ -32,6 +32,12 @@ router.get('/', function(req, res, next) {
   						err: '' });
 });
 
+router.get('/vis', function(req, res, next) {
+  res.render('vis', { title: 'Get2KnowUS',
+  						words: [{text:"Chair", size: 40}, {text:"Vivian", size: 25}, {text:"Devesh", size: 25}, {text:"Forever", size: 15}, {text:"Friends", size: 10}],
+  						err: '' });
+});
+
 router.post('/submit_query', function(req, res, next) {
 	runClassifier()
 	curr_query = req.body.query_field
