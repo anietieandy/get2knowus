@@ -4,6 +4,8 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var MongoClient = require('mongodb').MongoClient
+  , assert = require('assert');
 
 var app = express();
 
@@ -12,7 +14,33 @@ var users = require('./routes/users');
 
 // The project ID to use, e.g. "your-project-id"
 const projectId = "green-entity-183800";
+var url = 'mongodb://viviange:password@ds221228.mlab.com:21228/confirmations';
 
+MongoClient.connect(url, function(err, db) {
+  assert.equal(null, err);
+  console.log("Connected successfully to server");
+
+  insertDocuments(db, function() {
+    db.close();
+  });
+});
+
+/* I DID STUFF*/
+var insertDocuments = function(db, callback) {
+  // Get the documents collection
+  console.log(db);
+  var collection = db.collection('confirmations');
+  // Insert some documents
+  collection.insert(
+    {query : "m a dad", post : "I'm a dad...sike", user: "testuser1", valid: false}
+  , function(err, result) {
+    assert.equal(err, null);
+    assert.equal(1, result.result.n);
+    assert.equal(1, result.ops.length);
+    console.log("Inserted 1 document into the collection");
+    callback(result);
+  });
+}
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
