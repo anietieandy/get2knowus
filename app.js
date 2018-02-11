@@ -14,33 +14,6 @@ var users = require('./routes/users');
 
 // The project ID to use, e.g. "your-project-id"
 const projectId = "green-entity-183800";
-var url = 'mongodb://viviange:password@ds221228.mlab.com:21228/confirmations';
-
-MongoClient.connect(url, function(err, db) {
-  assert.equal(null, err);
-  console.log("Connected successfully to server");
-
-  insertDocuments(db, function() {
-    db.close();
-  });
-});
-
-/* I DID STUFF*/
-var insertDocuments = function(db, callback) {
-  // Get the documents collection
-  console.log(db);
-  var collection = db.collection('confirmations');
-  // Insert some documents
-  collection.insert(
-    {query : "m a dad", post : "I'm a dad...sike", user: "testuser1", valid: false}
-  , function(err, result) {
-    assert.equal(err, null);
-    assert.equal(1, result.result.n);
-    assert.equal(1, result.ops.length);
-    console.log("Inserted 1 document into the collection");
-    callback(result);
-  });
-}
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -87,8 +60,6 @@ app.use(function(err, req, res, next) {
   });
 });
 
-
-
 var credentials = process.env;
 
 if (!process.env.PRODUCTION) {
@@ -105,29 +76,16 @@ var config = {
 const sqlQuery = 
 "SELECT author, name, subreddit, body FROM `fh-bigquery.reddit_comments.2015_05` WHERE author != '[deleted]' AND author IN (SELECT author FROM `fh-bigquery.reddit_comments.2015_05` WHERE LENGTH(body) < 255 AND LENGTH(body) > 30 AND body LIKE '%m a dad%') LIMIT 500;";
 
-
-
 function printResult (rows) {
   console.log('Query Results:');
   for (var i = 0; i < rows.length; i++) {
   	row = rows[i];
-  	console.log("\n---------------------");
-  	console.log("Author: " + row.author);
-  	console.log("Name: " + row.name);
-  	console.log("Subreddit: " + row.subreddit);
-  	console.log("Body: " + row.body);  	
+  	// console.log("\n---------------------");
+  	// console.log("Author: " + row.author);
+  	// console.log("Name: " + row.name);
+  	// console.log("Subreddit: " + row.subreddit);
+  	// console.log("Body: " + row.body);  	
   }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-module.exports = app;
+module.exports = app

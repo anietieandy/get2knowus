@@ -2,7 +2,6 @@ var express = require('express');
 var router = express.Router();
 
 var sqlQuery = "SELECT author, name, subreddit, body FROM `fh-bigquery.reddit_comments.2015_05` WHERE author != '[deleted]' AND LENGTH(body) < 255 AND LENGTH(body) > 30 AND body LIKE '%";
-
 var usernameQuery = "SELECT body FROM `fh-bigquery.reddit_comments.2015_05` WHERE LENGTH(body) < 255 AND LENGTH(body) > 30 AND author IN (";
 
 // Imports the Google Cloud client library.
@@ -13,6 +12,8 @@ const BigQuery = require('@google-cloud/bigquery');
 const projectId = "green-entity-183800";
 //for fs
 const fs = require('fs');
+// classification db
+const classificationDb = require('../db/classification');
 //For exec
 var exec = require('child_process').exec;
 
@@ -27,7 +28,6 @@ var defaultCategory = 'N';
 var lexicon = new natural.Lexicon(lexiconFilename, defaultCategory);
 var rules = new natural.RuleSet(rulesFilename);
 var tagger = new natural.BrillPOSTagger(lexicon, rules);
-
 
 var credentials = process.env;
 
@@ -57,6 +57,22 @@ router.get('/vis', function(req, res, next) {
   res.render('vis', { title: 'Get2KnowUS',
   						words: [{text:"Chair", size: 40}, {text:"Vivian", size: 25}, {text:"Devesh", size: 25}, {text:"Forever", size: 15}, {text:"Friends", size: 10}],
   						err: '' });
+});
+
+router.post('/api/add_classification', function(req, res, next) {
+	var post_data = {
+		query: req.body.query,
+		post: req.body.post,
+		user: req.body.user,
+		valid: req.body.valid
+	};
+	classificationDb.addClassification(post_data, function(err) {
+		if (err) {
+			res.status(500).send("Error adding new classification to database.");
+		} else {
+			res.status(200).send("Successfully added classification to database.");
+		}
+	});
 });
 
 router.post('/submit_query', function(req, res, next) {
@@ -141,38 +157,25 @@ router.post('/submit_query', function(req, res, next) {
 
 router.post('/classify_query', function(req, res, next) {
 	var curr_query = req.body.query_field;
-	if (!req.body.hidden) {
-		new_options = getOptions(curr_query, function(new_options) {
-			if (new_options.length > 0) {
-				res.render('index', { title: 'Get2KnowUS',
-									  args: {help: "We found some other queries you may find helpful - check to see if you'd like to add them!",
-		  									 other_queries: new_options,
-		  									 query_to_enter: curr_query}
-		  							});
-			}
-		});
-	} else {
-		var all_queries = [];
-		all_queries.push(curr_query);		
-		var new_query = curr_query.replace(/'/gi, "\\'");
-		var query_to_enter = sqlQuery + new_query + "%'";
-		for (query in req.body) {
-			if (query != 'hidden' && query != 'query_field') {
-				all_queries.push(query);
-				query = query.replace(/'/gi, "\\'");
-				query_to_enter += " OR body LIKE '%" + query + "%'";
-			}
-		}
-		query_to_enter += " LIMIT 500;";
+	curr_sql_query = curr_query.replace(/'/gi, "\\'");
+	var query_to_enter = sqlQuery + curr_sql_query + "%'";
+	query_to_enter += " OR body LIKE '%" + curr_sql_query + "%'";
+	query_to_enter += " LIMIT 100;";
 
-		var options = {
-			query: query_to_enter,
-			useLegacySql: false
-		};
-		runQuery(options, (rows) => {
-			res.render('classify_queries', { title: 'Get2KnowUS', queries: all_queries, results: rows });		
-		});			
-	}
+	var options = {
+		query: query_to_enter,
+		useLegacySql: false
+	};
+
+	runQuery(options, (rows) => {
+		res.render('classify_queries', 
+				   { title: 'Get2KnowUS',
+					 all_queries: [req.body.query_field],
+					 query_analyzed: req.body.query_field.replace(/'/gi, ''),
+					results: rows
+					});		
+	});		
+
 });
 
 

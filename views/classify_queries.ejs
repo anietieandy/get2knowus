@@ -19,13 +19,14 @@
 
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>    
+    <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>   
+    <script src="/javascripts/classification_fns.js"></script>
 
   </head>
   <body>
     <h1><img src="/images/favicon" class="img-responsive" height="60" width="60" align="left"><%= title %></h1>
     <div class="well">
-        <h5>You are now classifying the following queries: <br>
+        <h5>You are now classifying this query: <br>
             <% for(var i = 0; i < all_queries.length; i++) {%>
                 <li><strong><%= all_queries[i] %></strong></li>
             <% } %>
@@ -34,15 +35,21 @@
     <br>
     <h5>The following results were returned from our BigQuery database: <br></h5>
     <br>
-    <div class="list-group">
+    <div class="card-group">
         <% for(var i = 0; i < results.length; i++) {%>
-        <div class="list-group-item">
-        	<li class="list-group-item-heading"><%= results[i].author %> (<%= results[i].name %>)</li><br>
-        	<li class="list-group-item-text"><strong>Subreddit:</strong> <%= results[i].subreddit %></li><br>
-        	<li class="list-group-item-text"><strong>Post:</strong> <%= results[i].body %></li>
-        </div>
+            <div class="card card-outline-primary mb-3 text-center" style="border-color: black; border-width: 1px; border-style: solid; border-radius: 5px" id=<%= "card-result" + i %>>
+              <div class="card-block">
+                <p class="card-text text-muted"><%= results[i].body %></p>
+                <p hidden id=<%= "card-result-author" + i %>><%= results[i].author %></p>
+                    <button id=<%= "result" + i %> class="btn btn-success" onclick="postClassification(this, '<%= query_analyzed %>', 1);">Correct Classification</button>
+                    <button id=<%= "result" + i %> class="btn btn-danger" onclick="postClassification(this, '<%= query_analyzed %>', 2);">Incorrect Classification</button>
+                <br><br>
+              </div>
+            </div>
     	<% } %>
-    </div>
-
+    </div><br><br>
+    <form action="/" method="get">
+        <button class="btn btn-info">I'm Done!</button>
+    </form>
   </body>
 </html>
