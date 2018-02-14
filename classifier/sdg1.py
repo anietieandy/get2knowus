@@ -7,19 +7,37 @@ import numpy as np
 from pprint import pprint
 from time import time
 import logging
-
+import json
 from sklearn.datasets import fetch_20newsgroups
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.linear_model import SGDClassifier
 from sklearn.model_selection import GridSearchCV
 from sklearn.pipeline import Pipeline
+from pymongo import MongoClient  # pymongo>=3.2
+
+data = json.load(open('credentials.json'))
+
+#database connection
+uri = 'mongodb://' + data['MLAB_USERNAME']+ ':' + data['MLAB_PASSWORD'] + '@ds221228.mlab.com:21228/' + data['MLAB_DB_NAME']
+client = MongoClient(uri)
+db = client.get_default_database()
+classifications = db['classifications']
+queries = db.classifications.find({'query': 'Im a dad'})
+
+d = []
+for doc in queries:
+    d.append({'body': doc['post'], 'classification': doc['valid']})
+dbData = pd.DataFrame(d, columns = ['body', 'classification'])
+dbData.classification = dbData.classification.astype(int)
+# print (dbData.head(10))
 
 
 
-# #############################################################################
+#############################################################################
 # Define a pipeline combining a text feature extractor with a simple
 # classifier
+
 pipeline = Pipeline([
     ('vect', CountVectorizer()),
     ('tfidf', TfidfTransformer()),
@@ -40,10 +58,13 @@ if __name__ == "__main__":
         with open(path) as f:
             for line in f:
                 input0.append(line)
-    else: input0 =['Ha']
-#    input1 = ["I\'m a dad", 'I\'m a daddy, looking for a little girl who is 18', 'When I\'m a dad i will use this']
-    datadf = pd.read_csv('Classyfications.csv')
-    datadf.body = datadf.body.apply(lambda x : unicode(x, errors='replace'))
+    else: 
+        input1 = ["I\'m a dad", 'I\'m a daddy, looking for a little girl who is 18', 'When I\'m a dad i will use this']
+
+    # datadf = pd.read_csv('Classyfications.csv')
+    # datadf.body = datadf.body.apply(lambda x : unicode(x, errors='replace'))
+    datadf = dbData
+
     data_new = list(datadf.body)
     data_target = np.array(datadf.classification)
     
