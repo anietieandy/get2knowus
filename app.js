@@ -6,11 +6,22 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var MongoClient = require('mongodb').MongoClient
   , assert = require('assert');
-
+var NaturalLanguageUnderstandingV1 = require('watson-developer-cloud/natural-language-understanding/v1.js');
+var ToneAnalyzerV3 = require('watson-developer-cloud/tone-analyzer/v3');
 var app = express();
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var natural_language_understanding = new NaturalLanguageUnderstandingV1({
+  'username': '7a5ee176-5c44-4860-b347-1e0761c93172',
+  'password': 'VMCZS5242eXl',
+  'version_date': '2017-02-27'
+});
+var tone_analyzer = new ToneAnalyzerV3({
+  username: '768d89c3-05a2-4b88-95ea-9addf4e3c125',
+  password: 'NyPHlxJNZIqq',
+  version_date: '2017-09-21'
+});
 
 // The project ID to use, e.g. "your-project-id"
 const projectId = "green-entity-183800";
@@ -87,5 +98,50 @@ function printResult (rows) {
   	// console.log("Body: " + row.body);  	
   }
 }
+/*ANALYZING TEXT USING IBM WATSON*/
+var input1 = 'UPenn is an amazing school. It is the best school ever. Harvard on the other hand is iffy and not that great. Plus, it\'s in Boston which is too cold'
+var input2 = 'Do you ever feel like breaking down? Do you ever feel out of place? Like somehow you just don\'t belong and no one understands you.'
+
+function analyzeText(text) {
+  var param = {
+    'text': text,
+    'features': {
+      'entities': {
+        'emotion': true,
+        'sentiment': true,
+        'limit': 2
+      },
+      'keywords': {
+        'emotion': true,
+        'sentiment': true,
+        //'limit': 5
+      }
+    }
+  }
+  natural_language_understanding.analyze(param, function(err, response) {
+    if (err)
+      console.log('error:', err);
+    else
+      console.log(JSON.stringify(response.keywords, null, 2));
+  });
+}
+
+function analyzeTone(text) {
+  var param = {
+  'tone_input': {'text': text},
+  'content_type': 'application/json'
+};
+  tone_analyzer.tone(param, function(error, response) {
+    if (error)
+      console.log('error:', error);
+    else
+      console.log(JSON.stringify(response.document_tone, null, 2));
+    }
+  );
+}
+
+analyzeText(input1);
+analyzeTone(input2);
+/*ANALYZING TEXT USING IBM WATSON*/
 
 module.exports = app
