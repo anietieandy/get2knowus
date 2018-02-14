@@ -1,7 +1,10 @@
 var express = require('express');
 var router = express.Router();
 
+var bigNum = 20000;
+//" + Math.floor(Math.random() * bigNum) + "
 var sqlQuery = "SELECT author, name, subreddit, body FROM `fh-bigquery.reddit_comments.2015_05` WHERE author != '[deleted]' AND LENGTH(body) < 255 AND LENGTH(body) > 30 AND body LIKE '%";
+var sqlQueryClassify = "SELECT author, name, subreddit, body, rand() as rand FROM `fh-bigquery.reddit_comments.2015_05` WHERE author != '[deleted]' AND LENGTH(body) < 255 AND LENGTH(body) > 30 AND body LIKE '%";
 var usernameQuery = "SELECT body FROM `fh-bigquery.reddit_comments.2015_05` WHERE LENGTH(body) < 255 AND LENGTH(body) > 30 AND author IN (";
 
 // Imports the Google Cloud client library.
@@ -158,9 +161,10 @@ router.post('/submit_query', function(req, res, next) {
 router.post('/classify_query', function(req, res, next) {
 	var curr_query = req.body.query_field;
 	curr_sql_query = curr_query.replace(/'/gi, "\\'");
-	var query_to_enter = sqlQuery + curr_sql_query + "%'";
+	var query_to_enter = sqlQueryClassify + curr_sql_query + "%'";
 	query_to_enter += " OR body LIKE '%" + curr_sql_query + "%'";
-	query_to_enter += " LIMIT 100;";
+	query_to_enter += " ORDER BY rand LIMIT 100;";
+	console.log(query_to_enter);
 
 	var options = {
 		query: query_to_enter,
