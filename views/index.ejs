@@ -31,7 +31,6 @@
   </head>
   <body>
     <h1><img src="/images/favicon" class="img-responsive" height="60" width="60" align="left"><%= title %></h1>
-    <p>Welcome to <%= title %></p>
     <br>
     <% if (args.err) { %>
         <div class="alert alert-danger"><%= args.err %></div>
@@ -63,7 +62,11 @@
                         <input id="finished" type="hidden" name="hidden" value="hidden">
                 <% } %>
                 <button class="btn btn-primary" type="submit" formaction="/submit_query">Analyze!</button>
-                <button class="btn btn-warning" type="submit" formaction="/classify_query">Classify!</button>
+                <% if (args.other_queries) { %>
+                <% } else {%>
+                    <button class="btn btn-warning" type="submit" formaction="/classify_query">Classify!</button>
+                <% } %>
+
             </form>            
         </div>
     </div>
