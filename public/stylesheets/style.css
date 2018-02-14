@@ -135,6 +135,10 @@ a {
     opacity: 1;
 }
 
+span:hover {
+    color: #000000;
+}
+
 
 /*footer {
     bottom: 0;

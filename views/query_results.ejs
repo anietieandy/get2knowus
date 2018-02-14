@@ -19,31 +19,104 @@
 
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>    
-
+    <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>  
+    <script src="/javascripts/nav_bar.js"></script>  
   </head>
   <body>
     <h1><img src="/images/favicon" class="img-responsive" height="60" width="60" align="left"><%= title %></h1>
-    <div class="well">
-        <h5>You submitted the following queries: <br>
-            <% for(var i = 0; i < all_queries.length; i++) {%>
-                <li><strong><%= all_queries[i] %></strong></li>
-            <% } %>
-        </h5>
-        <button href="/download" class="btn btn-success">Download Anonymized Post Data</a>
+    <div class="container">
+      <ul class="list-inline">
+        <li><span class="link" onclick="showGeneral();">General</span></li>
+        <li><span class="link" onclick="showDeepDive();">Deep Dive</span></li>
+        <li><span class="link" onclick="showCrossGroup();">Cross-Group</span></li>
+      </ul>
     </div>
-    <br>
-    <img src="/images/wc1.png" class="img-responsive" align="center">
-    <img src="/images/wc2.png" class="img-responsive" align="center">
-    <h5>The following results were returned from our BigQuery database: <br></h5>
-    <br>
-    <div class="list-group">
-        <% for(var i = 0; i < results.length; i++) {%>
-        <div class="list-group-item">
-        	<li class="list-group-item-text"><strong>Post:</strong> <%= results[i].body %></li>
+    <!-- General Tab -->
+    <div id="general_tab">
+        <div class="well">
+            <h5>You submitted the following queries: <br>
+                <% for(var i = 0; i < all_queries.length; i++) {%>
+                    <li><strong><%= all_queries[i] %></strong></li>
+                <% } %>
+            </h5>
+            <button href="/download" class="btn btn-success">Download Anonymized Post Data</button>
         </div>
-    	<% } %>
+        <br>
+        <img src="/images/wc1.png" class="img-responsive" align="center">
+        <img src="/images/wc2.png" class="img-responsive" align="center">
+        <h5>The following results were returned from our BigQuery database: <br></h5>
+        <br>
+        <div class="list-group">
+            <% for(var i = 0; i < results.length; i++) {%>
+            <div class="list-group-item">
+            	<li class="list-group-item-text"><strong>Post:</strong> <%= results[i].body %></li>
+            </div>
+        	<% } %>
+        </div>
     </div>
 
+    <!-- Deep Dive Tab -->
+    <div id="deep_dive_tab">
+        <div class="well">
+            <h5>You submitted the following queries: <br>
+                <% for(var i = 0; i < all_queries.length; i++) {%>
+                    <li><strong><%= all_queries[i] %></strong></li>
+                <% } %>
+            </h5>
+        </div>        
+        <div class="panel panel-primary">
+            <div class="panel-heading"> 
+                <p>Take a deeper dive into the results of the query! Enter in a word or phrase that you'd like to learn more about in the context of this user group. <br></p>
+            </div>
+            <div class="panel-body">  
+            <form action="#" onsubmit="deepDiveWords(); return false;">
+                <div class="form-group">
+                    <label for="query_info">Enter word/phrase of interest: </label>
+                    <input id="deep_dive_info" type="text" name="deep_dive_field" value="UPenn"><br>
+                </div>
+                <button class="btn btn-primary" type="submit">Analyze!</button>
+            </div>
+        </div>
+
+        <br>
+
+    </div>
+
+    <!-- Cross-Group Tab -->
+    <div id="cross_group_tab">
+    <div class="panel panel-primary">
+            <div class="panel-heading">
+                <p>Pick the first group.
+                    <br>
+                </p>
+            </div>
+            <div class="panel-body">
+                <form action="/submit_query" method="post">
+                    <div class="form-group">
+                        <label for="query_info1">Enter query: </label>
+                        <input id="query_info1" type="text" name="query_field" value="I'm a dad">
+                        <br>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <p>Pick another group to compare the first group with.
+                    <br>
+                </p>
+            </div>
+            <div class="panel-body">
+                <form action="/submit_query" method="post">
+                    <div class="form-group">
+                        <label for="query_info2">Enter query: </label>
+                        <input id="query_info2" type="text" name="query_field" value="I'm a dad">
+                        <br>
+                    </div>
+                </form>
+            </div>
+        </div>
+    <button class="btn btn-primary" type="submit" formaction="/submit_query">Compare!</button>
+    </div>
   </body>
 </html>
