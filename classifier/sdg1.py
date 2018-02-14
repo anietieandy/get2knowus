@@ -56,7 +56,7 @@ if __name__ == "__main__":
     if queries.count() < 500:
         print('##########')
         ones = [1 for i in input0]
-        print ('['," ".join(map(str,ones)).strip(),']')
+        print ('[' + " ".join(map(str,ones)).strip() + ']')
     else:
         d = []
         for doc in queries:
