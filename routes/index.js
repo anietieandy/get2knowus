@@ -81,6 +81,7 @@ router.post('/api/add_classification', function(req, res, next) {
 router.post('/submit_query', function(req, res, next) {
 	var curr_query = req.body.query_field;
 	if (!req.body.hidden) {
+		console.log("first callback")
 		new_options = getOptions(curr_query, function(new_options) {
 			if (new_options.length > 0) {
 				res.render('index', { title: 'Get2KnowUS',
@@ -120,6 +121,7 @@ router.post('/submit_query', function(req, res, next) {
 						console.log(err);
 						return;
 					}
+					console.log("Finished classifier")
 					var all_results = stdout.split("##########")[1];
 					all_results = all_results.replace(/(\r\n|\n|\r)/gm,"");
 					all_results = all_results.substring(1,all_results.length);
