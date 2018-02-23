@@ -14,6 +14,7 @@ from sklearn.linear_model import SGDClassifier
 from sklearn.model_selection import GridSearchCV
 from sklearn.pipeline import Pipeline
 from pymongo import MongoClient  # pymongo>=3.2
+from datetime import datetime
 
 
 
@@ -36,6 +37,9 @@ parameters = {
 
 if __name__ == "__main__":
 
+    with open("classifier/log.txt", "a") as myfile:
+        myfile.write("\n" + datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " sdg1 ran!")
+
     if len(sys.argv) > 1: 
         path = sys.argv[1]
         input0 = []
@@ -43,7 +47,13 @@ if __name__ == "__main__":
             for line in f:
                 input0.append(line)
     else: 
-        input0 = ["I\'m a dad", 'I\'m a daddy, looking for a little girl who is 18', 'When I\'m a dad i will use this']
+        input0 = ["I\'m gay", "I\'m a dad", 'I\'m a daddy, looking for a little girl who is 18', 'When I\'m a dad i will use this']
+
+    if len(sys.argv) > 2: 
+        queryPhrase = sys.argv[2];
+    else:
+        queryPhrase = 'Im gay';
+
 
     data = json.load(open('credentials.json'))
 
@@ -52,8 +62,11 @@ if __name__ == "__main__":
     client = MongoClient(uri)
     db = client.get_default_database()
     classifications = db['classifications']
-    queries = db.classifications.find({'query': 'Im a dad'})
-    if queries.count() < 500:
+    queries = db.classifications.find({'query': queryPhrase})
+    with open("classifier/log.txt", "a") as myfile:
+        myfile.write("\n" + datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " queryCount: " + str(queries.count()))
+
+    if queries.count() < 100:
         print('##########')
         ones = [1 for i in input0]
         print ('[' + " ".join(map(str,ones)).strip() + ']')
