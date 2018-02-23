@@ -17,6 +17,7 @@ var natural_language_understanding = new NaturalLanguageUnderstandingV1({
   'password': 'VMCZS5242eXl',
   'version_date': '2017-02-27'
 });
+// Used for BlueMix API
 var tone_analyzer = new ToneAnalyzerV3({
   username: '768d89c3-05a2-4b88-95ea-9addf4e3c125',
   password: 'NyPHlxJNZIqq',
