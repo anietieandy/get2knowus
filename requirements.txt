@@ -2,8 +2,8 @@
 # $ conda create --name get2knowus --file req.txt
 # then conda install -c https://conda.anaconda.org/amueller wordcloud
 # platform: osx-64
-dateutil==2.4.1
-freetype==2.4.10
+python-dateutil==2.4.1
+freetype-py==2.4.10
 jbig==2.1
 jpeg==8d
 libpng==1.5.13
