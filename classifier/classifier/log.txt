@@ -10,3 +10,89 @@
 2018-02-22 20:15:34 queryCount: 114
 2018-02-22 20:16:18 sdg1 ran!
 2018-02-22 20:16:18 queryCount: 114
+2018-02-23 10:49:23 sdg1 ran!
+2018-02-23 10:49:23 queryCount: 400
+2018-02-23 10:52:55 sdg1 ran!
+2018-02-23 10:52:55 queryCount: Im a lesbian400
+2018-02-23 10:52:58 accuracy: 0.875
+2018-02-23 10:54:27 sdg1 ran!
+2018-02-23 10:54:27 queryCount: Im a straight woman0
+2018-02-23 10:56:00 sdg1 ran!
+2018-02-23 10:56:00 queryCount: m a straight woman400
+2018-02-23 10:56:02 accuracy: 0.9975
+2018-02-23 12:22:07 sdg1 ran!
+2018-02-23 12:22:07 queryCount: Im a gay0
+2018-02-23 12:22:37 sdg1 ran!
+2018-02-23 12:22:37 queryCount: Im a gay0
+2018-02-23 12:22:50 sdg1 ran!
+2018-02-23 12:22:50 queryCount: Im a gay0
+2018-02-23 12:22:59 sdg1 ran!
+2018-02-23 12:22:59 queryCount: Im a gay0
+2018-02-23 12:23:46 sdg1 ran!
+2018-02-23 12:23:46 queryCount: Im gay114
+2018-02-23 12:23:47 accuracy: 0.7105263157894737
+2018-03-14 23:07:20 sdg1 ran!
+2018-03-14 23:07:20 queryCount: Im gay114
+2018-03-14 23:07:21 accuracy: 0.7105263157894737
+2018-03-14 23:10:03 queryCount: m a vegetarian100
+2018-03-14 23:10:04 accuracy: 0.82
+2018-03-14 23:11:42 queryCount: Im a teacher : 400
+2018-03-14 23:11:45 accuracy: 0.965
+2018-03-14 23:12:03 queryCount: Im a student : 400
+2018-03-14 23:12:07 accuracy: 0.96
+2018-03-14 23:12:22 queryCount: m a straight woman : 400
+2018-03-14 23:12:24 accuracy: 0.9975
+2018-03-14 23:20:33 queryCount: m a straight woman : 400
+2018-03-14 23:20:35 accuracy: 0.9975
+2018-03-14 23:21:03 queryCount: m a straight woman : 400
+2018-03-14 23:21:05 accuracy: 0.9975
+2018-03-14 23:21:41 queryCount: m a straight woman : 400
+2018-03-14 23:21:43 accuracy: 0.9975
+2018-03-14 23:22:54 queryCount: m a straight woman : 400
+2018-03-14 23:22:57 accuracy: 0.9975
+2018-03-14 23:23:10 queryCount: m a straight woman : 400
+2018-03-14 23:23:13 accuracy: 0.9975
+2018-03-14 23:24:28 queryCount: m a straight woman : 400
+2018-03-14 23:24:31 accuracy: 0.9975
+2018-03-14 23:24:55 queryCount: m a straight woman : 400
+2018-03-14 23:24:58 accuracy: 0.9975
+2018-03-14 23:25:14 queryCount: m a straight woman : 400
+2018-03-14 23:25:16 accuracy: 0.9975
+2018-03-14 23:25:45 queryCount: m a straight woman : 400
+2018-03-14 23:25:47 accuracy: 0.9975
+2018-03-14 23:26:18 queryCount: m a straight woman : 400
+2018-03-14 23:26:20 accuracy: 0.9975
+2018-03-14 23:26:49 queryCount: m a straight woman : 400
+2018-03-14 23:26:51 accuracy: 0.9975
+2018-03-14 23:27:09 queryCount: m a straight woman : 400
+2018-03-14 23:27:11 accuracy: 0.9975
+2018-03-14 23:27:49 queryCount: m a straight woman : 400
+2018-03-14 23:27:51 accuracy: 0.9975
+2018-03-14 23:28:28 queryCount: m a straight woman : 400
+2018-03-14 23:28:31 accuracy: 0.9975
+2018-03-14 23:33:26 queryCount: m a straight woman : 400
+2018-03-14 23:33:28 accuracy: 0.9975
+2018-03-14 23:40:41 queryCount: m a straight woman : 400
+2018-03-14 23:40:43 accuracy: 0.9975
+2018-03-14 23:42:50 queryCount: m a straight woman : 400
+2018-03-14 23:42:52 accuracy: 0.9975
+2018-03-14 23:45:14 queryCount: m a straight woman : 400
+2018-03-14 23:45:16 accuracy: 0.9975
+2018-03-14 23:47:11 queryCount: m a straight woman : 400
+2018-03-14 23:47:13 accuracy: 0.9975
+2018-03-14 23:48:40 queryCount: m a straight woman : 400
+2018-03-14 23:48:43 accuracy: 0.9975
+2018-03-14 23:49:02 queryCount: m a straight woman : 400
+2018-03-14 23:49:06 accuracy: 0.9975
+2018-03-14 23:49:39 queryCount: m a straight woman : 400
+2018-03-14 23:49:40 accuracy: 0.9975
+2018-03-14 23:51:05 queryCount: Im a lesbian : 400
+2018-03-14 23:51:08 accuracy: 0.8725
+2018-03-14 23:51:24 queryCount: Im a lesbian : 400
+2018-03-14 23:51:27 accuracy: 0.8575
+2018-03-14 23:51:41 queryCount: Im a lesbian : 400
+2018-03-14 23:51:44 accuracy: 0.875
+2018-03-14 23:52:02 queryCount: Im a lesbian : 400
+2018-03-14 23:52:05 accuracy: 0.8675
+2018-03-14 23:52:25 queryCount: m a straight woman : 400
+2018-03-14 23:52:27 accuracy: 0.9975
