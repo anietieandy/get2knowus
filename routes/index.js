@@ -123,7 +123,7 @@ router.post('/submit_query', function (req, res, next) {
 			}
 			fs.writeFile('query_results.txt', str, function (err) {
 				console.log("about to query");
-				exec('python2 classifier/sdg1.py query_results.txt', (err, stdout, stderr) => {
+				exec('python2 classifier/sdg1.py query_results.txt ' + new_query, (err, stdout, stderr) => {
 					if (err) {
 						console.log(err);
 						return;
