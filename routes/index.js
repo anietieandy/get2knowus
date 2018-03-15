@@ -1,6 +1,19 @@
 var express = require('express');
+var NaturalLanguageUnderstandingV1 = require('watson-developer-cloud/natural-language-understanding/v1.js');
+var ToneAnalyzerV3 = require('watson-developer-cloud/tone-analyzer/v3');
 var router = express.Router();
 
+var natural_language_understanding = new NaturalLanguageUnderstandingV1({
+  'username': '7a5ee176-5c44-4860-b347-1e0761c93172',
+  'password': 'VMCZS5242eXl',
+  'version_date': '2017-02-27'
+});
+// Used for BlueMix API
+var tone_analyzer = new ToneAnalyzerV3({
+  username: '768d89c3-05a2-4b88-95ea-9addf4e3c125',
+  password: 'NyPHlxJNZIqq',
+  version_date: '2017-09-21'
+});
 var bigNum = 20000;
 //" + Math.floor(Math.random() * bigNum) + "
 var sqlQuery = "SELECT author, name, subreddit, body FROM `fh-bigquery.reddit_comments.2015_05` WHERE author != '[deleted]' AND LENGTH(body) < 255 AND LENGTH(body) > 30 AND body LIKE '%";
@@ -150,7 +163,7 @@ router.post('/submit_query', function(req, res, next) {
 								return;
 							}
 							exec('python2 NLPMaybe/wordCloud.py all_posts.txt', (err, stdout, stderr) => {
-								res.render('query_results', { title: 'Get2KnowUS', all_queries: all_queries, results: rows });
+								analyzeTone(rows, res, all_queries, rows)
 							});
 						});
 					});
@@ -308,5 +321,58 @@ function getImportance(text, callback) {
  //    	console.log(item.term + ': ' + item.tfidf);
 	// });
 }
+
+/*ANALYZING TEXT USING IBM WATSON*/
+// var input1 = 'UPenn is an amazing school. It is the best school ever. Harvard on the other hand is iffy and not that great. Plus, it\'s in Boston which is too cold'
+// var input2 = 'Do you ever feel like breaking down? Do you ever feel out of place? Like somehow you just don\'t belong and no one understands you.'
+
+function analyzeText(text) {
+  var param = {
+    'text': text,
+    'features': {
+      'entities': {
+        'emotion': true,
+        'sentiment': true,
+        'limit': 2
+      },
+      'keywords': {
+        'emotion': true,
+        'sentiment': true,
+        //'limit': 5
+      }
+    }
+  }
+  natural_language_understanding.analyze(param, function(err, response) {
+    if (err)
+      console.log('error:', err);
+    else
+      console.log(JSON.stringify(response.keywords, null, 2));
+  });
+}
+
+function analyzeTone(text, res, all_queries, rows) {
+	var input = "";
+	for (var i = 0; i < text.length; i++) {
+		input = input + " " + text[i].body
+	}
+  var param = {
+  'tone_input': {'text': input},
+  'content_type': 'application/json'
+};
+  tone_analyzer.tone(param, function(error, response) {
+    if (error)
+      console.log('error:', error);
+    else
+      console.log(JSON.stringify(response.document_tone.tones));
+  	  var blue = [];
+      for (var i = 0; i < response.document_tone.tones.length; i++) {
+      	blue.push("Tone: " + JSON.stringify(response.document_tone.tones[i].tone_name) + " Score: " + JSON.stringify(response.document_tone.tones[i].score))
+      }	
+  	  //var blue = JSON.stringify(response.document_tone.tones[0]);
+  	  res.render('query_results', { title: 'Get2KnowUS', all_queries: all_queries, results: rows, bluemix_results: blue });
+    }
+  );
+}
+/*ANALYZING TEXT USING IBM WATSON*/
 
 module.exports = router;

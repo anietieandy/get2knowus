@@ -44,6 +44,12 @@
         <br>
         <img src="/images/wc1.png" class="img-responsive" align="center">
         <img src="/images/wc2.png" class="img-responsive" align="center">
+        <h5>General sentiment analysis from all posts: <br></h5>
+        <div class="well">
+            <% for(var i = 0; i < bluemix_results.length; i++) {%>
+                <h5> <%= bluemix_results[i] %></h5>
+            <%}%>
+        </div>
         <h5>The following results were returned from our BigQuery database: <br></h5>
         <br>
         <div class="list-group">
