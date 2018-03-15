@@ -33,7 +33,7 @@ pathlib==1.0.1
 pbr==0.10.0
 Pillow==4.3.0
 pipreqs==0.4.9
-psycopg2==2.5.4
+psycopg2
 py-bcrypt==0.4
 pycairo==1.15.4
 pycrypto==2.6.1
