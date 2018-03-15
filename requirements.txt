@@ -149,7 +149,7 @@ SQLAlchemy==0.9.8
 sqlalchemy-migrate==0.7.2
 sqlparse==0.1.13
 stevedore==1.1.0
-subprocess32==3.2.7
+subprocess32
 sympy==1.0
 Tempita==0.5.2
 terminado==0.5
