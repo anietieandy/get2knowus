@@ -14,7 +14,7 @@ Flask-OpenID==1.2.3
 Flask-Script==2.0.5
 Flask-SQLAlchemy==2.0
 Flask-User==0.6
-Flask-WhooshAlchemy==0.55a0
+Flask-WhooshAlchemy
 Flask-WTF==0.10.3
 flup==1.0.2
 foreman==0.9.7
