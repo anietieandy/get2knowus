@@ -1,0 +1,20 @@
+
+2018-03-15 00:13:47 queryCount: I'm a dad : 0
+2018-03-15 00:15:47 queryCount: I'm a mom : 0
+2018-03-15 00:17:14 classifying
+2018-03-15 00:17:14 queryCount: I'm a dad : 0
+2018-03-15 00:18:40 classifying
+2018-03-15 00:18:40 queryCount: I'm a teacher : 0
+2018-03-15 00:22:08 classifying
+2018-03-15 00:22:08 queryCount: I'm a teacher : 0
+2018-03-15 00:27:28 classifying
+2018-03-15 00:27:28 queryCount: I'm a teacher : 0
+2018-03-15 00:28:38 classifying
+2018-03-15 00:28:38 queryCount: I'm a teacher : 0
+2018-03-15 00:30:27 classifying
+2018-03-15 00:30:27 queryCount: I'm a teacher : 0
+2018-03-15 00:32:04 classifying
+2018-03-15 00:32:04 queryCount: I'm a teacher : 0
+2018-03-15 00:33:47 classifying
+2018-03-15 00:33:47 queryCount: Im a teacher : 400
+2018-03-15 00:33:50 accuracy: 0.965

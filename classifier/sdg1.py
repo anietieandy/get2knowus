@@ -15,12 +15,12 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.pipeline import Pipeline
 from pymongo import MongoClient  # pymongo>=3.2
 from datetime import datetime
-import matplotlib.pyplot as plt
-import warnings
-import seaborn as sns
+# import matplotlib.pyplot as plt
+# import warnings
+# import seaborn as sns
 
-sns.set_style("darkgrid")
-warnings.simplefilter(action='ignore', category=FutureWarning)
+# sns.set_style("darkgrid")
+# warnings.simplefilter(action='ignore', category=FutureWarning)
 
 
 
@@ -42,6 +42,8 @@ parameters = {
 }
 
 if __name__ == "__main__":
+    with open("classifier/log.txt", "a") as myfile:
+        myfile.write("\n" + datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " classifying")
 
     if len(sys.argv) > 1: 
         path = sys.argv[1]
@@ -55,7 +57,9 @@ if __name__ == "__main__":
 
 
     if len(sys.argv) > 2: 
-        queryPhrase = sys.argv[2];
+        queryPhrase = ' '.join(sys.argv[2:]);
+        queryPhrase = queryPhrase.replace("\'","")
+        # print(queryPhrase)
     else:
         # queryPhrase = 'm a straight woman';
         # queryPhrase = 'Im a lesbian';
