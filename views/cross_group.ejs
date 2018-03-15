@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        <%= title %>
+    </title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="/stylesheets/style.css" rel="stylesheet">
+    <link href="/stylesheets/secondary-styles.css" rel="stylesheet">
+    <link href="/stylesheets/morris.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+    <script src="/javascripts/classification_fns.js"></script>
+
+</head>
+
+<body>
+    <h1>
+        <img src="/images/favicon" class="img-responsive" height="60" width="60" align="left">
+        <%= title %>
+    </h1>
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <p>Pick the first group.
+                <br>
+            </p>
+        </div>
+        <div class="panel-body">
+            <form action="/submit_query" method="post">
+                <div class="form-group">
+                    <label for="query_info1">Enter query: </label>
+                    <input id="query_info1" type="text" name="query_field" value="I'm a dad">
+                    <br>
+                </div>
+            </form>
+        </div>
+    </div>
+    </div>
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <p>Pick another group to compare the first group with.
+                <br>
+            </p>
+        </div>
+        <div class="panel-body">
+            <form action="/submit_query" method="post">
+                <div class="form-group">
+                    <label for="query_info2">Enter query: </label>
+                    <input id="query_info2" type="text" name="query_field" value="I'm a dad">
+                    <br>
+                </div>
+            </form>
+        </div>
+    </div>
+    <button class="btn btn-primary" type="submit" formaction="/submit_query">Compare!</button>
+    </div>
+</body>
+
+</html>
