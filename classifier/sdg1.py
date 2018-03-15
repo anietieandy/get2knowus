@@ -15,6 +15,12 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.pipeline import Pipeline
 from pymongo import MongoClient  # pymongo>=3.2
 from datetime import datetime
+# import matplotlib.pyplot as plt
+# import warnings
+# import seaborn as sns
+
+# sns.set_style("darkgrid")
+# warnings.simplefilter(action='ignore', category=FutureWarning)
 
 
 
@@ -36,9 +42,8 @@ parameters = {
 }
 
 if __name__ == "__main__":
-
     with open("classifier/log.txt", "a") as myfile:
-        myfile.write("\n" + datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " sdg1 ran!")
+        myfile.write("\n" + datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " classifying")
 
     if len(sys.argv) > 1: 
         path = sys.argv[1]
@@ -47,12 +52,22 @@ if __name__ == "__main__":
             for line in f:
                 input0.append(line)
     else: 
-        input0 = ["I\'m gay", "I\'m a dad", 'I\'m a daddy, looking for a little girl who is 18', 'When I\'m a dad i will use this']
+        # input0 = ["I\'m gay", "I\'m a dad", 'I\'m a daddy, looking for a little girl who is 18', 'When I\'m a dad i will use this']
+        input0 = ["I\'m gay", "I don\'t really think i\'m \"gay\""]
+
 
     if len(sys.argv) > 2: 
-        queryPhrase = sys.argv[2];
+        queryPhrase = ' '.join(sys.argv[2:]);
+        queryPhrase = queryPhrase.replace("\'","")
+        # print(queryPhrase)
     else:
-        queryPhrase = 'Im gay';
+        # queryPhrase = 'm a straight woman';
+        # queryPhrase = 'Im a lesbian';
+        # queryPhrase = 'Im a straight man';
+        queryPhrase = 'Im a student';
+        # queryPhrase = 'Im a teacher';
+        # queryPhrase = 'm a vegetarian';
+        # queryPhrase = 'Im gay';
 
 
     data = json.load(open('credentials.json'))
@@ -64,7 +79,7 @@ if __name__ == "__main__":
     classifications = db['classifications']
     queries = db.classifications.find({'query': queryPhrase})
     with open("classifier/log.txt", "a") as myfile:
-        myfile.write("\n" + datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " queryCount: " + str(queries.count()))
+        myfile.write("\n" + datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " queryCount: " + queryPhrase + " : " + str(queries.count()))
 
     if queries.count() < 100:
         print('##########')
@@ -92,17 +107,44 @@ if __name__ == "__main__":
         # pprint(parameters)
         # t0 = time()
         grid_search.fit(data_new, data_target)
+
     #    print("done in %0.3fs" % (time() - t0))
-    #    print()
-    #    
     #    print("Best score: %0.3f" % grid_search.best_score_)
     #    print("Best parameters set:")
+
         best_parameters = grid_search.best_estimator_.get_params()
+
     #    for param_name in sorted(parameters.keys()):
     #        print("\t%s: %r" % (param_name, best_parameters[param_name]))
+
+        with open("classifier/log.txt", "a") as myfile:
+            myfile.write("\n" + datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " accuracy: " + str(grid_search.best_score_))
             
         results = grid_search.predict(input0)
         print('##########')
         print(results)
+
+#####################  Accuracy vs Samples ###################################################
+    # scores = []
+    # xTicks = []
+    # n = 5;
+    # for i in range(1,n+1):
+    #     n = float(n)
+    #     dataTemp = datadf.sample(frac = i/n)
+    #     tempBody = list(dataTemp.body)
+    #     tempTarget = np.array(dataTemp.classification)
+    #     grid_search = GridSearchCV(pipeline, parameters, n_jobs=-1, verbose=1)
+    #     grid_search.fit(tempBody, tempTarget)
+    #     scores.append(grid_search.best_score_)
+    #     xTicks.append(i/n)
+    #     print(i/n, grid_search.best_score_)
+
+    # plt.plot(xTicks, scores)
+    # plt.title("Scores by Sample Size, n = " + str(n) + " on ID: \'" + queryPhrase + "\'")
+    # plt.show()
+    # plt.savefig("scoreBySample" + str(n) + queryPhrase + ".png"); 
+
+
+
             
             
