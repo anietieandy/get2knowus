@@ -125,24 +125,24 @@ if __name__ == "__main__":
         print(results)
 
 #####################  Accuracy vs Samples ###################################################
-    scores = []
-    xTicks = []
-    n = 5;
-    for i in range(1,n+1):
-        n = float(n)
-        dataTemp = datadf.sample(frac = i/n)
-        tempBody = list(dataTemp.body)
-        tempTarget = np.array(dataTemp.classification)
-        grid_search = GridSearchCV(pipeline, parameters, n_jobs=-1, verbose=1)
-        grid_search.fit(tempBody, tempTarget)
-        scores.append(grid_search.best_score_)
-        xTicks.append(i/n)
-        print(i/n, grid_search.best_score_)
+    # scores = []
+    # xTicks = []
+    # n = 5;
+    # for i in range(1,n+1):
+    #     n = float(n)
+    #     dataTemp = datadf.sample(frac = i/n)
+    #     tempBody = list(dataTemp.body)
+    #     tempTarget = np.array(dataTemp.classification)
+    #     grid_search = GridSearchCV(pipeline, parameters, n_jobs=-1, verbose=1)
+    #     grid_search.fit(tempBody, tempTarget)
+    #     scores.append(grid_search.best_score_)
+    #     xTicks.append(i/n)
+    #     print(i/n, grid_search.best_score_)
 
-    plt.plot(xTicks, scores)
-    plt.title("Scores by Sample Size, n = " + str(n) + " on ID: \'" + queryPhrase + "\'")
-    plt.show()
-    plt.savefig("scoreBySample" + str(n) + queryPhrase + ".png"); 
+    # plt.plot(xTicks, scores)
+    # plt.title("Scores by Sample Size, n = " + str(n) + " on ID: \'" + queryPhrase + "\'")
+    # plt.show()
+    # plt.savefig("scoreBySample" + str(n) + queryPhrase + ".png"); 
 
 
 
