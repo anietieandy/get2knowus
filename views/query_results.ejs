@@ -23,6 +23,7 @@
     <script src="/javascripts/nav_bar.js"></script>  
   </head>
   <body>
+    <script>var curr_results = <%- JSON.stringify(results) %> </script>
     <h1><img src="/images/favicon" class="img-responsive" height="60" width="60" align="left"><%= title %></h1>
     <div class="container">
       <ul class="list-inline">
@@ -75,17 +76,18 @@
                 <p>Take a deeper dive into the results of the query! Enter in a word or phrase that you'd like to learn more about in the context of this user group. <br></p>
             </div>
             <div class="panel-body">  
-            <form action="#" onsubmit="deepDiveWords(); return false;">
+            <form action="/deep_dive"method="post">
                 <div class="form-group">
                     <label for="query_info">Enter word/phrase of interest: </label>
                     <input id="deep_dive_info" type="text" name="deep_dive_field" value="UPenn"><br>
+                    <!-- <input type="hidden" name="test" value="<%= results %>"> -->
                 </div>
-                <button class="btn btn-primary" type="submit">Analyze!</button>
+                <button id=deep_dive_button class="btn btn-primary" type="submit" formaction="/deep_dive">Analyze!</button>
+            </form>
             </div>
         </div>
 
         <br>
-
     </div>
 
     <!-- Cross-Group Tab -->

@@ -2,6 +2,7 @@ var express = require('express');
 var NaturalLanguageUnderstandingV1 = require('watson-developer-cloud/natural-language-understanding/v1.js');
 var ToneAnalyzerV3 = require('watson-developer-cloud/tone-analyzer/v3');
 var router = express.Router();
+var FileReader = require('filereader'); 
 
 var natural_language_understanding = new NaturalLanguageUnderstandingV1({
   'username': '7a5ee176-5c44-4860-b347-1e0761c93172',
@@ -226,6 +227,43 @@ router.post('/classify_query', function (req, res, next) {
 		});
 	}
 });
+
+
+// I'll be a given a list of (%, word type) to print out. 
+// Look at how natasha handled sdg and all_posts.txt
+router.post('/deep_dive', function(req, res, next) {
+	var deep_query = req.body.deep_dive_field; 
+	var new_queries = []; 
+	
+	fs.readFile('all_posts.txt', function read(err, data) {
+		if(err) {
+			throw err; 
+		} 
+		var file = data.toString(); 
+		console.log("file = " + file + "type = " + typeof(file));  
+		var split_file = file.split('\n'); 
+		// var split_file =  file.split('\n'); 
+		console.log("LINE 1 = " + split_file[0]); 
+
+		for (var i = 0; i < split_file.length; i++){ 
+			if(split_file[i].includes(deep_query)){
+				new_queries += (split_file[i]); 
+			}
+		}
+
+	})
+
+	var qs = []; 
+	var rs = []; 
+	console.log("deep_query = " + deep_query); 
+	// console.log("old_results = " + old_results); 
+	res.render('deep_dive', 
+		{
+			title: 'Get2KnowUs', 
+			all_queries: [], 
+			results: []
+		}); 
+}); 
 
 
 function runQuery(options, callback) {

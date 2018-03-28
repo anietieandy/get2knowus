@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="/stylesheets/style.css" rel="stylesheet">
+    <link href="/stylesheets/secondary-styles.css" rel="stylesheet">  
+    <link href="/stylesheets/morris.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>  
+    <script src="/javascripts/nav_bar.js"></script>  
+  </head>
+   <body>
+    <h1><img src="/images/favicon" class="img-responsive" height="60" width="60" align="left"><%= title %></h1>
+    </body>
+
+    <div class="well">
+        <h5>You submitted the following queries: <br>
+            <% for(var i = 0; i < all_queries.length; i++) {%>
+                <li><strong><%= all_queries[i] %></strong></li>
+            <% } %>
+        </h5>>
+    </div>
+
+    <h5>The following results were returned from our BigQuery database: <br></h5>
+    <br>
+    <div class="list-group">
+        <% for(var i = 0; i < results.length; i++) {%>
+        <div class="list-group-item">
+            <li class="list-group-item-text"><strong>Post:</strong> <%= results[i].body %></li>
+        </div>
+        <% } %>
+    </div>
+
+
+
+</html>
