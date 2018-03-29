@@ -262,11 +262,22 @@ router.post('/deep_dive', function(req, res, next) {
 			exec('python2 NLPMaybe/liwcAnal.py deep_dive.txt all_posts.txt', (err, stdout, stderr) => {
 			// TODO: need to figure out how to print out everything i need here... 
 				console.log("stdout = " + stdout); 
-				liwc_split = stdout.split("&&&&"); 
-				liwc_deep = liwc_split[1].split("\n"); 
-				console.log("liwc deep = " + liwc_deep); 
-				liwc_all = liwc_split[2].split("\n"); 
+				// liwc_split = stdout.split("&&&&"); 
+				var liwc_all = stdout.split("\n"); 
 				console.log("liwc all = " + liwc_all); 
+				// liwc_all = liwc_split[2].split("\n"); 
+				var liwc_res = []; 
+				for (var i = 0; i < liwc_all.length; i++) {
+					var l = liwc_all[i].split("++");
+					console.log("LINE " + i + " = " + l); 
+					var l_obj = {
+						key: l[0], 
+						ind: l[1],
+						all: l[2]
+					}
+					liwc_res.push(l_obj); 
+				}
+				console.log("liwc all = " + JSON.stringify(liwc_res[0])); 
 				var input = "";
 				for (var i = 0; i < new_queries.length; i++) {
 					input = input + " " + new_queries[i].body
@@ -276,15 +287,16 @@ router.post('/deep_dive', function(req, res, next) {
 				  'content_type': 'application/json'
 				};
 			  	tone_analyzer.tone(param, function(error, response) {
-			  		if (error)
-				      console.log('error:', error);
-				    else { 
-				      console.log(JSON.stringify(response.document_tone.tones));
-				  	  var blue = [];
-				      for (var i = 0; i < response.document_tone.tones.length; i++) {
-				      	blue.push("Tone: " + JSON.stringify(response.document_tone.tones[i].tone_name) + " Score: " + JSON.stringify(response.document_tone.tones[i].score))
-				      }	
-				      console.log("blue =" + blue); 
+			  		var blue = []; 
+			  		// if (error)
+				   //    console.log('error:', error);
+				   //  else { 
+				   //    console.log(JSON.stringify(response.document_tone.tones));
+				  	//   var blue = [];
+				   //    for (var i = 0; i < response.document_tone.tones.length; i++) {
+				   //    	blue.push("Tone: " + JSON.stringify(response.document_tone.tones[i].tone_name) + " Score: " + JSON.stringify(response.document_tone.tones[i].score))
+				   //    }	
+				   //    console.log("blue =" + blue); 
 				      console.log("recent queries = " + recent_queries); 
 						res.render('deep_dive', {
 							title: 'Get2KnowUs', 
@@ -292,10 +304,12 @@ router.post('/deep_dive', function(req, res, next) {
 							deep_query: deep_query,  
 							results: new_queries, 
 							bluemix_results: blue, 
-							liwc_deep: liwc_deep, 
-							lice_all: liwc_all
+							liwc_deep: [], 
+							liwc_all: [], 
+							liwc: liwc_res
+
 						});  
-					}
+					// }
 				}); 
 			}); 
 		});
@@ -456,6 +470,9 @@ function analyzeText(text) {
 }
 
 function analyzeTone(text, res, all_queries, rows) {
+	console.log("analzye tone"); 
+	console.log("rows length = " + rows.length); 
+	console.log("text = " + JSON.stringify(text)); 
 	var input = "";
 	for (var i = 0; i < text.length; i++) {
 		input = input + " " + text[i].body
@@ -465,15 +482,18 @@ function analyzeTone(text, res, all_queries, rows) {
   'content_type': 'application/json'
 };
   tone_analyzer.tone(param, function(error, response) {
-    if (error)
-      console.log('error:', error);
-    else
-      console.log(JSON.stringify(response.document_tone.tones));
-  	  var blue = [];
-      for (var i = 0; i < response.document_tone.tones.length; i++) {
-      	blue.push("Tone: " + JSON.stringify(response.document_tone.tones[i].tone_name) + " Score: " + JSON.stringify(response.document_tone.tones[i].score))
-      }	
-  	  //var blue = JSON.stringify(response.document_tone.tones[0]);
+  	console.log("tone_analyzer"); 
+  	var blue = []; 
+    // if (error)
+    //   console.log('error:', error);
+    // else
+    //   console.log("response = " + response); 
+    //   console.log(JSON.stringify(response.document_tone.tones));
+  	 //  var blue = [];
+    //   for (var i = 0; i < response.document_tone.tones.length; i++) {
+    //   	blue.push("Tone: " + JSON.stringify(response.document_tone.tones[i].tone_name) + " Score: " + JSON.stringify(response.document_tone.tones[i].score))
+    //   }	
+  	 //  var blue = JSON.stringify(response.document_tone.tones[0]);
   	  res.render('query_results', { title: 'Get2KnowUS', all_queries: all_queries, results: rows, bluemix_results: blue });
     }
   );

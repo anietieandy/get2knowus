@@ -36,16 +36,21 @@
         </h5>
     </div>
     <div class="well">
-        <h5>Analysis of language specific to deep dive</h5>
-        <% for(var i = 0; i < liwc_deep.length; i++) {%>
-            <h5> <%= liwc_deep[i] %></h5>
-        <%}%>
-    </div>
-    <div class="well">
-        <h5>Anlaysis of language compared to all posts</h5>
-        <% for(var i = 0; i < liwc_all.length; i++) {%>
-            <h5> <%= liwc_all[i] %></h5>
-        <%}%>
+        <h5>Analysis of language using LIWC</h5>
+        <table>
+            <tr>
+                <th>Word Classification</th>
+                <th>Regularized within query</th>
+                <th>Regularized over all </th>
+            </tr>
+            <% for(var i = 0; i < liwc.length; i++) {%>
+                <tr>
+                    <td><%=liwc[i].key%></td>
+                    <td><%=liwc[i].ind%></td>
+                    <td><%=liwc[i].all%></td>
+                </tr>
+            <% } %> 
+        </table>
     </div>
     <div class="well">
         <% for(var i = 0; i < bluemix_results.length; i++) {%>
