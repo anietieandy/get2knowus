@@ -47,6 +47,7 @@ var rules = new natural.RuleSet(rulesFilename);
 var tagger = new natural.BrillPOSTagger(lexicon, rules);
 
 var credentials = process.env;
+var recent_queries = []; 
 
 if (!process.env.PRODUCTION) {
 	credentials = require('../credentials.json');
@@ -100,6 +101,7 @@ router.post('/submit_query', function (req, res, next) {
 	if (!req.body.hidden) {
 		console.log("first callback")
 		new_options = getOptions(curr_query, function (new_options) {
+			recent_queries = curr_query; 
 			if (new_options.length > 0) {
 				res.render('index', {
 					title: 'Get2KnowUS',
@@ -170,6 +172,7 @@ router.post('/submit_query', function (req, res, next) {
 								console.log(err);
 								return;
 							}
+							recent_queries = all_queries; 
 							exec('python2 NLPMaybe/wordCloud.py all_posts.txt', (err, stdout, stderr) => {
 								analyzeTone(rows, res, all_queries, rows)
 							});
@@ -251,15 +254,19 @@ router.post('/deep_dive', function(req, res, next) {
 		}
 
 		console.log("new = " + new_queries); 
-		fs.writeFile('deep_dive.txt', all_str, function(err){
+		fs.writeFile('NLPMaybe/deep_dive.txt', all_str, function(err){
 			if(err) {
 				console.log(err);
 				return;  
 			}
-			exec('python2 classifier/liwcAnal.py deep_dive.txt', (err, stdout, stderr) => {
+			exec('python2 NLPMaybe/liwcAnal.py deep_dive.txt all_posts.txt', (err, stdout, stderr) => {
 			// TODO: need to figure out how to print out everything i need here... 
-				console.log("stdout = " + JSON.stringify(stdout)); 
-				console.log("stdout type = " + typeof(stdout)); 
+				console.log("stdout = " + stdout); 
+				liwc_split = stdout.split("&&&&"); 
+				liwc_deep = liwc_split[1].split("\n"); 
+				console.log("liwc deep = " + liwc_deep); 
+				liwc_all = liwc_split[2].split("\n"); 
+				console.log("liwc all = " + liwc_all); 
 				var input = "";
 				for (var i = 0; i < new_queries.length; i++) {
 					input = input + " " + new_queries[i].body
@@ -278,12 +285,15 @@ router.post('/deep_dive', function(req, res, next) {
 				      	blue.push("Tone: " + JSON.stringify(response.document_tone.tones[i].tone_name) + " Score: " + JSON.stringify(response.document_tone.tones[i].score))
 				      }	
 				      console.log("blue =" + blue); 
+				      console.log("recent queries = " + recent_queries); 
 						res.render('deep_dive', {
 							title: 'Get2KnowUs', 
-							all_queries: [], 
+							all_queries: recent_queries,
+							deep_query: deep_query,  
 							results: new_queries, 
 							bluemix_results: blue, 
-							liwc_results: []
+							liwc_deep: liwc_deep, 
+							lice_all: liwc_all
 						});  
 					}
 				}); 

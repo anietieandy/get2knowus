@@ -31,7 +31,21 @@
             <% for(var i = 0; i < all_queries.length; i++) {%>
                 <li><strong><%= all_queries[i] %></strong></li>
             <% } %>
-        </h5>>
+            to see what they said about 
+            <li><strong><%= deep_query %></strong></li>
+        </h5>
+    </div>
+    <div class="well">
+        <h5>Analysis of language specific to deep dive</h5>
+        <% for(var i = 0; i < liwc_deep.length; i++) {%>
+            <h5> <%= liwc_deep[i] %></h5>
+        <%}%>
+    </div>
+    <div class="well">
+        <h5>Anlaysis of language compared to all posts</h5>
+        <% for(var i = 0; i < liwc_all.length; i++) {%>
+            <h5> <%= liwc_all[i] %></h5>
+        <%}%>
     </div>
     <div class="well">
         <% for(var i = 0; i < bluemix_results.length; i++) {%>
