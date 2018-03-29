@@ -30,3 +30,7 @@
 2018-03-28 16:07:00 queryCount: Im a dad : 49
 2018-03-28 16:07:37 classifying
 2018-03-28 16:07:37 queryCount: Im a dad : 49
+2018-03-28 16:19:30 classifying
+2018-03-28 16:19:30 queryCount: Im a dad : 49
+2018-03-28 16:19:59 classifying
+2018-03-28 16:19:59 queryCount: Im a mom : 0
