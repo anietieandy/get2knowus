@@ -240,30 +240,27 @@ router.post('/deep_dive', function(req, res, next) {
 			throw err; 
 		} 
 		var file = data.toString(); 
-		console.log("file = " + file + "type = " + typeof(file));  
 		var split_file = file.split('\n'); 
-		// var split_file =  file.split('\n'); 
-		console.log("LINE 1 = " + split_file[0]); 
 
 		for (var i = 0; i < split_file.length; i++){ 
 			if(split_file[i].includes(deep_query)){
 				new_queries += (split_file[i]); 
 			}
 		}
-
-	})
-
-	var qs = []; 
-	var rs = []; 
-	console.log("deep_query = " + deep_query); 
-	// console.log("old_results = " + old_results); 
-	res.render('deep_dive', 
-		{
-			title: 'Get2KnowUs', 
-			all_queries: [], 
-			results: []
-		}); 
-}); 
+	});
+	
+	fs.writeFile('deep_dive.txt', new_queries, function(err){
+		if(err) {
+			console.log(err);
+			return;  
+		}
+	}); 
+	
+	res.render('deep_dive', {
+		title: 'Get2KnowUs', 
+		all_queries: [], 
+		results: []
+	});  
 
 
 function runQuery(options, callback) {
