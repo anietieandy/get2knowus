@@ -233,7 +233,8 @@ router.post('/classify_query', function (req, res, next) {
 // Look at how natasha handled sdg and all_posts.txt
 router.post('/deep_dive', function(req, res, next) {
 	var deep_query = req.body.deep_dive_field; 
-	var new_queries = []; 
+	var new_queries = [];
+	var all_str = "";  
 	
 	fs.readFile('all_posts.txt', function read(err, data) {
 		if(err) {
@@ -244,23 +245,52 @@ router.post('/deep_dive', function(req, res, next) {
 
 		for (var i = 0; i < split_file.length; i++){ 
 			if(split_file[i].includes(deep_query)){
-				new_queries += (split_file[i]); 
+				new_queries.push(split_file[i]); 
+				all_str += (split_file[i]); 
 			}
 		}
-	});
-	
-	fs.writeFile('deep_dive.txt', new_queries, function(err){
-		if(err) {
-			console.log(err);
-			return;  
-		}
+
+		console.log("new = " + new_queries); 
+		fs.writeFile('deep_dive.txt', all_str, function(err){
+			if(err) {
+				console.log(err);
+				return;  
+			}
+			exec('python2 classifier/liwcAnal.py deep_dive.txt', (err, stdout, stderr) => {
+			// TODO: need to figure out how to print out everything i need here... 
+				console.log("stdout = " + JSON.stringify(stdout)); 
+				console.log("stdout type = " + typeof(stdout)); 
+				var input = "";
+				for (var i = 0; i < new_queries.length; i++) {
+					input = input + " " + new_queries[i].body
+				}
+			  	var param = {
+				  'tone_input': {'text': input},
+				  'content_type': 'application/json'
+				};
+			  	tone_analyzer.tone(param, function(error, response) {
+			  		if (error)
+				      console.log('error:', error);
+				    else { 
+				      console.log(JSON.stringify(response.document_tone.tones));
+				  	  var blue = [];
+				      for (var i = 0; i < response.document_tone.tones.length; i++) {
+				      	blue.push("Tone: " + JSON.stringify(response.document_tone.tones[i].tone_name) + " Score: " + JSON.stringify(response.document_tone.tones[i].score))
+				      }	
+				      console.log("blue =" + blue); 
+						res.render('deep_dive', {
+							title: 'Get2KnowUs', 
+							all_queries: [], 
+							results: new_queries, 
+							bluemix_results: blue, 
+							liwc_results: []
+						});  
+					}
+				}); 
+			}); 
+		});
 	}); 
-	
-	res.render('deep_dive', {
-		title: 'Get2KnowUs', 
-		all_queries: [], 
-		results: []
-	});  
+}); 
 
 
 function runQuery(options, callback) {

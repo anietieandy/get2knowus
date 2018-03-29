@@ -33,13 +33,17 @@
             <% } %>
         </h5>>
     </div>
-
+    <div class="well">
+        <% for(var i = 0; i < bluemix_results.length; i++) {%>
+            <h5> <%= bluemix_results[i] %></h5>
+        <%}%>
+    </div>
     <h5>The following results were returned from our BigQuery database: <br></h5>
     <br>
     <div class="list-group">
         <% for(var i = 0; i < results.length; i++) {%>
         <div class="list-group-item">
-            <li class="list-group-item-text"><strong>Post:</strong> <%= results[i].body %></li>
+            <li class="list-group-item-text"><strong>Post:</strong> <%= results[i] %></li>
         </div>
         <% } %>
     </div>
