@@ -15,9 +15,9 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.pipeline import Pipeline
 from pymongo import MongoClient  # pymongo>=3.2
 from datetime import datetime
-# import matplotlib.pyplot as plt
-# import warnings
-# import seaborn as sns
+import matplotlib.pyplot as plt
+import warnings
+import seaborn as sns
 
 # sns.set_style("darkgrid")
 # warnings.simplefilter(action='ignore', category=FutureWarning)
@@ -62,9 +62,9 @@ if __name__ == "__main__":
         # print(queryPhrase)
     else:
         # queryPhrase = 'm a straight woman';
-        # queryPhrase = 'Im a lesbian';
+        queryPhrase = 'Im a lesbian';
         # queryPhrase = 'Im a straight man';
-        queryPhrase = 'Im a student';
+        # queryPhrase = 'Im a student';
         # queryPhrase = 'Im a teacher';
         # queryPhrase = 'm a vegetarian';
         # queryPhrase = 'Im gay';

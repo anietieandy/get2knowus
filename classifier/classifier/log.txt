@@ -8,3 +8,9 @@
 2018-03-15 00:29:35 classifying
 2018-03-15 00:29:35 queryCount: Im a teacher : 400
 2018-03-15 00:29:38 accuracy: 0.965
+2018-03-16 12:14:06 classifying
+2018-03-16 12:14:06 queryCount: Im a student : 400
+2018-03-16 12:14:10 accuracy: 0.96
+2018-03-16 12:14:40 classifying
+2018-03-16 12:14:40 queryCount: Im a lesbian : 400
+2018-03-16 12:14:46 accuracy: 0.87

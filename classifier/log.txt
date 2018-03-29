@@ -18,3 +18,15 @@
 2018-03-15 00:33:47 classifying
 2018-03-15 00:33:47 queryCount: Im a teacher : 400
 2018-03-15 00:33:50 accuracy: 0.965
+2018-03-15 00:36:47 classifying
+2018-03-15 00:36:47 queryCount: Im a dad : 32
+2018-03-16 12:07:41 classifying
+2018-03-16 12:07:41 queryCount: Im a dad : 33
+2018-03-16 12:09:11 classifying
+2018-03-16 12:09:11 queryCount: Im a mom : 0
+2018-03-28 16:05:53 classifying
+2018-03-28 16:05:53 queryCount: Im a mom : 0
+2018-03-28 16:07:00 classifying
+2018-03-28 16:07:00 queryCount: Im a dad : 49
+2018-03-28 16:07:37 classifying
+2018-03-28 16:07:37 queryCount: Im a dad : 49
