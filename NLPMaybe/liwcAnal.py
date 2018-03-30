@@ -49,20 +49,11 @@ for k in countDict.keys():
   difDict[k] =  pctDict[k] - count2Dict[k]/float(count2)
 
 
-# print("&&&&")
 # for i in sorted( ((v,k) for k,v in pctDict.iteritems()), reverse=True):
 #   print(i[1] + ": " + str(i[0]))
-# print("&&&&")
 # for i in sorted( ((v,k) for k,v in difDict.iteritems()), reverse=True):
 #   print(i[1] + ": " + str(i[0]))
+for k in sorted(pctDict, key = pctDict.get, reverse = True):  
+  print(k + "++" + str(pctDict.get(k)) + "++" + str(difDict.get(k)))
 
-# print("&&&&"); 
-
-combined_dict = defaultdict(list)
-for (k, v) in chain(pctDict.items(), difDict.items()): 
-  combined_dict[k].append(v)
-
-for (k, v) in combined_dict.items(): 
-  print(k + "++" + str(v[0]) + "++" + str(v[1])) 
-# print(combined_dict)
 

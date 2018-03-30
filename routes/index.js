@@ -181,8 +181,8 @@ router.post('/submit_query', function (req, res, next) {
 										if (err) {
 											console.log(err); 
 										}						
-											analyzeTone(rows, res, all_queries, rows)
-									}): 
+											analyzeTone(rows, res, all_queries, rows); 
+									}); 
 								}
 							});
 						});
