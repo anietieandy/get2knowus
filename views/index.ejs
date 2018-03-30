@@ -61,9 +61,14 @@
                     </div>
                         <input id="finished" type="hidden" name="hidden" value="hidden">
                 <% } %>
-                <button class="btn btn-primary" type="submit" formaction="/submit_query">Analyze!</button>
-                <% if (args.other_queries) { %>
-                <% } else {%>
+                <% if (args.choice) { %>
+                    <% if (args.choice == 1) { %>
+                        <button class="btn btn-primary" type="submit" formaction="/submit_query">Analyze!</button>
+                    <% } else { %>
+                         <button class="btn btn-warning" type="submit" formaction="/classify_query">Classify!</button>
+                    <% } %> 
+                <% } else { %>
+                    <button class="btn btn-primary" type="submit" formaction="/submit_query">Analyze!</button>
                     <button class="btn btn-warning" type="submit" formaction="/classify_query">Classify!</button>
                 <% } %>
 

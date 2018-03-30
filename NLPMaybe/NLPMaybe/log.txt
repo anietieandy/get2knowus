@@ -1,1 +1,5 @@
 This is for running from terminal to check success
+2018-03-28 16:15:39 WordCloud ran!
+2018-03-28 16:16:34 WordCloud ran!
+2018-03-28 16:17:06 WordCloud ran!
+2018-03-28 16:18:09 WordCloud ran!

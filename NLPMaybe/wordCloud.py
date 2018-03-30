@@ -11,7 +11,8 @@ import time
 
 d = path.dirname(__file__)
 fname = sys.argv[1] #if len(sys.argv)>1 else 'output1.txt'
-text = open(fname)#open(path.join(d, fname)).read()
+
+text = open(fname).read()#open(path.join(d, fname)).read()
 
 wordcloud = WordCloud().generate(text)
 

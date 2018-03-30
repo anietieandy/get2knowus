@@ -19,37 +19,60 @@
 
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>   
-    <script src="/javascripts/classification_fns.js"></script>
-
+    <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>  
+    <script src="/javascripts/nav_bar.js"></script>  
   </head>
-  <body>
+   <body>
     <h1><img src="/images/favicon" class="img-responsive" height="60" width="60" align="left"><%= title %></h1>
+    </body>
+
     <div class="well">
-        <h5>You are now classifying the following queries: <br>
+        <h5>You submitted the following queries: <br>
             <% for(var i = 0; i < all_queries.length; i++) {%>
                 <li><strong><%= all_queries[i] %></strong></li>
             <% } %>
+            to see what they said about 
+            <li><strong><%= deep_query %></strong></li>
         </h5>
     </div>
-    <br>
+    <div class="well">
+        <h5>Analysis of language using LIWC</h5>
+        <table>
+            <tr>
+                <th>Word Classification</th>
+                <th>Regularized within query</th>
+                <th>Regularized over all </th>
+            </tr>
+            <% for(var i = 0; i < liwc.length; i++) {%>
+                <tr>
+                    <td><%=liwc[i].key%></td>
+                    <td><%=liwc[i].ind%></td>
+                    <td><%=liwc[i].all%></td>
+                </tr>
+            <% } %> 
+        </table>
+    </div>
+    <div class="well">
+        <h5> Deep Dive Specific </h5>
+        <% for(var i = 0; i < bluemix_deep.length; i++) {%>
+            <h5> <%= bluemix_deep[i] %></h5>
+        <%}%>
+        <h5> Overall </h5>
+        <% for(var i = 0; i < bluemix_all.length; i++) {%>
+            <h5> <%= bluemix_all[i] %></h5>
+        <%}%>
+
+    </div>
     <h5>The following results were returned from our BigQuery database: <br></h5>
     <br>
-    <div class="card-group">
+    <div class="list-group">
         <% for(var i = 0; i < results.length; i++) {%>
-            <div class="card card-outline-primary mb-3 text-center" style="border-color: black; border-width: 1px; border-style: solid; border-radius: 5px" id=<%= "card-result" + i %>>
-              <div class="card-block">
-                <p class="card-text text-muted"><%= results[i].body %></p>
-                <p hidden id=<%= "card-result-author" + i %>><%= results[i].author %></p>
-                    <button id=<%= "result" + i %> class="btn btn-success" onclick="postClassification(this, '<%= query_analyzed %>', 1);">Correct Classification</button>
-                    <button id=<%= "result" + i %> class="btn btn-danger" onclick="postClassification(this, '<%= query_analyzed %>', 2);">Incorrect Classification</button>
-                <br><br>
-              </div>
-            </div>
-    	<% } %>
-    </div><br><br>
-    <form action="/" method="get">
-        <button class="btn btn-info">I'm Done!</button>
-    </form>
-  </body>
+        <div class="list-group-item">
+            <li class="list-group-item-text"><strong>Post:</strong> <%= results[i] %></li>
+        </div>
+        <% } %>
+    </div>
+
+
+
 </html>
