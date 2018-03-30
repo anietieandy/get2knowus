@@ -53,9 +53,15 @@
         </table>
     </div>
     <div class="well">
-        <% for(var i = 0; i < bluemix_results.length; i++) {%>
-            <h5> <%= bluemix_results[i] %></h5>
+        <h5> Deep Dive Specific </h5>
+        <% for(var i = 0; i < bluemix_deep.length; i++) {%>
+            <h5> <%= bluemix_deep[i] %></h5>
         <%}%>
+        <h5> Overall </h5>
+        <% for(var i = 0; i < bluemix_all.length; i++) {%>
+            <h5> <%= bluemix_all[i] %></h5>
+        <%}%>
+
     </div>
     <h5>The following results were returned from our BigQuery database: <br></h5>
     <br>

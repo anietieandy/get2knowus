@@ -174,7 +174,16 @@ router.post('/submit_query', function (req, res, next) {
 							}
 							recent_queries = all_queries; 
 							exec('python2 NLPMaybe/wordCloud.py all_posts.txt', (err, stdout, stderr) => {
-								analyzeTone(rows, res, all_queries, rows)
+								if (err) {
+									console.log(err);
+								} else {
+									exec('python2 NLPMaybe/wordCloud2.py all_posts.txt', (err, stdout, stderr) => {
+										if (err) {
+											console.log(err); 
+										}						
+											analyzeTone(rows, res, all_queries, rows)
+									}): 
+								}
 							});
 						});
 					});
@@ -237,7 +246,8 @@ router.post('/classify_query', function (req, res, next) {
 router.post('/deep_dive', function(req, res, next) {
 	var deep_query = req.body.deep_dive_field; 
 	var new_queries = [];
-	var all_str = "";  
+	var all_posts = []; 
+	var new_str = "";  
 	
 	fs.readFile('all_posts.txt', function read(err, data) {
 		if(err) {
@@ -249,27 +259,28 @@ router.post('/deep_dive', function(req, res, next) {
 		for (var i = 0; i < split_file.length; i++){ 
 			if(split_file[i].includes(deep_query)){
 				new_queries.push(split_file[i]); 
-				all_str += (split_file[i]); 
+				new_str += (split_file[i]); 
 			}
+			all_posts.push(split_file[i]); 
 		}
 
-		console.log("new = " + new_queries); 
-		fs.writeFile('NLPMaybe/deep_dive.txt', all_str, function(err){
+		// console.log("new = " + new_queries); 
+		fs.writeFile('NLPMaybe/deep_dive.txt', new_str, function(err){
 			if(err) {
 				console.log(err);
 				return;  
 			}
 			exec('python2 NLPMaybe/liwcAnal.py deep_dive.txt all_posts.txt', (err, stdout, stderr) => {
 			// TODO: need to figure out how to print out everything i need here... 
-				console.log("stdout = " + stdout); 
+				// console.log("stdout = " + stdout); 
 				// liwc_split = stdout.split("&&&&"); 
 				var liwc_all = stdout.split("\n"); 
-				console.log("liwc all = " + liwc_all); 
+				// console.log("liwc all = " + liwc_all); 
 				// liwc_all = liwc_split[2].split("\n"); 
 				var liwc_res = []; 
 				for (var i = 0; i < liwc_all.length; i++) {
 					var l = liwc_all[i].split("++");
-					console.log("LINE " + i + " = " + l); 
+					// console.log("LINE " + i + " = " + l); 
 					var l_obj = {
 						key: l[0], 
 						ind: l[1],
@@ -277,40 +288,63 @@ router.post('/deep_dive', function(req, res, next) {
 					}
 					liwc_res.push(l_obj); 
 				}
-				console.log("liwc all = " + JSON.stringify(liwc_res[0])); 
+				// console.log("liwc all = " + JSON.stringify(liwc_res[0])); 
 				var input = "";
 				for (var i = 0; i < new_queries.length; i++) {
-					input = input + " " + new_queries[i].body
+					input = input + " " + new_queries[i]
 				}
+				console.log("input = " + input)
+
 			  	var param = {
-				  'tone_input': {'text': input},
+				  'tone_input': {'text': "input"},
 				  'content_type': 'application/json'
 				};
+					console.log("all_posts = " + all_posts); 
+			      var input_all = "";
+			      for (var i = 0; i < all_posts.length; i++) {
+			      	input_all = input_all + " " + all_posts[i]
+			      }
+			      // console.log("input all = " + input_all); 
 			  	tone_analyzer.tone(param, function(error, response) {
 			  		if (error)
 				      console.log('error:', error);
 				    else { 
 				      console.log(JSON.stringify(response.document_tone.tones));
-				  	  var blue = [];
+				  	  var blue_deep = [];
 				      for (var i = 0; i < response.document_tone.tones.length; i++) {
-				      	blue.push("Tone: " + JSON.stringify(response.document_tone.tones[i].tone_name) + " Score: " + JSON.stringify(response.document_tone.tones[i].score))
-				      }	
-						res.render('deep_dive', {
-							title: 'Get2KnowUs', 
-							all_queries: recent_queries,
-							deep_query: deep_query,  
-							results: new_queries, 
-							bluemix_results: blue, 
-							liwc_deep: [], 
-							liwc_all: [], 
-							liwc: liwc_res
+				      	blue_deep.push("Tone: " + JSON.stringify(response.document_tone.tones[i].tone_name) + " Score: " + JSON.stringify(response.document_tone.tones[i].score))
+				      }
+				      var param_all = {
+				      	'tone_input': {'text': input_all},
+				      	'content_type': 'application/json'
+				      };
+				      tone_analyzer.tone(param_all, function(error, response) {
+				      	if (error)
+				      		console.log('error:', error);
+					    else { 
+					      // console.log(JSON.stringify(response.document_tone.tones));
+					  	  var blue_all = [];
+					      for (var i = 0; i < response.document_tone.tones.length; i++) {
+					      	blue_all.push("Tone: " + JSON.stringify(response.document_tone.tones[i].tone_name) + " Score: " + JSON.stringify(response.document_tone.tones[i].score))
+					      }
 
-						});  
-					}
-				}); 
+							res.render('deep_dive', {
+								title: 'Get2KnowUs', 
+								all_queries: recent_queries,
+								deep_query: deep_query,  
+								results: new_queries, 
+								bluemix_deep: blue_deep, 
+								bluemix_all: blue_all, 
+								liwc: liwc_res
+
+							});  
+						}
+					}); 
+				} 
 			}); 
 		});
 	}); 
+}); 
 }); 
 
 
