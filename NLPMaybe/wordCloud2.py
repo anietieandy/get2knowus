@@ -19,7 +19,9 @@ fname = sys.argv[1] #if len(sys.argv)>1 else 'output1.txt'
 
 text = open(fname).read()#open(path.join(d, fname)).read()
 
-# read the mask image
+
+
+
 my_mask = np.array(Image.open(path.join(d, "outline.png")))
 
 stopwords = set(STOPWORDS)
@@ -27,10 +29,7 @@ stopwords.add("said")
 
 wc = WordCloud(background_color="white", max_words=2000, mask=my_mask,
                stopwords=stopwords)
-# generate word cloud
 wc.generate(text)
-
-# store to file
 wc.to_file("public/images/wc2.png")
 
 # show
