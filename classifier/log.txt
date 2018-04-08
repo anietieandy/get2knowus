@@ -30,6 +30,7 @@
 2018-03-28 16:07:00 queryCount: Im a dad : 49
 2018-03-28 16:07:37 classifying
 2018-03-28 16:07:37 queryCount: Im a dad : 49
+<<<<<<< HEAD
 2018-03-28 21:43:51 classifying
 2018-03-28 21:43:51 queryCount: Im a dad : 49
 2018-03-28 22:08:49 classifying
@@ -312,3 +313,49 @@
 2018-04-02 20:42:59 queryCount: Im a dad : 49
 2018-04-02 21:00:37 classifying
 2018-04-02 21:00:37 queryCount: Im a dad : 49
+=======
+2018-03-28 16:19:30 classifying
+2018-03-28 16:19:30 queryCount: Im a dad : 49
+2018-03-28 16:19:59 classifying
+2018-03-28 16:19:59 queryCount: Im a mom : 0
+2018-03-29 21:08:09 classifying
+2018-03-29 21:08:09 queryCount: Im a dad : 49
+2018-03-29 21:24:24 classifying
+2018-03-29 21:24:24 queryCount: Im a dad : 49
+2018-03-29 21:32:13 classifying
+2018-03-29 21:32:13 queryCount: Im a dad : 49
+2018-03-29 21:35:54 classifying
+2018-03-29 21:35:54 queryCount: Im a dad : 49
+2018-03-29 21:37:11 classifying
+2018-03-29 21:37:11 queryCount: Im a dad : 49
+2018-03-29 21:38:46 classifying
+2018-03-29 21:38:46 queryCount: Im a dad : 49
+2018-03-29 21:40:43 classifying
+2018-03-29 21:40:43 queryCount: Im a dad : 49
+2018-03-29 21:43:18 classifying
+2018-03-29 21:43:18 queryCount: Im a dad : 49
+2018-03-29 21:45:06 classifying
+2018-03-29 21:45:06 queryCount: Im a dad : 49
+2018-03-29 21:56:10 classifying
+2018-03-29 21:56:10 queryCount: Im a dad : 49
+2018-03-29 21:57:52 classifying
+2018-03-29 21:57:52 queryCount: Im a dad : 49
+2018-03-30 11:48:05 classifying
+2018-03-30 11:48:05 queryCount: Im a dad : 49
+2018-04-02 20:38:38 classifying
+2018-04-02 20:38:38 queryCount: Im a dad : 49
+2018-04-08 18:17:45 classifying
+2018-04-08 18:17:45 queryCount: Im a dad : 49
+2018-04-08 18:26:38 classifying
+2018-04-08 18:26:38 queryCount: Im a dad : 49
+2018-04-08 18:36:59 classifying
+2018-04-08 18:36:59 queryCount: Im a dad : 49
+2018-04-08 18:42:10 classifying
+2018-04-08 18:42:10 queryCount: Im a dad : 49
+2018-04-08 18:52:27 classifying
+2018-04-08 18:52:27 queryCount: Im a dad : 49
+2018-04-08 18:58:57 classifying
+2018-04-08 18:58:57 queryCount: Im a dad : 49
+2018-04-08 19:02:09 classifying
+2018-04-08 19:02:09 queryCount: Im a dad : 49
+>>>>>>> e60f1da95ea4fdc4c44d35bdadfc7d9975e8eeca

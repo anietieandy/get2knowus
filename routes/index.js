@@ -10,10 +10,16 @@ var natural_language_understanding = new NaturalLanguageUnderstandingV1({
 });
 // Used for BlueMix API
 var tone_analyzer = new ToneAnalyzerV3({
+<<<<<<< HEAD
   username: 'b75c30c3-1875-42ca-8bf2-f1b9c317a0e4',
   password: '2GXhXCY3jq88',
+=======
+ "username": "b75c30c3-1875-42ca-8bf2-f1b9c317a0e4",
+ "password": "2GXhXCY3jq88", 
+>>>>>>> e60f1da95ea4fdc4c44d35bdadfc7d9975e8eeca
   version_date: '2017-09-21'
 });
+
 var bigNum = 20000;
 //" + Math.floor(Math.random() * bigNum) + "
 var sqlQuery = "SELECT author, name, subreddit, body FROM `fh-bigquery.reddit_comments.2015_05` WHERE author != '[deleted]' AND LENGTH(body) < 255 AND LENGTH(body) > 30 AND body LIKE '%";
@@ -46,6 +52,7 @@ var rules = new natural.RuleSet(rulesFilename);
 var tagger = new natural.BrillPOSTagger(lexicon, rules);
 
 var credentials = process.env;
+var recent_queries = []; 
 
 if (!process.env.PRODUCTION) {
 	credentials = require('../credentials.json');
@@ -67,7 +74,7 @@ router.get('/', function (req, res, next) {
 });
 
 router.get('/download', function (req, res) {
-	res.sendFile("all_posts.txt", { root: '.' });
+	res.download("all_posts.txt", "post_data.txt");
 });
 
 router.get('/vis', function (req, res, next) {
@@ -99,6 +106,7 @@ router.post('/submit_query', function (req, res, next) {
 	if (!req.body.hidden) {
 		console.log("first callback")
 		new_options = getOptions(curr_query, function (new_options) {
+			recent_queries = curr_query; 
 			if (new_options.length > 0) {
 				res.render('index', {
 					title: 'Get2KnowUS',
@@ -169,8 +177,18 @@ router.post('/submit_query', function (req, res, next) {
 								console.log(err);
 								return;
 							}
+							recent_queries = all_queries; 
 							exec('python2 NLPMaybe/wordCloud.py all_posts.txt', (err, stdout, stderr) => {
-								analyzeTone(rows, res, all_queries, rows)
+								if (err) {
+									console.log(err);
+								} else {
+									exec('python2 NLPMaybe/wordCloud2.py all_posts.txt', (err, stdout, stderr) => {
+										if (err) {
+											console.log(err); 
+										}						
+											analyzeTone(rows, res, all_queries, rows); 
+									}); 
+								}
 							});
 						});
 					});
@@ -227,6 +245,120 @@ router.post('/classify_query', function (req, res, next) {
 	}
 });
 
+
+// I'll be a given a list of (%, word type) to print out. 
+// Look at how natasha handled sdg and all_posts.txt
+router.post('/deep_dive', function(req, res, next) {
+	var deep_query = req.body.deep_dive_field; 
+	var new_queries = [];
+	var all_posts = []; 
+	var new_str = "";  
+	
+	fs.readFile('all_posts.txt', function read(err, data) {
+		if(err) {
+			throw err; 
+		} 
+		var file = data.toString(); 
+		var split_file = file.split('\n'); 
+
+		for (var i = 0; i < split_file.length; i++){ 
+			if(split_file[i].includes(deep_query)){
+				new_queries.push(split_file[i]); 
+				new_str += (split_file[i]); 
+			}
+			all_posts.push(split_file[i]); 
+		}
+
+		// console.log("new = " + new_queries); 
+		fs.writeFile('NLPMaybe/deep_dive.txt', new_str, function(err){
+			if(err) {
+				console.log(err);
+				return;  
+			}
+			exec('python2 NLPMaybe/liwcAnal.py deep_dive.txt all_posts.txt', (err, stdout, stderr) => {
+				var liwc_all = stdout.split("\n"); 
+				var liwc_res = []; 
+				var csv_text = "word_classification, regularized_count, absolute_difference\n"; 
+				for (var i = 0; i < liwc_all.length; i++) {
+					var l = liwc_all[i].split("++");
+					// console.log("LINE " + i + " = " + l); 
+					var l_obj = {
+						key: l[0], 
+						ind: l[1],
+						all: l[2]
+					}
+					csv_text += l[0] + "," + l[1] + "," + l[2] + "\n"; 
+					liwc_res.push(l_obj); 
+				}
+				// console.log("liwc all = " + JSON.stringify(liwc_res[0])); 
+				var input = "";
+				for (var i = 0; i < new_queries.length; i++) {
+					input = input + " " + new_queries[i]
+				}
+				console.log("input = " + input)
+
+			  	var param = {
+				  'tone_input': {'text': "input"},
+				  'content_type': 'application/json'
+				};
+				console.log("all_posts = " + all_posts); 
+		      	var input_all = "";
+		      	for (var i = 0; i < all_posts.length; i++) {
+		      		input_all = input_all + " " + all_posts[i]
+		      	}
+			      // console.log("input all = " + input_all); 
+			    fs.writeFile('liwcDownload.csv', csv_text, function(err){
+					if(err) {
+						console.log(err);
+						return;  
+					}
+				  	tone_analyzer.tone(param, function(error, response) {
+				  		if (error)
+					      console.log('error:', error);
+					    else { 
+					      console.log(JSON.stringify(response.document_tone.tones));
+					  	  var blue_deep = [];
+					      for (var i = 0; i < response.document_tone.tones.length; i++) {
+					      	blue_deep.push("Tone: " + JSON.stringify(response.document_tone.tones[i].tone_name) + " Score: " + JSON.stringify(response.document_tone.tones[i].score))
+					      }
+					      var param_all = {
+					      	'tone_input': {'text': input_all},
+					      	'content_type': 'application/json'
+					      };
+					      tone_analyzer.tone(param_all, function(error, response) {
+					      	if (error)
+					      		console.log('error:', error);
+						    else { 
+						      // console.log(JSON.stringify(response.document_tone.tones));
+						  	  var blue_all = [];
+						      for (var i = 0; i < response.document_tone.tones.length; i++) {
+						      	blue_all.push("Tone: " + JSON.stringify(response.document_tone.tones[i].tone_name) + " Score: " + JSON.stringify(response.document_tone.tones[i].score))
+						      }
+
+								res.render('deep_dive', {
+									title: 'Get2KnowUs', 
+									all_queries: recent_queries,
+									deep_query: deep_query,  
+									results: new_queries, 
+									bluemix_deep: blue_deep, 
+									bluemix_all: blue_all, 
+									liwc: liwc_res
+
+								});  
+							}
+						}); 
+					} 
+				}); 
+			}); 
+		});
+	}); 
+}); 
+}); 
+
+
+router.get('/download_csv', function (req, res) {
+	res.download("liwcDownload.csv", "liwc_download.csv");
+});
 
 function runQuery(options, callback) {
 	bigquery
@@ -381,6 +513,9 @@ function analyzeText(text) {
 }
 //The score that is returned lies in the range of 0.5 to 1. A score greater than 0.75 indicates a high likelihood that the tone is perceived in the content.
 function analyzeTone(text, res, all_queries, rows) {
+	console.log("analzye tone"); 
+	console.log("rows length = " + rows.length); 
+	console.log("text = " + JSON.stringify(text)); 
 	var input = "";
 	var outputs = [];
 	//var mapList = [];
@@ -416,10 +551,14 @@ function analyzeTone(text, res, all_queries, rows) {
   'content_type': 'application/json'
 };
   tone_analyzer.tone(param, function(error, response) {
+  	console.log("tone_analyzer"); 
+  	var blue = []; 
     if (error)
       console.log('error:', error);
     else
+      console.log("response = " + JSON.stringify(response)); 
       console.log(JSON.stringify(response.document_tone.tones));
+<<<<<<< HEAD
   	  var blue = [];
   	  var blueData = [];
   	  var blueName = [];
@@ -447,6 +586,12 @@ function analyzeTone(text, res, all_queries, rows) {
       }	
   	  //var blue = JSON.stringify(response.document_tone.tones[0]);
   	  res.render('query_results', { title: 'Get2KnowUS', all_queries: all_queries, results: rows, bluemix_results: blue, bluemix_data: blueData, bluemix_name: blueName });
+=======
+      for (var i = 0; i < response.document_tone.tones.length; i++) {
+      	blue.push("Tone: " + JSON.stringify(response.document_tone.tones[i].tone_name) + " Score: " + JSON.stringify(response.document_tone.tones[i].score))
+      }	
+  	  res.render('query_results', { title: 'Get2KnowUS', all_queries: all_queries, results: rows, bluemix_results: blue });
+>>>>>>> e60f1da95ea4fdc4c44d35bdadfc7d9975e8eeca
     }
   );
 }

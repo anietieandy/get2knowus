@@ -24,6 +24,7 @@
     <script src="/javascripts/nav_bar.js"></script>  
   </head>
   <body>
+    <script>var curr_results = <%- JSON.stringify(results) %> </script>
     <h1><img src="/images/favicon" class="img-responsive" height="60" width="60" align="left"><%= title %></h1>
     <div class="container">
       <ul class="list-inline">
@@ -40,10 +41,9 @@
                     <li><strong><%= all_queries[i] %></strong></li>
                 <% } %>
             </h5>
-            <button href="/download" class="btn btn-success">Download Anonymized Post Data</button>
+            <a href= "/download"> <button class="btn btn-success">Download Anonymized Post Data</button></a>
         </div>
         <br>
-        <img src="/images/wc1.png" class="img-responsive" align="center">
         <img src="/images/wc2.png" class="img-responsive" align="center">
         <h5>General sentiment analysis from all posts: <br></h5>
         <div class="well">
@@ -51,6 +51,7 @@
                 <h5> <%= bluemix_results[i] %></h5>
             <%}%>
         </div>
+<<<<<<< HEAD
         <svg id="vivian" class="vivian"></svg>
         <script type="text/javascript">
                 var colors = ["MediumAquamarine", "Aqua", "Cyan", "LightCyan", "PaleTurquoise", "Aquamarine",
@@ -138,6 +139,9 @@
                             .call(d3.axisLeft(y));
                 console.log("Running");
             </script>
+=======
+        <img src="/images/wc1.png" class="img-responsive" align="center">
+>>>>>>> e60f1da95ea4fdc4c44d35bdadfc7d9975e8eeca
         <h5>The following results were returned from our BigQuery database: <br></h5>
         <br>
         <div class="list-group">
@@ -163,17 +167,18 @@
                 <p>Take a deeper dive into the results of the query! Enter in a word or phrase that you'd like to learn more about in the context of this user group. <br></p>
             </div>
             <div class="panel-body">  
-            <form action="#" onsubmit="deepDiveWords(); return false;">
+            <form action="/deep_dive"method="post">
                 <div class="form-group">
                     <label for="query_info">Enter word/phrase of interest: </label>
                     <input id="deep_dive_info" type="text" name="deep_dive_field" value="UPenn"><br>
+                    <!-- <input type="hidden" name="test" value="<%= results %>"> -->
                 </div>
-                <button class="btn btn-primary" type="submit">Analyze!</button>
+                <button id=deep_dive_button class="btn btn-primary" type="submit" formaction="/deep_dive">Analyze!</button>
+            </form>
             </div>
         </div>
 
         <br>
-
     </div>
 
     <!-- Cross-Group Tab -->
