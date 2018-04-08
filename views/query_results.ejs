@@ -94,37 +94,26 @@
     <div id="cross_group_tab">
     <div class="panel panel-primary">
             <div class="panel-heading">
-                <p>Pick the first group.
+                <p>Query the two groups.
                     <br>
                 </p>
             </div>
             <div class="panel-body">
                 <form action="/submit_query" method="post">
                     <div class="form-group">
-                        <label for="query_info1">Enter query: </label>
-                        <input id="query_info1" type="text" name="query_field" value="I'm a dad">
+                        <label for="query_info1">Enter query for the first group: </label>
+                        <input id="query_info1" type="text" name="query_field1" value="I'm a dad">
                         <br>
                     </div>
-                </form>
-            </div>
-        </div>
-        <div class="panel panel-primary">
-            <div class="panel-heading">
-                <p>Pick another group to compare the first group with.
-                    <br>
-                </p>
-            </div>
-            <div class="panel-body">
-                <form action="/submit_query" method="post">
                     <div class="form-group">
-                        <label for="query_info2">Enter query: </label>
-                        <input id="query_info2" type="text" name="query_field" value="I'm a dad">
+                        <label for="query_info1">Enter query for the second group: </label>
+                        <input id="query_info1" type="text" name="query_field2" value="I'm a dad">
                         <br>
                     </div>
+                    <button class="btn btn-primary" type="submit" formaction="/submit_cross_group_query">Analyze!</button>
                 </form>
             </div>
         </div>
-    <button class="btn btn-primary" type="submit" formaction="/submit_query">Compare!</button>
     </div>
   </body>
 </html>

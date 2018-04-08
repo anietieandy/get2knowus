@@ -96,6 +96,80 @@ router.post('/api/add_classification', function (req, res, next) {
 	});
 });
 
+router.post('/submit_cross_group_query', function (req, res, next) {
+	var group_one = req.body.query_field1;
+	var group_two = req.body.query_field2;
+
+	// group one's queries
+	var group_one_queries = [group_one.replace(/'/gi, "\\'")]
+	var query_one_entered = sqlQuery + group_one_queries[0] + "%'" + " LIMIT 500;";
+
+	// group two's queries
+	var group_two_queries = [group_two.replace(/'/gi, "\\'")]
+	var query_two_entered = sqlQuery + group_two_queries[0] + "%'" + " LIMIT 500;";
+
+	var options_one = {
+		query: query_one_entered,
+		useLegacySql: false
+	};
+
+	var options_two = {
+		query: query_two_entered,
+		useLegacySql: false
+	};
+
+	runQuery(options_one, (rows_one) => {
+		var group_one_text = "";
+		for (var i = 0; i < rows_one.length; i++) {
+			group_one_text += rows_one[i].body.replace(/(\r\n|\n|\r)/gm, "") + "\n";
+		}
+		runQuery(options_two, (rows_two) => {
+			var group_two_text = "";
+			for (var i = 0; i < rows_two.length; i++) {
+				group_two_text += rows_two[i].body.replace(/(\r\n|\n|\r)/gm, "") + "\n";
+			}
+
+			console.log(group_one_text);
+			console.log(group_two_text);
+
+			// tokenize all text
+			var group_one_tokens = group_one_text.split(new RegExp('\w+\'*\w*'));
+			var group_two_tokens = group_two_text.split(new RegExp('\w+\'*\w*'));	
+
+			// get phrases
+			var group_one_phrases = flatten_phrases(group_one_tokens);
+			var group_two_phrases = flatten_phrases(group_two_tokens);
+
+			// get results
+			var results = log_odds_results(group_one_phrases, group_two_phrases);
+			// sort results
+			var items = Object.keys(results).map(function(key) {
+				return [key, results[key]];
+			});
+
+			console.log(items);
+
+			items.sort(function(first, second) {
+				return (Math.abs(second[1][0]) - Math.abs(first[1][0]));
+			});
+
+			var highest_log_scores = items.slice(0, 10);
+			var lowest_log_scores = items.slice(-10);
+			res.render('cross_group', {
+				title: 'Get2KnowUS',
+				query_one: req.body.query_field1,
+				query_two: req.body.query_field2,
+				group_one_rows: rows_one,
+				group_two_rows: rows_two,
+				highest_scores: highest_log_scores,
+				lowest_scores: lowest_log_scores
+			});
+		})
+	})
+
+
+});
+
 router.post('/submit_query', function (req, res, next) {
 	var curr_query = req.body.query_field;
 	if (!req.body.hidden) {
@@ -131,20 +205,17 @@ router.post('/submit_query', function (req, res, next) {
 			query: query_to_enter,
 			useLegacySql: false
 		};
-		console.log("if this prints once, a callback is being called twice!!!!");
 		runQuery(options, (rows) => {
 			var str = ""
 			for (var i = 0; i < rows.length; i++) {
 				str += rows[i].body.replace(/(\r\n|\n|\r)/gm, "") + "\n";
 			}
 			fs.writeFile('query_results.txt', str, function (err) {
-				console.log("about to query");
 				exec('python2 classifier/sdg1.py query_results.txt ' + new_query, (err, stdout, stderr) => {
 					if (err) {
 						console.log(err);
 						return;
 					}
-					console.log("Finished classifier")
 					var all_results = stdout.split("##########")[1];
 					all_results = all_results.replace(/(\r\n|\n|\r)/gm, "");
 					all_results = all_results.substring(1, all_results.length);
@@ -157,7 +228,6 @@ router.post('/submit_query', function (req, res, next) {
 					}
 					new_username_query = new_username_query.substring(0, new_username_query.length - 2);
 					new_username_query += ") AND body != '[deleted]' LIMIT 500;";
-					console.log(new_username_query);
 					var username_options = {
 						query: new_username_query,
 						useLegacySql: false
@@ -197,7 +267,6 @@ router.post('/classify_query', function (req, res, next) {
 	var curr_query = req.body.query_field;
 	if (!req.body.hidden) {
 		var other_queries = getOptions(curr_query, function (new_options) {
-			console.log(new_options);
 			res.render('index', {
 				title: 'Get2KnowUs',
 				args: {
@@ -220,8 +289,6 @@ router.post('/classify_query', function (req, res, next) {
 			}
 		}
 		query_to_enter += " ORDER BY rand LIMIT 100;";
-
-		console.log(query_to_enter);
 
 		var options = {
 			query: query_to_enter,
@@ -528,5 +595,156 @@ function analyzeTone(text, res, all_queries, rows) {
   );
 }
 /*ANALYZING TEXT USING IBM WATSON*/
+
+function flatten_phrases(sentence_list) {
+	to_return = [];
+	for (var i = 0; i < sentence_list.length; i++) {
+		var curr_sentence = sentence_list[i];
+		var buf = []
+		var curr_sentence_split = curr_sentence.trim().split(/\s+/);
+		for (var j = 0; j < curr_sentence_split.length; j++) {
+			var word = curr_sentence_split[j].replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"");
+
+			if (isNaN(word)) {
+				to_return.push(word);
+			}
+		}
+	}
+	return to_return;
+}
+
+function get_priors() {
+	var prior_counter = {};
+	var result;
+	var result = fs.readFileSync("resources/small_phrase_corpus_tok2.txt", 'utf8');
+	var lines = result.split('\n');
+	for (var line = 0; line < lines.length; line++) {
+		var words = lines[line].trim().split(/\s+/);
+		words.map(word => word.trim());
+		for (var i = 0; i < words.length; i++) {
+			var word = words[i];
+			if (word in prior_counter) {
+				prior_counter[word] += 1;
+			} else {
+				prior_counter[word] = 1;
+			}
+		}
+	}
+	return prior_counter;	
+}
+
+function log_odds_results(group_one, group_two) {
+	var group_one = group_one.filter(word => word.length != 1).map(word => word.toLowerCase().trim());
+	var group_two = group_two.filter(word => word.length != 1).map(word => word.toLowerCase().trim());
+
+	var group_one_counter = {};
+	var group_one_values = 0;
+
+	var combined_group_counter = {};
+	var combined_group_values = 0;
+
+	var group_two_counter = {};
+	var group_two_values = 0;
+
+	for (var i = 0; i < group_one.length; i++) {
+		var word = group_one[i];
+		if (word in group_one_counter) {
+			group_one_counter[word] += 1;
+		} else {
+			group_one_counter[word] = 1;
+		}
+
+		if (word in combined_group_counter) {
+			combined_group_counter[word] += 1;
+		} else {
+			combined_group_counter[word] = 1;
+		}
+	}
+
+	for (var i = 0; i < group_two.length; i++) {
+		var word = group_two[i];
+		if (word in group_two_counter) {
+			group_two_counter[word] += 1;
+		} else {
+			group_two_counter[word] = 1;
+		}
+
+		if (word in combined_group_counter) {
+			combined_group_counter[word] += 1;
+		} else {
+			combined_group_counter[word] = 1;
+		}		
+	}
+
+	group_one_values = group_one.length;
+	group_two_values = group_two.length;
+	combined_group_values = group_one_values + group_two_values;
+
+	var prior_counter = get_priors();
+
+	for (var i = 0; i < group_one.length; i++) {
+		var word = group_one[i];
+		if (word in prior_counter) {
+			prior_counter[word] += 1;
+		} else {
+			prior_counter[word] = 1;
+		}
+	}
+
+	for (var i = 0; i < group_two.length; i++) {
+		var word = group_two[i];
+		if (word in prior_counter) {
+			prior_counter[word] += 1;
+		} else {
+			prior_counter[word] = 1;
+		}
+	}
+
+	priors_sum = 0;
+	for (var i = 0; i < prior_counter.length; i++) {
+		var val = prior_counter[i];
+		priors_sum += val;
+	}
+
+	all_deltas = {}
+	all_sigmas = {}
+	zscore_freqs = {}
+
+	for (var word in combined_group_counter) {
+		if (word in group_one_counter) {
+			all_deltas[word] = Math.log((1.0 * (group_one_counter[word] + prior_counter[word])) / (group_one_values + priors_sum - group_one_counter[word] - prior_counter[word]));
+		} else {
+			all_deltas[word] = Math.log((1.0 * (0.0 + prior_counter[word])) / (group_one_values + priors_sum - 0.0 - prior_counter[word]));
+		}
+
+		if (word in group_two_counter) {
+			all_deltas[word] -= Math.log((1.0 * (group_two_counter[word] + prior_counter[word])) / (group_two_values + priors_sum - group_two_counter[word] - prior_counter[word]));
+		} else {
+			all_deltas[word] -= Math.log((1.0 * (0.0 + prior_counter[word])) / (group_two_values + priors_sum - 0.0 - prior_counter[word]));
+		}
+
+		if (word in group_one_counter) {
+			var group_one_value = group_one_counter[word];
+		} else {
+			var group_one_value = 0.0;
+		}
+
+		if (word in group_two_counter) {
+			var group_two_vaue = group_two_counter[word];
+		} else {
+			var group_two_value = 0.0;
+		}
+		all_sigmas[word] = Math.sqrt(
+								(1.0/(group_one_value + prior_counter[word])) +
+								(1.0/(group_one_values + priors_sum - group_one_value - prior_counter[word])) +
+								(1.0/(group_two_value + prior_counter[word])) +
+								(1.0/(group_two_values + priors_sum - group_two_value - prior_counter[word])));
+		zscore_freqs[word] = [ (1.0 * all_deltas[word]) / all_sigmas[word], combined_group_counter[word], group_one_counter[word], group_two_counter[word]]
+	}
+
+	return zscore_freqs;
+}
+
+
 
 module.exports = router;
