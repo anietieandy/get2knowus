@@ -40,8 +40,8 @@
         <table>
             <tr>
                 <th>Word Classification</th>
-                <th>Regularized within query</th>
-                <th>Regularized over all </th>
+                <th>Regularized count within deep dive</th>
+                <th>Difference between deep dive and all posts</th>
             </tr>
             <% for(var i = 0; i < liwc.length; i++) {%>
                 <tr>
@@ -51,6 +51,7 @@
                 </tr>
             <% } %> 
         </table>
+         <a href= "/download_csv"> <button class="btn btn-success">Download LIWC Data</button></a>
     </div>
     <div class="well">
         <h5> Deep Dive Specific </h5>

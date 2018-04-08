@@ -10,8 +10,8 @@ var natural_language_understanding = new NaturalLanguageUnderstandingV1({
 });
 // Used for BlueMix API
 var tone_analyzer = new ToneAnalyzerV3({
- "username": "b75c30c3-1875-42ca-8bf2-f1b9c317a0e4",
- "password": "2GXhXCY3jq88", 
+  username: 'b75c30c3-1875-42ca-8bf2-f1b9c317a0e4',
+  password: '2GXhXCY3jq88',
   version_date: '2017-09-21'
 });
 
@@ -69,7 +69,7 @@ router.get('/', function (req, res, next) {
 });
 
 router.get('/download', function (req, res) {
-	res.sendFile("all_posts.txt", { root: '.' });
+	res.download("all_posts.txt", "post_data.txt");
 });
 
 router.get('/vis', function (req, res, next) {
@@ -173,7 +173,6 @@ router.post('/submit_cross_group_query', function (req, res, next) {
 router.post('/submit_query', function (req, res, next) {
 	var curr_query = req.body.query_field;
 	if (!req.body.hidden) {
-		console.log("first callback")
 		new_options = getOptions(curr_query, function (new_options) {
 			recent_queries = curr_query; 
 			if (new_options.length > 0) {
@@ -331,89 +330,88 @@ router.post('/deep_dive', function(req, res, next) {
 			all_posts.push(split_file[i]); 
 		}
 
-		// console.log("new = " + new_queries); 
 		fs.writeFile('NLPMaybe/deep_dive.txt', new_str, function(err){
 			if(err) {
 				console.log(err);
 				return;  
 			}
 			exec('python2 NLPMaybe/liwcAnal.py deep_dive.txt all_posts.txt', (err, stdout, stderr) => {
-			// TODO: need to figure out how to print out everything i need here... 
-				// console.log("stdout = " + stdout); 
-				// liwc_split = stdout.split("&&&&"); 
 				var liwc_all = stdout.split("\n"); 
-				// console.log("liwc all = " + liwc_all); 
-				// liwc_all = liwc_split[2].split("\n"); 
 				var liwc_res = []; 
+				var csv_text = "word_classification, regularized_count, absolute_difference\n"; 
 				for (var i = 0; i < liwc_all.length; i++) {
 					var l = liwc_all[i].split("++");
-					// console.log("LINE " + i + " = " + l); 
 					var l_obj = {
 						key: l[0], 
 						ind: l[1],
 						all: l[2]
 					}
+					csv_text += l[0] + "," + l[1] + "," + l[2] + "\n"; 
 					liwc_res.push(l_obj); 
 				}
-				// console.log("liwc all = " + JSON.stringify(liwc_res[0])); 
 				var input = "";
 				for (var i = 0; i < new_queries.length; i++) {
 					input = input + " " + new_queries[i]
 				}
-				console.log("input = " + input)
 
 			  	var param = {
 				  'tone_input': {'text': "input"},
 				  'content_type': 'application/json'
 				};
-					console.log("all_posts = " + all_posts); 
-			      var input_all = "";
-			      for (var i = 0; i < all_posts.length; i++) {
-			      	input_all = input_all + " " + all_posts[i]
-			      }
-			      // console.log("input all = " + input_all); 
-			  	tone_analyzer.tone(param, function(error, response) {
-			  		if (error)
-				      console.log('error:', error);
-				    else { 
-				      console.log(JSON.stringify(response.document_tone.tones));
-				  	  var blue_deep = [];
-				      for (var i = 0; i < response.document_tone.tones.length; i++) {
-				      	blue_deep.push("Tone: " + JSON.stringify(response.document_tone.tones[i].tone_name) + " Score: " + JSON.stringify(response.document_tone.tones[i].score))
-				      }
-				      var param_all = {
-				      	'tone_input': {'text': input_all},
-				      	'content_type': 'application/json'
-				      };
-				      tone_analyzer.tone(param_all, function(error, response) {
-				      	if (error)
-				      		console.log('error:', error);
+		      	var input_all = "";
+		      	for (var i = 0; i < all_posts.length; i++) {
+		      		input_all = input_all + " " + all_posts[i]
+		      	}
+			    fs.writeFile('liwcDownload.csv', csv_text, function(err){
+					if(err) {
+						console.log(err);
+						return;  
+					}
+				  	tone_analyzer.tone(param, function(error, response) {
+				  		if (error)
+					      console.log('error:', error);
 					    else { 
-					      // console.log(JSON.stringify(response.document_tone.tones));
-					  	  var blue_all = [];
+					  	  var blue_deep = [];
 					      for (var i = 0; i < response.document_tone.tones.length; i++) {
-					      	blue_all.push("Tone: " + JSON.stringify(response.document_tone.tones[i].tone_name) + " Score: " + JSON.stringify(response.document_tone.tones[i].score))
+					      	blue_deep.push("Tone: " + JSON.stringify(response.document_tone.tones[i].tone_name) + " Score: " + JSON.stringify(response.document_tone.tones[i].score))
 					      }
+					      var param_all = {
+					      	'tone_input': {'text': input_all},
+					      	'content_type': 'application/json'
+					      };
+					      tone_analyzer.tone(param_all, function(error, response) {
+					      	if (error)
+					      		console.log('error:', error);
+						    else { 
+						  	  var blue_all = [];
+						      for (var i = 0; i < response.document_tone.tones.length; i++) {
+						      	blue_all.push("Tone: " + JSON.stringify(response.document_tone.tones[i].tone_name) + " Score: " + JSON.stringify(response.document_tone.tones[i].score))
+						      }
 
-							res.render('deep_dive', {
-								title: 'Get2KnowUs', 
-								all_queries: recent_queries,
-								deep_query: deep_query,  
-								results: new_queries, 
-								bluemix_deep: blue_deep, 
-								bluemix_all: blue_all, 
-								liwc: liwc_res
+								res.render('deep_dive', {
+									title: 'Get2KnowUs', 
+									all_queries: recent_queries,
+									deep_query: deep_query,  
+									results: new_queries, 
+									bluemix_deep: blue_deep, 
+									bluemix_all: blue_all, 
+									liwc: liwc_res
 
-							});  
-						}
-					}); 
-				} 
+								});  
+							}
+						}); 
+					} 
+				}); 
 			}); 
 		});
 	}); 
 }); 
 }); 
 
+
+router.get('/download_csv', function (req, res) {
+	res.download("liwcDownload.csv", "liwc_download.csv");
+});
 
 function runQuery(options, callback) {
 	bigquery
@@ -533,10 +531,6 @@ function getImportance(text, callback) {
 		}
 		callback(output);
 	});
-
-	// tfidf.listTerms(0).forEach(function(item) {
-	//    	console.log(item.term + ': ' + item.tfidf);
-	// });
 }
 
 /*ANALYZING TEXT USING IBM WATSON*/
@@ -566,15 +560,19 @@ function analyzeText(text) {
       console.log(JSON.stringify(response.keywords, null, 2));
   });
 }
-
+//The score that is returned lies in the range of 0.5 to 1. A score greater than 0.75 indicates a high likelihood that the tone is perceived in the content.
 function analyzeTone(text, res, all_queries, rows) {
 	console.log("analzye tone"); 
 	console.log("rows length = " + rows.length); 
 	console.log("text = " + JSON.stringify(text)); 
 	var input = "";
+	var outputs = [];
+	//var mapList = [];
 	for (var i = 0; i < text.length; i++) {
+		//console.log(text[i].body);
 		input = input + " " + text[i].body
 	}
+	//console.log(mapList)
   var param = {
   'tone_input': {'text': input},
   'content_type': 'application/json'
@@ -587,12 +585,54 @@ function analyzeTone(text, res, all_queries, rows) {
     else
       console.log("response = " + JSON.stringify(response)); 
       console.log(JSON.stringify(response.document_tone.tones));
-      for (var i = 0; i < response.document_tone.tones.length; i++) {
-      	blue.push("Tone: " + JSON.stringify(response.document_tone.tones[i].tone_name) + " Score: " + JSON.stringify(response.document_tone.tones[i].score))
+  	  var blue = [];
+  	  var blueData = [];
+  	  var blueName = [];
+      for (var i = 0; i < response.document_tone.tones.length; i++) { 
+      	var val = parseFloat(JSON.stringify(response.document_tone.tones[i].score));
+      	if (val < 0.6) { //low
+      		blue.push("Detected low amounts of " + JSON.stringify(response.document_tone.tones[i].tone_name));
+      	}
+      	else if (val < 0.7) { //slight
+      		blue.push("Detected slight amounts of " + JSON.stringify(response.document_tone.tones[i].tone_name));
+      	}
+      	else if (val < 0.8) { //medium
+      		blue.push("Detected medium amounts of " + JSON.stringify(response.document_tone.tones[i].tone_name));
+      	}
+      	else if (val < 0.9) { //moderate
+      		blue.push("Detected moderate amounts of " + JSON.stringify(response.document_tone.tones[i].tone_name));
+      	}
+      	else { //high
+      		blue.push("Detected high amounts of " + JSON.stringify(response.document_tone.tones[i].tone_name));
+      	}
+      	//blue.push("Tone: " + JSON.stringify(response.document_tone.tones[i].tone_name) + " Score: " + JSON.stringify(response.document_tone.tones[i].score))
+      	//blueData.push([JSON.stringify(response.document_tone.tones[i].tone_name), JSON.stringify(response.document_tone.tones[i].score)])
+      	blueData.push(JSON.stringify(response.document_tone.tones[i].score))
+      	blueName.push(JSON.stringify(response.document_tone.tones[i].tone_name))
       }	
-  	  res.render('query_results', { title: 'Get2KnowUS', all_queries: all_queries, results: rows, bluemix_results: blue });
+  	  //var blue = JSON.stringify(response.document_tone.tones[0]);
+  	  res.render('query_results', { title: 'Get2KnowUS', all_queries: all_queries, results: rows, bluemix_results: blue, bluemix_data: blueData, bluemix_name: blueName });
     }
   );
+}
+
+function analyzeIndiv(text) {
+	var param = {
+		'tone_input': {'text': text},
+		'content_type': 'application/json'
+	};
+	tone_analyzer.tone(param, function(error, response) {
+		if (error)
+			console.log('error: ', error);
+		else {
+			var blue = [];
+	      	for (var i = 0; i < response.document_tone.tones.length; i++) {
+		      	//blue.push("Tone: " + JSON.stringify(response.document_tone.tones[i].tone_name) + " Score: " + JSON.stringify(response.document_tone.tones[i].score))
+		      	blue.push([JSON.stringify(response.document_tone.tones[i].tone_name), JSON.stringify(response.document_tone.tones[i].score)])
+	      	}	
+	    }
+	    return new Map(blue);
+	});
 }
 /*ANALYZING TEXT USING IBM WATSON*/
 

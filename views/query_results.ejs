@@ -8,6 +8,7 @@
     <link href="/stylesheets/style.css" rel="stylesheet">
     <link href="/stylesheets/secondary-styles.css" rel="stylesheet">  
     <link href="/stylesheets/morris.css" rel="stylesheet">
+    <script type="text/javascript" src="http://d3js.org/d3.v4.min.js"></script>
 
     <!-- Custom Fonts -->
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
@@ -40,7 +41,7 @@
                     <li><strong><%= all_queries[i] %></strong></li>
                 <% } %>
             </h5>
-            <button href="/download" class="btn btn-success">Download Anonymized Post Data</button>
+            <a href= "/download"> <button class="btn btn-success">Download Anonymized Post Data</button></a>
         </div>
         <br>
         <img src="/images/wc2.png" class="img-responsive" align="center">
@@ -50,6 +51,80 @@
                 <h5> <%= bluemix_results[i] %></h5>
             <%}%>
         </div>
+        <svg id="vivian" class="vivian"></svg>
+        <script type="text/javascript">
+                var colors = ["MediumAquamarine", "Aqua", "Cyan", "LightCyan", "PaleTurquoise", "Aquamarine",
+                                "Turquoise",
+                                "MediumTurquoise",
+                                "DarkTurquoise",
+                                "LightSeaGreen",
+                                "CadetBlue",
+                                "DarkCyan",
+                                "Teal",
+                                "LightSteelBlue",
+                                "PowderBlue",
+                                "LightBlue",
+                                "SkyBlue",
+                                "LightSkyBlue",
+                                "DeepSkyBlue",
+                                "DodgerBlue",
+                                "CornflowerBlue",
+                                "SteelBlue",
+                                "RoyalBlue",
+                                "Blue",
+                                "MediumBlue",
+                                "DarkBlue",
+                                "Navy"];
+                var dataTitles = <%- JSON.stringify(bluemix_name) %>;
+                var dataTemp = <%- JSON.stringify(bluemix_data) %>;
+                var dataNumbers = []
+                var max = 0
+                for (var i = 0; i < dataTemp.length; i++) {
+                    var temp = (parseFloat(dataTemp[i]) * 100).toFixed(0);
+                    dataNumbers.push([parseInt(temp) - 50 , colors[i % colors.length], dataTitles[i]]);
+                    if (parseInt(temp) - 50 > max) {
+                        max = parseInt(temp) - 50;
+                    }
+                }
+                // max = 50
+                //dataNumbers.push([20, colors[5], "\"Concern\""]);
+                console.log(dataNumbers);
+                var dataArray = dataNumbers;
+                //var dataArray =  [.23, .13, .21, .14, .37, .15, .18, .34, .30]; 
+                document.getElementById("vivian").innerHTML = dataArray;
+
+                var y = d3.scaleLinear().range([1.0, 0.5]);
+                y.domain([0.5, 1.0]);
+                var svg = d3.select(".vivian")
+                            .attr("height",(max + 1)*10)
+                            .attr("width",500)
+                            .append("g")
+                            .selectAll("rect")
+                            .data(dataArray)
+                            .enter();
+                svg.append("rect")
+                      //.attr("class", "bar")
+                      .attr("height", function(d, i) {return (d[0]*10 )})
+                      .attr("width",40)
+                      //.attr("x", function(d, i) {return (i * 60) + 25})
+                      .attr("x", function(d, i) {return (i * 60) + 25})
+                      .attr("y", function(d, i) {return (max + 1)*10 - (d[0]*10 )})
+                      .style("fill", function(d, i) {return d[1]})
+                
+                svg.append("text")
+                    .style("text-anchor", "middle")
+                    .attr("x", function(d, i) {return (i * 60) + 40})
+                    .attr("y", function(d, i) {return (max + 1)*10 - (d[0]*10 )})
+                    .text(function(d, i) {return d[2]});          
+                
+                d3.select(".vivian")
+                            .attr("height",(max + 1)*10)
+                            .attr("width",500)
+                            .append("g")
+                            .call(d3.axisLeft(y));
+                console.log("Running");
+            </script>
+
         <img src="/images/wc1.png" class="img-responsive" align="center">
         <h5>The following results were returned from our BigQuery database: <br></h5>
         <br>
