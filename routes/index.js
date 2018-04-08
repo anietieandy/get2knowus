@@ -10,8 +10,8 @@ var natural_language_understanding = new NaturalLanguageUnderstandingV1({
 });
 // Used for BlueMix API
 var tone_analyzer = new ToneAnalyzerV3({
-  username: '768d89c3-05a2-4b88-95ea-9addf4e3c125',
-  password: 'NyPHlxJNZIqq',
+  username: 'b75c30c3-1875-42ca-8bf2-f1b9c317a0e4',
+  password: '2GXhXCY3jq88',
   version_date: '2017-09-21'
 });
 var bigNum = 20000;
@@ -379,12 +379,38 @@ function analyzeText(text) {
       console.log(JSON.stringify(response.keywords, null, 2));
   });
 }
-
+//The score that is returned lies in the range of 0.5 to 1. A score greater than 0.75 indicates a high likelihood that the tone is perceived in the content.
 function analyzeTone(text, res, all_queries, rows) {
 	var input = "";
+	var outputs = [];
+	//var mapList = [];
 	for (var i = 0; i < text.length; i++) {
+		//console.log(text[i].body);
 		input = input + " " + text[i].body
+
+		// var q = {
+  // 			'tone_input': {'text': text[i].body},
+  // 			'content_type': 'application/json'
+		// 	};
+		// tone_analyzer.tone(q, function(error, response) {
+		//     if (error)
+		//       console.log('error:', error);
+		//     else {
+		//       //console.log(JSON.stringify(response.document_tone.tones));
+		//   	  var blue = [];
+		//       for (var i = 0; i < response.document_tone.tones.length; i++) {
+		//       	//blue.push("Tone: " + JSON.stringify(response.document_tone.tones[i].tone_name) + " Score: " + JSON.stringify(response.document_tone.tones[i].score))
+		//       	blue.push([JSON.stringify(response.document_tone.tones[i].tone_name), JSON.stringify(response.document_tone.tones[i].score)])
+		//       }	
+		//       var blue2 = new Map(blue);
+		//       mapList.push(blue2);
+		//       console.log(blue2);
+		//   	  //var blue = JSON.stringify(response.document_tone.tones[0]);
+		//   	  //res.render('query_results', { title: 'Get2KnowUS', all_queries: all_queries, results: rows, bluemix_results: blue });
+		//     }
+		// });
 	}
+	//console.log(mapList)
   var param = {
   'tone_input': {'text': input},
   'content_type': 'application/json'
@@ -395,13 +421,53 @@ function analyzeTone(text, res, all_queries, rows) {
     else
       console.log(JSON.stringify(response.document_tone.tones));
   	  var blue = [];
-      for (var i = 0; i < response.document_tone.tones.length; i++) {
-      	blue.push("Tone: " + JSON.stringify(response.document_tone.tones[i].tone_name) + " Score: " + JSON.stringify(response.document_tone.tones[i].score))
+  	  var blueData = [];
+  	  var blueName = [];
+      for (var i = 0; i < response.document_tone.tones.length; i++) { 
+      	var val = parseFloat(JSON.stringify(response.document_tone.tones[i].score));
+      	if (val < 0.6) { //low
+      		blue.push("Detected low amounts of " + JSON.stringify(response.document_tone.tones[i].tone_name));
+      	}
+      	else if (val < 0.7) { //slight
+      		blue.push("Detected slight amounts of " + JSON.stringify(response.document_tone.tones[i].tone_name));
+      	}
+      	else if (val < 0.8) { //medium
+      		blue.push("Detected medium amounts of " + JSON.stringify(response.document_tone.tones[i].tone_name));
+      	}
+      	else if (val < 0.9) { //moderate
+      		blue.push("Detected moderate amounts of " + JSON.stringify(response.document_tone.tones[i].tone_name));
+      	}
+      	else { //high
+      		blue.push("Detected high amounts of " + JSON.stringify(response.document_tone.tones[i].tone_name));
+      	}
+      	//blue.push("Tone: " + JSON.stringify(response.document_tone.tones[i].tone_name) + " Score: " + JSON.stringify(response.document_tone.tones[i].score))
+      	//blueData.push([JSON.stringify(response.document_tone.tones[i].tone_name), JSON.stringify(response.document_tone.tones[i].score)])
+      	blueData.push(JSON.stringify(response.document_tone.tones[i].score))
+      	blueName.push(JSON.stringify(response.document_tone.tones[i].tone_name))
       }	
   	  //var blue = JSON.stringify(response.document_tone.tones[0]);
-  	  res.render('query_results', { title: 'Get2KnowUS', all_queries: all_queries, results: rows, bluemix_results: blue });
+  	  res.render('query_results', { title: 'Get2KnowUS', all_queries: all_queries, results: rows, bluemix_results: blue, bluemix_data: blueData, bluemix_name: blueName });
     }
   );
+}
+
+function analyzeIndiv(text) {
+	var param = {
+		'tone_input': {'text': text},
+		'content_type': 'application/json'
+	};
+	tone_analyzer.tone(param, function(error, response) {
+		if (error)
+			console.log('error: ', error);
+		else {
+			var blue = [];
+	      	for (var i = 0; i < response.document_tone.tones.length; i++) {
+		      	//blue.push("Tone: " + JSON.stringify(response.document_tone.tones[i].tone_name) + " Score: " + JSON.stringify(response.document_tone.tones[i].score))
+		      	blue.push([JSON.stringify(response.document_tone.tones[i].tone_name), JSON.stringify(response.document_tone.tones[i].score)])
+	      	}	
+	    }
+	    return new Map(blue);
+	});
 }
 /*ANALYZING TEXT USING IBM WATSON*/
 
