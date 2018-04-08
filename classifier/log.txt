@@ -359,3 +359,8 @@
 2018-04-08 19:02:09 classifying
 2018-04-08 19:02:09 queryCount: Im a dad : 49
 >>>>>>> e60f1da95ea4fdc4c44d35bdadfc7d9975e8eeca
+
+2018-04-08 19:24:15 classifying
+2018-04-08 19:24:15 queryCount: Im a dad : 49
+2018-04-08 19:26:28 classifying
+2018-04-08 19:26:28 queryCount: Im a dad : 49

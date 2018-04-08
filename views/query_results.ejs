@@ -51,7 +51,6 @@
                 <h5> <%= bluemix_results[i] %></h5>
             <%}%>
         </div>
-<<<<<<< HEAD
         <svg id="vivian" class="vivian"></svg>
         <script type="text/javascript">
                 var colors = ["MediumAquamarine", "Aqua", "Cyan", "LightCyan", "PaleTurquoise", "Aquamarine",
@@ -94,20 +93,6 @@
                 //var dataArray =  [.23, .13, .21, .14, .37, .15, .18, .34, .30]; 
                 document.getElementById("vivian").innerHTML = dataArray;
 
-                // var svg = d3.select(".vivian")
-                //             .attr("height",300)
-                //             .attr("width",300)
-                //             .append("g")
-                //             .selectAll("rect")
-                //             .data(dataArray)
-                //             .enter().append("rect")
-                //                   .attr("class", "bar")
-                //                   .attr("height", function(d, i) {return (d[0] * 10)})
-                //                   .attr("width",40)
-                //                   //.attr("x", function(d, i) {return (i * 60) + 25})
-                //                   .attr("x", function(d, i) {return (i * 60) + 25})
-                //                   .attr("y", function(d, i) {return 400 - (d[0] * 10)})
-                //                   .style("fill", function(d, i) {return d[1]})    
                 var y = d3.scaleLinear().range([1.0, 0.5]);
                 y.domain([0.5, 1.0]);
                 var svg = d3.select(".vivian")
@@ -139,9 +124,8 @@
                             .call(d3.axisLeft(y));
                 console.log("Running");
             </script>
-=======
+
         <img src="/images/wc1.png" class="img-responsive" align="center">
->>>>>>> e60f1da95ea4fdc4c44d35bdadfc7d9975e8eeca
         <h5>The following results were returned from our BigQuery database: <br></h5>
         <br>
         <div class="list-group">
