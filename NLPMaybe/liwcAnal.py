@@ -53,7 +53,13 @@ for k in countDict.keys():
 #   print(i[1] + ": " + str(i[0]))
 # for i in sorted( ((v,k) for k,v in difDict.iteritems()), reverse=True):
 #   print(i[1] + ": " + str(i[0]))
+helper = [];
 for k in sorted(pctDict, key = pctDict.get, reverse = True):  
   print(k + "++" + str(pctDict.get(k)) + "++" + str(difDict.get(k)))
+  helper.append([k,pctDict.get(k), difDict.get(k)])
+
+toCSV = pd.DataFrame(helper)
+toCSV.columns = ['']
+
 
 

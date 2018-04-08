@@ -69,7 +69,7 @@ router.get('/', function (req, res, next) {
 });
 
 router.get('/download', function (req, res) {
-	res.sendFile("all_posts.txt", { root: '.' });
+	res.download("all_posts.txt", "post_data.txt");
 });
 
 router.get('/vis', function (req, res, next) {
@@ -352,7 +352,7 @@ router.post('/deep_dive', function(req, res, next) {
 
 
 router.get('/download_csv', function (req, res) {
-	res.sendFile("liwcDownload.csv", { root: '.' });
+	res.download("liwcDownload.csv", "liwc_download.csv");
 });
 
 function runQuery(options, callback) {
