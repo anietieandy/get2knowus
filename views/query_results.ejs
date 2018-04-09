@@ -21,6 +21,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>  
     <script src="/javascripts/nav_bar.js"></script>  
+    <script src="/javascripts/blueMixSingle.js"></script>
   </head>
   <body>
     <script>var curr_results = <%- JSON.stringify(results) %> </script>
@@ -37,7 +38,8 @@
         <div class="well">
             <h5>You submitted the following queries: <br>
                 <% for(var i = 0; i < all_queries.length; i++) {%>
-                    <li><strong><%= all_queries[i] %></strong></li>
+                    <li><strong><%= all_queries[i] %></strong>
+                    </li>
                 <% } %>
             </h5>
             <a href= "/download"> <button class="btn btn-success">Download Anonymized Post Data</button></a>
@@ -55,8 +57,10 @@
         <br>
         <div class="list-group">
             <% for(var i = 0; i < results.length; i++) {%>
-            <div class="list-group-item">
-            	<li class="list-group-item-text"><strong>Post:</strong> <%= results[i].body %></li>
+            <div id = <%= "blue-br_" + i %> class="list-group-item">
+            	<li class="list-group-item-text"><strong>Post:</strong> <%= results[i].body %>
+                    <button id=<%= "br_" + i %> class="btn btn-success" onclick="doTheBlue(this, '<%= results[i].body.replace("'","").replace("'","").replace("'","").replace("'","") %>');">Analyze</button>
+                </li>
             </div>
         	<% } %>
         </div>

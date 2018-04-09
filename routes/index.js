@@ -48,6 +48,7 @@ var tagger = new natural.BrillPOSTagger(lexicon, rules);
 
 var credentials = process.env;
 var recent_queries = []; 
+var blue = []
 
 if (!process.env.PRODUCTION) {
 	credentials = require('../credentials.json');
@@ -238,6 +239,14 @@ router.post('/classify_query', function (req, res, next) {
 				});
 		});
 	}
+});
+
+
+router.post('/blueMixSingle', function(req, res, next) {
+	var single_blue = req.body.test; 
+	console.log("in blue");
+	console.log(single_blue);
+	res.render('query_results', { title: 'Get2KnowUS', all_queries: all_queries, results: rows, bluemix_results: blue });
 });
 
 
@@ -521,7 +530,7 @@ function analyzeTone(text, res, all_queries, rows) {
 };
   tone_analyzer.tone(param, function(error, response) {
   	console.log("tone_analyzer"); 
-  	var blue = []; 
+  	blue = []; 
     if (error)
       console.log('error:', error);
     else
