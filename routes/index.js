@@ -129,9 +129,6 @@ router.post('/submit_cross_group_query', function (req, res, next) {
 				group_two_text += rows_two[i].body.replace(/(\r\n|\n|\r)/gm, "") + "\n";
 			}
 
-			console.log(group_one_text);
-			console.log(group_two_text);
-
 			// tokenize all text
 			var group_one_tokens = group_one_text.split(new RegExp('\w+\'*\w*'));
 			var group_two_tokens = group_two_text.split(new RegExp('\w+\'*\w*'));	
@@ -147,11 +144,27 @@ router.post('/submit_cross_group_query', function (req, res, next) {
 				return [key, results[key]];
 			});
 
-			console.log(items);
+			var tuples = Object.keys(results).map(function(key) {
+				return [key, results[key][0]];
+			});
 
 			items.sort(function(first, second) {
 				return (Math.abs(second[1][0]) - Math.abs(first[1][0]));
 			});
+
+			var sorted_tuples = Object.keys(results).map(function(key) {
+				return [key, results[key][0], results[key][1]];
+			});
+
+			sorted_tuples.sort(function(first, second) {
+				return (Math.abs(second[1]) - Math.abs(first[1]));
+			});
+
+			sorted_tuples = sorted_tuples.filter(item => isNaN(item[1]) != true);
+
+
+
+			console.log(sorted_tuples);
 
 			var highest_log_scores = items.slice(0, 10);
 			var lowest_log_scores = items.slice(-10);
@@ -162,7 +175,9 @@ router.post('/submit_cross_group_query', function (req, res, next) {
 				group_one_rows: rows_one,
 				group_two_rows: rows_two,
 				highest_scores: highest_log_scores,
-				lowest_scores: lowest_log_scores
+				lowest_scores: lowest_log_scores,
+				all_data: tuples,
+				all_sorted: sorted_tuples
 			});
 		})
 	})
@@ -428,8 +443,6 @@ function runClassifier() {
 		if (err) {
 			return;
 		}
-		console.log(stdout);
-		console.log(stderr);
 	});
 }
 
@@ -562,9 +575,6 @@ function analyzeText(text) {
 }
 //The score that is returned lies in the range of 0.5 to 1. A score greater than 0.75 indicates a high likelihood that the tone is perceived in the content.
 function analyzeTone(text, res, all_queries, rows) {
-	console.log("analzye tone"); 
-	console.log("rows length = " + rows.length); 
-	console.log("text = " + JSON.stringify(text)); 
 	var input = "";
 	var outputs = [];
 	//var mapList = [];
@@ -578,13 +588,10 @@ function analyzeTone(text, res, all_queries, rows) {
   'content_type': 'application/json'
 };
   tone_analyzer.tone(param, function(error, response) {
-  	console.log("tone_analyzer"); 
   	var blue = []; 
     if (error)
       console.log('error:', error);
     else
-      console.log("response = " + JSON.stringify(response)); 
-      console.log(JSON.stringify(response.document_tone.tones));
   	  var blue = [];
   	  var blueData = [];
   	  var blueName = [];
@@ -608,7 +615,7 @@ function analyzeTone(text, res, all_queries, rows) {
       	//blue.push("Tone: " + JSON.stringify(response.document_tone.tones[i].tone_name) + " Score: " + JSON.stringify(response.document_tone.tones[i].score))
       	//blueData.push([JSON.stringify(response.document_tone.tones[i].tone_name), JSON.stringify(response.document_tone.tones[i].score)])
       	blueData.push(JSON.stringify(response.document_tone.tones[i].score))
-      	blueName.push(JSON.stringify(response.document_tone.tones[i].tone_name))
+      	blueName.push(response.document_tone.tones[i].tone_name)
       }	
   	  //var blue = JSON.stringify(response.document_tone.tones[0]);
   	  res.render('query_results', { title: 'Get2KnowUS', all_queries: all_queries, results: rows, bluemix_results: blue, bluemix_data: blueData, bluemix_name: blueName });
@@ -616,7 +623,7 @@ function analyzeTone(text, res, all_queries, rows) {
   );
 }
 
-function analyzeIndiv(text) {
+function analyzeInDiv(text) {
 	var param = {
 		'tone_input': {'text': text},
 		'content_type': 'application/json'

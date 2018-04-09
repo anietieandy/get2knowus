@@ -22,6 +22,20 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>  
     <script src="/javascripts/nav_bar.js"></script>  
+    <style>
+
+    .axis {
+      font: 10px sans-serif;
+    }
+
+    .axis path,
+    .axis line {
+      fill: none;
+      stroke: #000;
+      shape-rendering: crispEdges;
+    }
+
+    </style>
   </head>
   <body>
     <script>var curr_results = <%- JSON.stringify(results) %> </script>
@@ -53,6 +67,10 @@
         </div>
         <svg id="vivian" class="vivian"></svg>
         <script type="text/javascript">
+                var margin = {top: 20, right: 20, bottom: 70, left: 40};
+                width = 600 - margin.left - margin.right;
+                height = 200 - margin.top - margin.bottom;
+
                 var colors = ["MediumAquamarine", "Aqua", "Cyan", "LightCyan", "PaleTurquoise", "Aquamarine",
                                 "Turquoise",
                                 "MediumTurquoise",
@@ -81,57 +99,65 @@
                 var max = 0
                 for (var i = 0; i < dataTemp.length; i++) {
                     var temp = (parseFloat(dataTemp[i]) * 100).toFixed(0);
-                    dataNumbers.push([parseInt(temp) - 50 , colors[i % colors.length], dataTitles[i]]);
+                    dataNumbers.push([parseInt(temp) - 50 , colors[(i * 3) % colors.length], dataTitles[i]]);
                     if (parseInt(temp) - 50 > max) {
                         max = parseInt(temp) - 50;
                     }
                 }
-                // max = 50
-                //dataNumbers.push([20, colors[5], "\"Concern\""]);
-                console.log(dataNumbers);
+
                 var dataArray = dataNumbers;
-                //var dataArray =  [.23, .13, .21, .14, .37, .15, .18, .34, .30]; 
-                document.getElementById("vivian").innerHTML = dataArray;
 
-                var y = d3.scaleLinear().range([1.0, 0.5]);
-                y.domain([0.5, 1.0]);
+                var x = d3.scaleBand().rangeRound([0, width], .05);
+                var y = d3.scaleLinear().range([height, 0]);
+
+                var xAxis = d3.axisBottom().scale(x).ticks(dataArray.length);
+                var yAxis = d3.axisLeft().scale(y).ticks(5);
+
                 var svg = d3.select(".vivian")
-                            .attr("height",(max + 1)*10)
-                            .attr("width",500)
+                            .attr("height", height + 150)
+                            .attr("width", width + 50)
+                            .append("svg")
+                            .attr("height", height + margin.top + margin.bottom)
+                            .attr("width", width + margin.left + margin.right)
                             .append("g")
-                            .selectAll("rect")
-                            .data(dataArray)
-                            .enter();
-                svg.append("rect")
-                      //.attr("class", "bar")
-                      .attr("height", function(d, i) {return (d[0]*10 )})
-                      .attr("width",40)
-                      //.attr("x", function(d, i) {return (i * 60) + 25})
-                      .attr("x", function(d, i) {return (i * 60) + 25})
-                      .attr("y", function(d, i) {return (max + 1)*10 - (d[0]*10 )})
-                      .style("fill", function(d, i) {return d[1]})
-                
-                svg.append("text")
-                    .style("text-anchor", "middle")
-                    .attr("x", function(d, i) {return (i * 60) + 40})
-                    .attr("y", function(d, i) {return (max + 1)*10 - (d[0]*10 )})
-                    .text(function(d, i) {return d[2]});          
-                
-                d3.select(".vivian")
-                            .attr("height",(max + 1)*10)
-                            .attr("width",500)
-                            .append("g")
-                            .call(d3.axisLeft(y));
-                console.log("Running");
-            </script>
+                            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+                x.domain(dataArray.map(function(d) { return d;}));
+                y.domain([0, d3.max(dataArray, function(d) { return d[0]})]);
+
+              svg.append("g")
+                  .attr("class", "x axis")
+                  .attr("transform", "translate(0," + height + ")")
+                  .call(xAxis)
+                .selectAll("text")
+                  .style("text-anchor", "end")
+                  .text(function(d) { return d[2];})
+                  .attr("dx", "-.8em")
+                  .attr("dy", "-.55em")
+                  .attr("transform", "rotate(-90)");
+
+              svg.append("g")
+                  .attr("class", "y axis")
+                  .call(yAxis)
+
+                svg.selectAll("bar")
+                    .data(dataArray)
+                    .enter()
+                    .append("rect")
+                    .style("fill", function(d) { return d[1];})       
+                    .attr("x", function(d, i) {return i * width / dataArray.length})
+                    .attr("y", function(d, i) { return y(d[0]); })
+                    .attr("width", x.bandwidth())
+                    .attr("height", function(d) { return height - y(d[0]);});
+
+            </script>
         <img src="/images/wc1.png" class="img-responsive" align="center">
         <h5>The following results were returned from our BigQuery database: <br></h5>
         <br>
         <div class="list-group">
             <% for(var i = 0; i < results.length; i++) {%>
             <div class="list-group-item">
-            	<li class="list-group-item-text"><strong>Post:</strong> <%= results[i].body %></li>
+            	<li class="list-group-item-text"><strong>Post:</strong> <%= results[i].body %><br></li>
             </div>
         	<% } %>
         </div>
