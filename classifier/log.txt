@@ -30,6 +30,290 @@
 2018-03-28 16:07:00 queryCount: Im a dad : 49
 2018-03-28 16:07:37 classifying
 2018-03-28 16:07:37 queryCount: Im a dad : 49
+<<<<<<< HEAD
+2018-03-28 21:43:51 classifying
+2018-03-28 21:43:51 queryCount: Im a dad : 49
+2018-03-28 22:08:49 classifying
+2018-03-28 22:08:49 queryCount: Im a dad : 49
+2018-03-28 22:25:15 classifying
+2018-03-28 22:25:15 queryCount: Im a dad : 49
+2018-03-28 23:15:40 classifying
+2018-03-28 23:15:40 queryCount: Im a dad : 49
+2018-03-28 23:19:19 classifying
+2018-03-28 23:19:19 queryCount: Im a dad : 49
+2018-03-28 23:21:58 classifying
+2018-03-28 23:21:58 queryCount: Im a dad : 49
+2018-03-28 23:26:27 classifying
+2018-03-28 23:26:27 queryCount: Im a dad : 49
+2018-03-28 23:29:06 classifying
+2018-03-28 23:29:06 queryCount: Im a dad : 49
+2018-03-28 23:39:34 classifying
+2018-03-28 23:39:34 queryCount: Im a dad : 49
+2018-03-28 23:52:01 classifying
+2018-03-28 23:52:01 queryCount: Im a dad : 49
+2018-03-28 23:55:58 classifying
+2018-03-28 23:55:58 queryCount: Im a mom : 0
+2018-03-29 00:11:02 classifying
+2018-03-29 00:11:02 queryCount: Im a dad : 49
+2018-03-29 00:20:30 classifying
+2018-03-29 00:20:30 queryCount: Im a dad : 49
+2018-03-29 00:23:11 classifying
+2018-03-29 00:23:11 queryCount: Im a dad : 49
+2018-03-29 00:29:17 classifying
+2018-03-29 00:29:17 queryCount: Im a dad : 49
+2018-03-29 00:32:52 classifying
+2018-03-29 00:32:52 queryCount: Im a dad : 49
+2018-03-29 00:36:31 classifying
+2018-03-29 00:36:31 queryCount: Im a dad : 49
+2018-03-29 00:42:46 classifying
+2018-03-29 00:42:46 queryCount: Im a dad : 49
+2018-03-29 00:44:55 classifying
+2018-03-29 00:44:55 queryCount: Im a dad : 49
+2018-03-29 00:46:02 classifying
+2018-03-29 00:46:02 queryCount: Im a dad : 49
+2018-03-29 00:49:28 classifying
+2018-03-29 00:49:28 queryCount: Im a dad : 49
+2018-03-29 00:50:42 classifying
+2018-03-29 00:50:42 queryCount: Im a dad : 49
+2018-03-29 13:53:26 classifying
+2018-03-29 13:53:26 queryCount: Im a dad : 49
+2018-03-29 23:32:28 classifying
+2018-03-29 23:32:28 queryCount: Im a dad : 49
+2018-03-29 23:34:43 classifying
+2018-03-29 23:34:43 queryCount: Im a dad : 49
+2018-03-29 23:38:54 classifying
+2018-03-29 23:38:54 queryCount: Im a dad : 49
+2018-03-29 23:41:09 classifying
+2018-03-29 23:41:09 queryCount: Im a dad : 49
+2018-03-29 23:43:21 classifying
+2018-03-29 23:43:21 queryCount: Im a dad : 49
+2018-03-29 23:44:42 classifying
+2018-03-29 23:44:42 queryCount: Im a dad : 49
+2018-03-29 23:45:25 classifying
+2018-03-29 23:45:25 queryCount: Im a dad : 49
+2018-03-29 23:46:11 classifying
+2018-03-29 23:46:11 queryCount: Im a dad : 49
+2018-03-29 23:46:33 classifying
+2018-03-29 23:46:34 queryCount: Im a dad : 49
+2018-03-29 23:48:46 classifying
+2018-03-29 23:48:46 queryCount: Im a dad : 49
+2018-03-29 23:49:42 classifying
+2018-03-29 23:49:42 queryCount: Im a dad : 49
+2018-03-29 23:51:15 classifying
+2018-03-29 23:51:15 queryCount: Im a dad : 49
+2018-03-29 23:55:06 classifying
+2018-03-29 23:55:06 queryCount: Im a dad : 49
+2018-03-29 23:55:43 classifying
+2018-03-29 23:55:43 queryCount: Im a dad : 49
+2018-03-29 23:57:04 classifying
+2018-03-29 23:57:04 queryCount: Im a dad : 49
+2018-03-29 23:57:58 classifying
+2018-03-29 23:57:58 queryCount: Im a dad : 49
+2018-03-29 23:58:26 classifying
+2018-03-29 23:58:26 queryCount: Im a dad : 49
+2018-03-30 00:00:09 classifying
+2018-03-30 00:00:09 queryCount: Im a dad : 49
+2018-03-30 00:01:01 classifying
+2018-03-30 00:01:01 queryCount: Im a dad : 49
+2018-03-30 00:02:15 classifying
+2018-03-30 00:02:15 queryCount: Im a dad : 49
+2018-03-30 00:02:40 classifying
+2018-03-30 00:02:40 queryCount: Im a dad : 49
+2018-03-30 00:03:46 classifying
+2018-03-30 00:03:46 queryCount: Im a dad : 49
+2018-03-30 00:06:40 classifying
+2018-03-30 00:06:40 queryCount: Im a dad : 49
+2018-03-30 00:07:14 classifying
+2018-03-30 00:07:14 queryCount: Im a dad : 49
+2018-03-30 00:08:32 classifying
+2018-03-30 00:08:32 queryCount: Im a dad : 49
+2018-03-30 00:09:16 classifying
+2018-03-30 00:09:16 queryCount: Im a dad : 49
+2018-03-30 00:10:19 classifying
+2018-03-30 00:10:19 queryCount: Im a dad : 49
+2018-03-30 00:13:52 classifying
+2018-03-30 00:13:52 queryCount: Im a dad : 49
+2018-03-30 00:14:30 classifying
+2018-03-30 00:14:30 queryCount: Im a dad : 49
+2018-03-30 00:16:50 classifying
+2018-03-30 00:16:50 queryCount: Im a dad : 49
+2018-03-30 00:21:09 classifying
+2018-03-30 00:21:09 queryCount: Im a dad : 49
+2018-03-30 00:25:34 classifying
+2018-03-30 00:25:34 queryCount: Im a dad : 49
+2018-03-30 00:27:37 classifying
+2018-03-30 00:27:37 queryCount: Im a dad : 49
+2018-03-30 00:29:53 classifying
+2018-03-30 00:29:53 queryCount: Im a dad : 49
+2018-03-30 00:31:31 classifying
+2018-03-30 00:31:31 queryCount: Im a dad : 49
+2018-03-30 00:34:04 classifying
+2018-03-30 00:34:04 queryCount: Im a dad : 49
+2018-03-30 00:35:21 classifying
+2018-03-30 00:35:21 queryCount: Im a dad : 49
+2018-03-30 00:36:33 classifying
+2018-03-30 00:36:33 queryCount: Im a dad : 49
+2018-03-30 00:37:57 classifying
+2018-03-30 00:37:57 queryCount: Im a dad : 49
+2018-03-30 00:38:57 classifying
+2018-03-30 00:38:57 queryCount: Im a dad : 49
+2018-03-30 00:43:10 classifying
+2018-03-30 00:43:10 queryCount: Im a dad : 49
+2018-03-30 00:44:12 classifying
+2018-03-30 00:44:12 queryCount: Im a dad : 49
+2018-03-30 00:46:00 classifying
+2018-03-30 00:46:00 queryCount: Im a dad : 49
+2018-03-30 00:49:06 classifying
+2018-03-30 00:49:06 queryCount: Im a dad : 49
+2018-03-30 00:51:26 classifying
+2018-03-30 00:51:26 queryCount: Im a dad : 49
+2018-03-30 00:53:27 classifying
+2018-03-30 00:53:27 queryCount: Im a dad : 49
+2018-03-30 00:54:35 classifying
+2018-03-30 00:54:35 queryCount: Im a dad : 49
+2018-03-30 00:55:09 classifying
+2018-03-30 00:55:09 queryCount: Im a dad : 49
+2018-03-30 00:55:36 classifying
+2018-03-30 00:55:36 queryCount: Im a dad : 49
+2018-03-30 00:56:12 classifying
+2018-03-30 00:56:12 queryCount: Im a dad : 49
+2018-03-30 00:57:29 classifying
+2018-03-30 00:57:29 queryCount: Im a dad : 49
+2018-03-30 01:00:51 classifying
+2018-03-30 01:00:51 queryCount: Im a dad : 49
+2018-03-30 01:01:30 classifying
+2018-03-30 01:01:30 queryCount: Im a dad : 49
+2018-03-30 01:07:59 classifying
+2018-03-30 01:07:59 queryCount: Im a dad : 49
+2018-03-30 01:14:27 classifying
+2018-03-30 01:14:27 queryCount: Im a dad : 49
+2018-03-30 01:16:03 classifying
+2018-03-30 01:16:03 queryCount: Im a dad : 49
+2018-03-30 01:16:54 classifying
+2018-03-30 01:16:54 queryCount: Im a dad : 49
+2018-03-30 01:17:36 classifying
+2018-03-30 01:17:36 queryCount: Im a dad : 49
+2018-03-30 01:18:53 classifying
+2018-03-30 01:18:53 queryCount: Im a dad : 49
+2018-03-30 01:20:29 classifying
+2018-03-30 01:20:29 queryCount: Im a dad : 49
+2018-03-30 01:21:29 classifying
+2018-03-30 01:21:29 queryCount: Im a dad : 49
+2018-03-30 01:21:58 classifying
+2018-03-30 01:21:58 queryCount: Im a dad : 49
+2018-03-30 01:22:20 classifying
+2018-03-30 01:22:20 queryCount: Im a dad : 49
+2018-03-30 01:24:21 classifying
+2018-03-30 01:24:21 queryCount: Im a dad : 49
+2018-03-30 01:25:07 classifying
+2018-03-30 01:25:07 queryCount: Im a dad : 49
+2018-03-30 01:25:48 classifying
+2018-03-30 01:25:48 queryCount: Im a dad : 49
+2018-03-30 01:26:03 classifying
+2018-03-30 01:26:03 queryCount: Im a dad : 49
+2018-03-30 01:26:48 classifying
+2018-03-30 01:26:48 queryCount: Im a dad : 49
+2018-03-30 01:27:44 classifying
+2018-03-30 01:27:44 queryCount: Im a dad : 49
+2018-03-30 01:28:19 classifying
+2018-03-30 01:28:19 queryCount: Im a dad : 49
+2018-03-30 01:31:06 classifying
+2018-03-30 01:31:06 queryCount: Im a dad : 49
+2018-03-30 01:31:37 classifying
+2018-03-30 01:31:37 queryCount: Im a dad : 49
+2018-03-30 01:32:23 classifying
+2018-03-30 01:32:23 queryCount: Im a dad : 49
+2018-03-30 01:32:49 classifying
+2018-03-30 01:32:49 queryCount: Im a dad : 49
+2018-03-30 01:33:18 classifying
+2018-03-30 01:33:18 queryCount: Im a dad : 49
+2018-03-30 01:33:46 classifying
+2018-03-30 01:33:46 queryCount: Im a dad : 49
+2018-03-30 01:35:08 classifying
+2018-03-30 01:35:08 queryCount: Im a dad : 49
+2018-03-30 01:35:29 classifying
+2018-03-30 01:35:29 queryCount: Im a dad : 49
+2018-03-30 01:35:56 classifying
+2018-03-30 01:35:56 queryCount: Im a dad : 49
+2018-03-30 01:36:57 classifying
+2018-03-30 01:36:57 queryCount: Im a dad : 49
+2018-03-30 01:37:30 classifying
+2018-03-30 01:37:30 queryCount: Im a dad : 49
+2018-03-30 01:38:03 classifying
+2018-03-30 01:38:03 queryCount: Im a dad : 49
+2018-03-30 01:38:34 classifying
+2018-03-30 01:38:34 queryCount: Im a dad : 49
+2018-03-30 01:39:13 classifying
+2018-03-30 01:39:13 queryCount: Im a dad : 49
+2018-03-30 01:39:37 classifying
+2018-03-30 01:39:37 queryCount: Im a dad : 49
+2018-03-30 01:40:57 classifying
+2018-03-30 01:40:57 queryCount: Im a dad : 49
+2018-03-30 01:41:33 classifying
+2018-03-30 01:41:33 queryCount: Im a dad : 49
+2018-03-30 01:42:18 classifying
+2018-03-30 01:42:18 queryCount: Im a dad : 49
+2018-03-30 01:42:50 classifying
+2018-03-30 01:42:50 queryCount: Im a dad : 49
+2018-03-30 01:43:18 classifying
+2018-03-30 01:43:18 queryCount: Im a dad : 49
+2018-03-30 01:44:20 classifying
+2018-03-30 01:44:20 queryCount: Im a dad : 49
+2018-03-30 01:45:05 classifying
+2018-03-30 01:45:05 queryCount: Im a dad : 49
+2018-03-30 01:46:00 classifying
+2018-03-30 01:46:00 queryCount: Im a dad : 49
+2018-03-30 01:48:48 classifying
+2018-03-30 01:48:48 queryCount: Im a dad : 49
+2018-03-30 01:49:35 classifying
+2018-03-30 01:49:35 queryCount: Im a dad : 49
+2018-03-30 01:50:07 classifying
+2018-03-30 01:50:07 queryCount: Im a dad : 49
+2018-03-30 01:51:20 classifying
+2018-03-30 01:51:20 queryCount: Im a dad : 49
+2018-03-30 01:52:00 classifying
+2018-03-30 01:52:00 queryCount: Im a dad : 49
+2018-03-30 01:52:31 classifying
+2018-03-30 01:52:31 queryCount: Im a dad : 49
+2018-03-30 01:53:01 classifying
+2018-03-30 01:53:01 queryCount: Im a dad : 49
+2018-03-30 01:53:26 classifying
+2018-03-30 01:53:26 queryCount: Im a dad : 49
+2018-03-30 01:54:00 classifying
+2018-03-30 01:54:00 queryCount: Im a dad : 49
+2018-03-30 01:58:26 classifying
+2018-03-30 01:58:26 queryCount: Im a dad : 49
+2018-03-30 02:01:29 classifying
+2018-03-30 02:01:29 queryCount: Im a dad : 49
+2018-03-30 02:05:29 classifying
+2018-03-30 02:05:29 queryCount: Im a dad : 49
+2018-03-30 02:06:56 classifying
+2018-03-30 02:06:56 queryCount: Im a dad : 49
+2018-03-30 02:08:33 classifying
+2018-03-30 02:08:33 queryCount: Im a dad : 49
+2018-03-30 02:09:45 classifying
+2018-03-30 02:09:45 queryCount: Im a dad : 49
+2018-03-30 02:10:34 classifying
+2018-03-30 02:10:34 queryCount: Im a dad : 49
+2018-03-30 02:11:24 classifying
+2018-03-30 02:11:24 queryCount: Im a dad : 49
+2018-03-30 02:13:30 classifying
+2018-03-30 02:13:30 queryCount: Im a dad : 49
+2018-04-02 20:38:10 classifying
+2018-04-02 20:38:10 queryCount: Im a dad : 49
+2018-04-02 20:41:18 classifying
+2018-04-02 20:41:18 queryCount: Im a dad : 49
+2018-04-02 20:41:42 classifying
+2018-04-02 20:41:42 queryCount: Im a dad : 49
+2018-04-02 20:42:13 classifying
+2018-04-02 20:42:13 queryCount: Im a dad : 49
+2018-04-02 20:42:32 classifying
+2018-04-02 20:42:32 queryCount: Im a dad : 49
+2018-04-02 20:42:59 classifying
+2018-04-02 20:42:59 queryCount: Im a dad : 49
+2018-04-02 21:00:37 classifying
+2018-04-02 21:00:37 queryCount: Im a dad : 49
+=======
 2018-03-28 16:19:30 classifying
 2018-03-28 16:19:30 queryCount: Im a dad : 49
 2018-03-28 16:19:59 classifying
@@ -74,6 +358,7 @@
 2018-04-08 18:58:57 queryCount: Im a dad : 49
 2018-04-08 19:02:09 classifying
 2018-04-08 19:02:09 queryCount: Im a dad : 49
+<<<<<<< HEAD
 2018-04-09 11:07:19 classifying
 2018-04-09 11:07:19 queryCount: Im a dad : 49
 2018-04-09 11:20:23 classifying
@@ -118,3 +403,14 @@
 2018-04-09 12:51:42 queryCount: Im a dad : 49
 2018-04-09 12:58:43 classifying
 2018-04-09 12:58:43 queryCount: Im a dad : 49
+=======
+>>>>>>> e60f1da95ea4fdc4c44d35bdadfc7d9975e8eeca
+
+2018-04-08 19:24:15 classifying
+2018-04-08 19:24:15 queryCount: Im a dad : 49
+2018-04-08 19:26:28 classifying
+2018-04-08 19:26:28 queryCount: Im a dad : 49
+>>>>>>> 27d360baf9e55abd29fee51869c67172d5b9f91e
+
+2018-04-09 13:05:41 classifying
+2018-04-09 13:05:41 queryCount: Im a dad : 49

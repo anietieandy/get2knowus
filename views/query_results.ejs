@@ -8,6 +8,7 @@
     <link href="/stylesheets/style.css" rel="stylesheet">
     <link href="/stylesheets/secondary-styles.css" rel="stylesheet">  
     <link href="/stylesheets/morris.css" rel="stylesheet">
+    <script type="text/javascript" src="http://d3js.org/d3.v4.min.js"></script>
 
     <!-- Custom Fonts -->
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
@@ -22,6 +23,20 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>  
     <script src="/javascripts/nav_bar.js"></script>  
     <script src="/javascripts/blueMixSingle.js"></script>
+    <style>
+
+    .axis {
+      font: 10px sans-serif;
+    }
+
+    .axis path,
+    .axis line {
+      fill: none;
+      stroke: #000;
+      shape-rendering: crispEdges;
+    }
+
+    </style>
   </head>
   <body>
     <script>var curr_results = <%- JSON.stringify(results) %> </script>
@@ -52,6 +67,92 @@
                 <h5> <%= bluemix_results[i] %></h5>
             <%}%>
         </div>
+        <svg id="vivian" class="vivian"></svg>
+        <script type="text/javascript">
+                var margin = {top: 20, right: 20, bottom: 70, left: 40};
+                width = 600 - margin.left - margin.right;
+                height = 200 - margin.top - margin.bottom;
+
+                var colors = ["MediumAquamarine", "Aqua", "Cyan", "LightCyan", "PaleTurquoise", "Aquamarine",
+                                "Turquoise",
+                                "MediumTurquoise",
+                                "DarkTurquoise",
+                                "LightSeaGreen",
+                                "CadetBlue",
+                                "DarkCyan",
+                                "Teal",
+                                "LightSteelBlue",
+                                "PowderBlue",
+                                "LightBlue",
+                                "SkyBlue",
+                                "LightSkyBlue",
+                                "DeepSkyBlue",
+                                "DodgerBlue",
+                                "CornflowerBlue",
+                                "SteelBlue",
+                                "RoyalBlue",
+                                "Blue",
+                                "MediumBlue",
+                                "DarkBlue",
+                                "Navy"];
+                var dataTitles = <%- JSON.stringify(bluemix_name) %>;
+                var dataTemp = <%- JSON.stringify(bluemix_data) %>;
+                var dataNumbers = []
+                var max = 0
+                for (var i = 0; i < dataTemp.length; i++) {
+                    var temp = (parseFloat(dataTemp[i]) * 100).toFixed(0);
+                    dataNumbers.push([parseInt(temp) - 50 , colors[(i * 3) % colors.length], dataTitles[i]]);
+                    if (parseInt(temp) - 50 > max) {
+                        max = parseInt(temp) - 50;
+                    }
+                }
+
+                var dataArray = dataNumbers;
+
+                var x = d3.scaleBand().rangeRound([0, width], .05);
+                var y = d3.scaleLinear().range([height, 0]);
+
+                var xAxis = d3.axisBottom().scale(x).ticks(dataArray.length);
+                var yAxis = d3.axisLeft().scale(y).ticks(5);
+
+                var svg = d3.select(".vivian")
+                            .attr("height", height + 150)
+                            .attr("width", width + 50)
+                            .append("svg")
+                            .attr("height", height + margin.top + margin.bottom)
+                            .attr("width", width + margin.left + margin.right)
+                            .append("g")
+                            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+                x.domain(dataArray.map(function(d) { return d;}));
+                y.domain([0, d3.max(dataArray, function(d) { return d[0]})]);
+
+              svg.append("g")
+                  .attr("class", "x axis")
+                  .attr("transform", "translate(0," + height + ")")
+                  .call(xAxis)
+                .selectAll("text")
+                  .style("text-anchor", "end")
+                  .text(function(d) { return d[2];})
+                  .attr("dx", "-.8em")
+                  .attr("dy", "-.55em")
+                  .attr("transform", "rotate(-90)");
+
+              svg.append("g")
+                  .attr("class", "y axis")
+                  .call(yAxis)
+
+                svg.selectAll("bar")
+                    .data(dataArray)
+                    .enter()
+                    .append("rect")
+                    .style("fill", function(d) { return d[1];})       
+                    .attr("x", function(d, i) {return i * width / dataArray.length})
+                    .attr("y", function(d, i) { return y(d[0]); })
+                    .attr("width", x.bandwidth())
+                    .attr("height", function(d) { return height - y(d[0]);});
+
+            </script>
         <img src="/images/wc1.png" class="img-responsive" align="center">
         <h5>The following results were returned from our BigQuery database: <br></h5>
         <br>
@@ -65,7 +166,6 @@
         	<% } %>
         </div>
     </div>
-
     <!-- Deep Dive Tab -->
     <div id="deep_dive_tab">
         <div class="well">
@@ -98,15 +198,15 @@
     <div id="cross_group_tab">
     <div class="panel panel-primary">
             <div class="panel-heading">
-                <p>Pick the first group.
+                <p>Query the two groups.
                     <br>
                 </p>
             </div>
             <div class="panel-body">
                 <form action="/submit_query" method="post">
                     <div class="form-group">
-                        <label for="query_info1">Enter query: </label>
-                        <input id="query_info1" type="text" name="query_field" value="I'm a dad">
+                        <label for="query_info1">Enter query for the first group: </label>
+                        <input id="query_info1" type="text" name="query_field1" value="I'm a dad">
                         <br>
                     </div>
                 </form>
@@ -114,21 +214,22 @@
         </div>
         <div class="panel panel-primary">
             <div class="panel-heading">
-                <p>Pick another group to compare the first group with.
+                <p>Compare your first group to another! Enter a new query to learn how your original group compares.
+
                     <br>
                 </p>
             </div>
             <div class="panel-body">
                 <form action="/submit_query" method="post">
                     <div class="form-group">
-                        <label for="query_info2">Enter query: </label>
-                        <input id="query_info2" type="text" name="query_field" value="I'm a dad">
+                        <label for="query_info1">Enter query for the second group: </label>
+                        <input id="query_info1" type="text" name="query_field2" value="I'm a dad">
                         <br>
                     </div>
+                    <button class="btn btn-primary" type="submit" formaction="/submit_cross_group_query">Analyze!</button>
                 </form>
             </div>
         </div>
-    <button class="btn btn-primary" type="submit" formaction="/submit_query">Compare!</button>
     </div>
   </body>
 </html>

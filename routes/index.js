@@ -10,8 +10,8 @@ var natural_language_understanding = new NaturalLanguageUnderstandingV1({
 });
 // Used for BlueMix API
 var tone_analyzer = new ToneAnalyzerV3({
- "username": "b75c30c3-1875-42ca-8bf2-f1b9c317a0e4",
- "password": "2GXhXCY3jq88", 
+  username: 'b75c30c3-1875-42ca-8bf2-f1b9c317a0e4',
+  password: '2GXhXCY3jq88',
   version_date: '2017-09-21'
 });
 
@@ -97,10 +97,98 @@ router.post('/api/add_classification', function (req, res, next) {
 	});
 });
 
+router.post('/submit_cross_group_query', function (req, res, next) {
+	var group_one = req.body.query_field1;
+	var group_two = req.body.query_field2;
+
+	// group one's queries
+	var group_one_queries = [group_one.replace(/'/gi, "\\'")]
+	var query_one_entered = sqlQuery + group_one_queries[0] + "%'" + " LIMIT 500;";
+
+	// group two's queries
+	var group_two_queries = [group_two.replace(/'/gi, "\\'")]
+	var query_two_entered = sqlQuery + group_two_queries[0] + "%'" + " LIMIT 500;";
+
+	var options_one = {
+		query: query_one_entered,
+		useLegacySql: false
+	};
+
+	var options_two = {
+		query: query_two_entered,
+		useLegacySql: false
+	};
+
+	runQuery(options_one, (rows_one) => {
+		var group_one_text = "";
+		for (var i = 0; i < rows_one.length; i++) {
+			group_one_text += rows_one[i].body.replace(/(\r\n|\n|\r)/gm, "") + "\n";
+		}
+		runQuery(options_two, (rows_two) => {
+			var group_two_text = "";
+			for (var i = 0; i < rows_two.length; i++) {
+				group_two_text += rows_two[i].body.replace(/(\r\n|\n|\r)/gm, "") + "\n";
+			}
+
+			// tokenize all text
+			var group_one_tokens = group_one_text.split(new RegExp('\w+\'*\w*'));
+			var group_two_tokens = group_two_text.split(new RegExp('\w+\'*\w*'));	
+
+			// get phrases
+			var group_one_phrases = flatten_phrases(group_one_tokens);
+			var group_two_phrases = flatten_phrases(group_two_tokens);
+
+			// get results
+			var results = log_odds_results(group_one_phrases, group_two_phrases);
+			// sort results
+			var items = Object.keys(results).map(function(key) {
+				return [key, results[key]];
+			});
+
+			var tuples = Object.keys(results).map(function(key) {
+				return [key, results[key][0]];
+			});
+
+			items.sort(function(first, second) {
+				return (Math.abs(second[1][0]) - Math.abs(first[1][0]));
+			});
+
+			var sorted_tuples = Object.keys(results).map(function(key) {
+				return [key, results[key][0], results[key][1]];
+			});
+
+			sorted_tuples.sort(function(first, second) {
+				return (Math.abs(second[1]) - Math.abs(first[1]));
+			});
+
+			sorted_tuples = sorted_tuples.filter(item => isNaN(item[1]) != true);
+
+
+
+			console.log(sorted_tuples);
+
+			var highest_log_scores = items.slice(0, 10);
+			var lowest_log_scores = items.slice(-10);
+			res.render('cross_group', {
+				title: 'Get2KnowUS',
+				query_one: req.body.query_field1,
+				query_two: req.body.query_field2,
+				group_one_rows: rows_one,
+				group_two_rows: rows_two,
+				highest_scores: highest_log_scores,
+				lowest_scores: lowest_log_scores,
+				all_data: tuples,
+				all_sorted: sorted_tuples
+			});
+		})
+	})
+
+
+});
+
 router.post('/submit_query', function (req, res, next) {
 	var curr_query = req.body.query_field;
 	if (!req.body.hidden) {
-		console.log("first callback")
 		new_options = getOptions(curr_query, function (new_options) {
 			recent_queries = curr_query; 
 			if (new_options.length > 0) {
@@ -132,20 +220,17 @@ router.post('/submit_query', function (req, res, next) {
 			query: query_to_enter,
 			useLegacySql: false
 		};
-		console.log("if this prints once, a callback is being called twice!!!!");
 		runQuery(options, (rows) => {
 			var str = ""
 			for (var i = 0; i < rows.length; i++) {
 				str += rows[i].body.replace(/(\r\n|\n|\r)/gm, "") + "\n";
 			}
 			fs.writeFile('query_results.txt', str, function (err) {
-				console.log("about to query");
 				exec('python2 classifier/sdg1.py query_results.txt ' + new_query, (err, stdout, stderr) => {
 					if (err) {
 						console.log(err);
 						return;
 					}
-					console.log("Finished classifier")
 					var all_results = stdout.split("##########")[1];
 					all_results = all_results.replace(/(\r\n|\n|\r)/gm, "");
 					all_results = all_results.substring(1, all_results.length);
@@ -158,7 +243,6 @@ router.post('/submit_query', function (req, res, next) {
 					}
 					new_username_query = new_username_query.substring(0, new_username_query.length - 2);
 					new_username_query += ") AND body != '[deleted]' LIMIT 500;";
-					console.log(new_username_query);
 					var username_options = {
 						query: new_username_query,
 						useLegacySql: false
@@ -198,7 +282,6 @@ router.post('/classify_query', function (req, res, next) {
 	var curr_query = req.body.query_field;
 	if (!req.body.hidden) {
 		var other_queries = getOptions(curr_query, function (new_options) {
-			console.log(new_options);
 			res.render('index', {
 				title: 'Get2KnowUs',
 				args: {
@@ -221,8 +304,6 @@ router.post('/classify_query', function (req, res, next) {
 			}
 		}
 		query_to_enter += " ORDER BY rand LIMIT 100;";
-
-		console.log(query_to_enter);
 
 		var options = {
 			query: query_to_enter,
@@ -273,7 +354,6 @@ router.post('/deep_dive', function(req, res, next) {
 			all_posts.push(split_file[i]); 
 		}
 
-		// console.log("new = " + new_queries); 
 		fs.writeFile('NLPMaybe/deep_dive.txt', new_str, function(err){
 			if(err) {
 				console.log(err);
@@ -285,7 +365,6 @@ router.post('/deep_dive', function(req, res, next) {
 				var csv_text = "word_classification, regularized_count, absolute_difference\n"; 
 				for (var i = 0; i < liwc_all.length; i++) {
 					var l = liwc_all[i].split("++");
-					// console.log("LINE " + i + " = " + l); 
 					var l_obj = {
 						key: l[0], 
 						ind: l[1],
@@ -294,23 +373,19 @@ router.post('/deep_dive', function(req, res, next) {
 					csv_text += l[0] + "," + l[1] + "," + l[2] + "\n"; 
 					liwc_res.push(l_obj); 
 				}
-				// console.log("liwc all = " + JSON.stringify(liwc_res[0])); 
 				var input = "";
 				for (var i = 0; i < new_queries.length; i++) {
 					input = input + " " + new_queries[i]
 				}
-				console.log("input = " + input)
 
 			  	var param = {
 				  'tone_input': {'text': "input"},
 				  'content_type': 'application/json'
 				};
-				console.log("all_posts = " + all_posts); 
 		      	var input_all = "";
 		      	for (var i = 0; i < all_posts.length; i++) {
 		      		input_all = input_all + " " + all_posts[i]
 		      	}
-			      // console.log("input all = " + input_all); 
 			    fs.writeFile('liwcDownload.csv', csv_text, function(err){
 					if(err) {
 						console.log(err);
@@ -320,7 +395,6 @@ router.post('/deep_dive', function(req, res, next) {
 				  		if (error)
 					      console.log('error:', error);
 					    else { 
-					      console.log(JSON.stringify(response.document_tone.tones));
 					  	  var blue_deep = [];
 					      for (var i = 0; i < response.document_tone.tones.length; i++) {
 					      	blue_deep.push("Tone: " + JSON.stringify(response.document_tone.tones[i].tone_name) + " Score: " + JSON.stringify(response.document_tone.tones[i].score))
@@ -333,7 +407,6 @@ router.post('/deep_dive', function(req, res, next) {
 					      	if (error)
 					      		console.log('error:', error);
 						    else { 
-						      // console.log(JSON.stringify(response.document_tone.tones));
 						  	  var blue_all = [];
 						      for (var i = 0; i < response.document_tone.tones.length; i++) {
 						      	blue_all.push("Tone: " + JSON.stringify(response.document_tone.tones[i].tone_name) + " Score: " + JSON.stringify(response.document_tone.tones[i].score))
@@ -364,6 +437,10 @@ router.get('/download_csv', function (req, res) {
 	res.download("liwcDownload.csv", "liwc_download.csv");
 });
 
+router.get('/show_tone', function (req, res) {
+	console.log("hi"); 
+}); 
+
 function runQuery(options, callback) {
 	bigquery
 		.query(options)
@@ -379,8 +456,6 @@ function runClassifier() {
 		if (err) {
 			return;
 		}
-		console.log(stdout);
-		console.log(stderr);
 	});
 }
 
@@ -482,10 +557,6 @@ function getImportance(text, callback) {
 		}
 		callback(output);
 	});
-
-	// tfidf.listTerms(0).forEach(function(item) {
-	//    	console.log(item.term + ': ' + item.tfidf);
-	// });
 }
 
 /*ANALYZING TEXT USING IBM WATSON*/
@@ -515,34 +586,225 @@ function analyzeText(text) {
       console.log(JSON.stringify(response.keywords, null, 2));
   });
 }
-
+//The score that is returned lies in the range of 0.5 to 1. A score greater than 0.75 indicates a high likelihood that the tone is perceived in the content.
 function analyzeTone(text, res, all_queries, rows) {
-	console.log("analzye tone"); 
-	console.log("rows length = " + rows.length); 
-	console.log("text = " + JSON.stringify(text)); 
 	var input = "";
+	var outputs = [];
+	//var mapList = [];
 	for (var i = 0; i < text.length; i++) {
+		//console.log(text[i].body);
 		input = input + " " + text[i].body
 	}
+	//console.log(mapList)
   var param = {
   'tone_input': {'text': input},
   'content_type': 'application/json'
 };
   tone_analyzer.tone(param, function(error, response) {
-  	console.log("tone_analyzer"); 
-  	blue = []; 
+  	var blue = []; 
     if (error)
       console.log('error:', error);
     else
-      console.log("response = " + JSON.stringify(response)); 
-      console.log(JSON.stringify(response.document_tone.tones));
-      for (var i = 0; i < response.document_tone.tones.length; i++) {
-      	blue.push("Tone: " + JSON.stringify(response.document_tone.tones[i].tone_name) + " Score: " + JSON.stringify(response.document_tone.tones[i].score))
+  	  var blue = [];
+  	  var blueData = [];
+  	  var blueName = [];
+      for (var i = 0; i < response.document_tone.tones.length; i++) { 
+      	var val = parseFloat(JSON.stringify(response.document_tone.tones[i].score));
+      	if (val < 0.6) { //low
+      		blue.push("Detected low amounts of " + JSON.stringify(response.document_tone.tones[i].tone_name));
+      	}
+      	else if (val < 0.7) { //slight
+      		blue.push("Detected slight amounts of " + JSON.stringify(response.document_tone.tones[i].tone_name));
+      	}
+      	else if (val < 0.8) { //medium
+      		blue.push("Detected medium amounts of " + JSON.stringify(response.document_tone.tones[i].tone_name));
+      	}
+      	else if (val < 0.9) { //moderate
+      		blue.push("Detected moderate amounts of " + JSON.stringify(response.document_tone.tones[i].tone_name));
+      	}
+      	else { //high
+      		blue.push("Detected high amounts of " + JSON.stringify(response.document_tone.tones[i].tone_name));
+      	}
+      	//blue.push("Tone: " + JSON.stringify(response.document_tone.tones[i].tone_name) + " Score: " + JSON.stringify(response.document_tone.tones[i].score))
+      	//blueData.push([JSON.stringify(response.document_tone.tones[i].tone_name), JSON.stringify(response.document_tone.tones[i].score)])
+      	blueData.push(JSON.stringify(response.document_tone.tones[i].score))
+      	blueName.push(response.document_tone.tones[i].tone_name)
       }	
-  	  res.render('query_results', { title: 'Get2KnowUS', all_queries: all_queries, results: rows, bluemix_results: blue });
+  	  //var blue = JSON.stringify(response.document_tone.tones[0]);
+  	  res.render('query_results', { title: 'Get2KnowUS', all_queries: all_queries, results: rows, bluemix_results: blue, bluemix_data: blueData, bluemix_name: blueName });
     }
   );
 }
+
+function analyzeInDiv(text) {
+	var param = {
+		'tone_input': {'text': text},
+		'content_type': 'application/json'
+	};
+	tone_analyzer.tone(param, function(error, response) {
+		if (error)
+			console.log('error: ', error);
+		else {
+			var blue = [];
+	      	for (var i = 0; i < response.document_tone.tones.length; i++) {
+		      	//blue.push("Tone: " + JSON.stringify(response.document_tone.tones[i].tone_name) + " Score: " + JSON.stringify(response.document_tone.tones[i].score))
+		      	blue.push([JSON.stringify(response.document_tone.tones[i].tone_name), JSON.stringify(response.document_tone.tones[i].score)])
+	      	}	
+	    }
+	    return new Map(blue);
+	});
+}
 /*ANALYZING TEXT USING IBM WATSON*/
+
+function flatten_phrases(sentence_list) {
+	to_return = [];
+	for (var i = 0; i < sentence_list.length; i++) {
+		var curr_sentence = sentence_list[i];
+		var buf = []
+		var curr_sentence_split = curr_sentence.trim().split(/\s+/);
+		for (var j = 0; j < curr_sentence_split.length; j++) {
+			var word = curr_sentence_split[j].replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"");
+
+			if (isNaN(word)) {
+				to_return.push(word);
+			}
+		}
+	}
+	return to_return;
+}
+
+function get_priors() {
+	var prior_counter = {};
+	var result;
+	var result = fs.readFileSync("resources/small_phrase_corpus_tok2.txt", 'utf8');
+	var lines = result.split('\n');
+	for (var line = 0; line < lines.length; line++) {
+		var words = lines[line].trim().split(/\s+/);
+		words.map(word => word.trim());
+		for (var i = 0; i < words.length; i++) {
+			var word = words[i];
+			if (word in prior_counter) {
+				prior_counter[word] += 1;
+			} else {
+				prior_counter[word] = 1;
+			}
+		}
+	}
+	return prior_counter;	
+}
+
+function log_odds_results(group_one, group_two) {
+	var group_one = group_one.filter(word => word.length != 1).map(word => word.toLowerCase().trim());
+	var group_two = group_two.filter(word => word.length != 1).map(word => word.toLowerCase().trim());
+
+	var group_one_counter = {};
+	var group_one_values = 0;
+
+	var combined_group_counter = {};
+	var combined_group_values = 0;
+
+	var group_two_counter = {};
+	var group_two_values = 0;
+
+	for (var i = 0; i < group_one.length; i++) {
+		var word = group_one[i];
+		if (word in group_one_counter) {
+			group_one_counter[word] += 1;
+		} else {
+			group_one_counter[word] = 1;
+		}
+
+		if (word in combined_group_counter) {
+			combined_group_counter[word] += 1;
+		} else {
+			combined_group_counter[word] = 1;
+		}
+	}
+
+	for (var i = 0; i < group_two.length; i++) {
+		var word = group_two[i];
+		if (word in group_two_counter) {
+			group_two_counter[word] += 1;
+		} else {
+			group_two_counter[word] = 1;
+		}
+
+		if (word in combined_group_counter) {
+			combined_group_counter[word] += 1;
+		} else {
+			combined_group_counter[word] = 1;
+		}		
+	}
+
+	group_one_values = group_one.length;
+	group_two_values = group_two.length;
+	combined_group_values = group_one_values + group_two_values;
+
+	var prior_counter = get_priors();
+
+	for (var i = 0; i < group_one.length; i++) {
+		var word = group_one[i];
+		if (word in prior_counter) {
+			prior_counter[word] += 1;
+		} else {
+			prior_counter[word] = 1;
+		}
+	}
+
+	for (var i = 0; i < group_two.length; i++) {
+		var word = group_two[i];
+		if (word in prior_counter) {
+			prior_counter[word] += 1;
+		} else {
+			prior_counter[word] = 1;
+		}
+	}
+
+	priors_sum = 0;
+	for (var i = 0; i < prior_counter.length; i++) {
+		var val = prior_counter[i];
+		priors_sum += val;
+	}
+
+	all_deltas = {}
+	all_sigmas = {}
+	zscore_freqs = {}
+
+	for (var word in combined_group_counter) {
+		if (word in group_one_counter) {
+			all_deltas[word] = Math.log((1.0 * (group_one_counter[word] + prior_counter[word])) / (group_one_values + priors_sum - group_one_counter[word] - prior_counter[word]));
+		} else {
+			all_deltas[word] = Math.log((1.0 * (0.0 + prior_counter[word])) / (group_one_values + priors_sum - 0.0 - prior_counter[word]));
+		}
+
+		if (word in group_two_counter) {
+			all_deltas[word] -= Math.log((1.0 * (group_two_counter[word] + prior_counter[word])) / (group_two_values + priors_sum - group_two_counter[word] - prior_counter[word]));
+		} else {
+			all_deltas[word] -= Math.log((1.0 * (0.0 + prior_counter[word])) / (group_two_values + priors_sum - 0.0 - prior_counter[word]));
+		}
+
+		if (word in group_one_counter) {
+			var group_one_value = group_one_counter[word];
+		} else {
+			var group_one_value = 0.0;
+		}
+
+		if (word in group_two_counter) {
+			var group_two_vaue = group_two_counter[word];
+		} else {
+			var group_two_value = 0.0;
+		}
+		all_sigmas[word] = Math.sqrt(
+								(1.0/(group_one_value + prior_counter[word])) +
+								(1.0/(group_one_values + priors_sum - group_one_value - prior_counter[word])) +
+								(1.0/(group_two_value + prior_counter[word])) +
+								(1.0/(group_two_values + priors_sum - group_two_value - prior_counter[word])));
+		zscore_freqs[word] = [ (1.0 * all_deltas[word]) / all_sigmas[word], combined_group_counter[word], group_one_counter[word], group_two_counter[word]]
+	}
+
+	return zscore_freqs;
+}
+
+
 
 module.exports = router;
