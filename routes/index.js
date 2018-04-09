@@ -340,6 +340,10 @@ router.get('/download_csv', function (req, res) {
 	res.download("liwcDownload.csv", "liwc_download.csv");
 });
 
+router.get('/show_tone', function (req, res) {
+	console.log("hi"); 
+}); 
+
 function runQuery(options, callback) {
 	bigquery
 		.query(options)
