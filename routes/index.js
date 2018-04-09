@@ -324,11 +324,29 @@ router.post('/classify_query', function (req, res, next) {
 
 
 router.post('/blueMixSingle', function(req, res, next) {
-	var single_blue = req.body.test; 
+	var query = req.body.query
+	analyzeIndiv(query, function(result) {
+		res.status(200).send(result);
+	});
 	console.log("in blue");
-	console.log(single_blue);
-	res.render('query_results', { title: 'Get2KnowUS', all_queries: all_queries, results: rows, bluemix_results: blue });
+	//res.render('query_results', { title: 'Get2KnowUS', all_queries: all_queries, results: rows, bluemix_results: blue });
 });
+
+// router.post('/api/add_classification', function (req, res, next) {
+// 	var post_data = {
+// 		query: req.body.query,
+// 		post: req.body.post,
+// 		user: req.body.user,
+// 		valid: req.body.valid
+// 	};
+// 	classificationDb.addClassification(post_data, function (err) {
+// 		if (err) {
+// 			res.status(500).send("Error adding new classification to database.");
+// 		} else {
+// 			res.status(200).send("Successfully added classification to database.");
+// 		}
+// 	});
+// });
 
 
 // I'll be a given a list of (%, word type) to print out. 
@@ -636,22 +654,42 @@ function analyzeTone(text, res, all_queries, rows) {
   );
 }
 
-function analyzeInDiv(text) {
+function analyzeIndiv(text, callback) {
 	var param = {
 		'tone_input': {'text': text},
 		'content_type': 'application/json'
 	};
 	tone_analyzer.tone(param, function(error, response) {
+		var blue = [];
 		if (error)
 			console.log('error: ', error);
 		else {
-			var blue = [];
 	      	for (var i = 0; i < response.document_tone.tones.length; i++) {
-		      	//blue.push("Tone: " + JSON.stringify(response.document_tone.tones[i].tone_name) + " Score: " + JSON.stringify(response.document_tone.tones[i].score))
-		      	blue.push([JSON.stringify(response.document_tone.tones[i].tone_name), JSON.stringify(response.document_tone.tones[i].score)])
+		      	var val = parseFloat(JSON.stringify(response.document_tone.tones[i].score));
+		      	if (val < 0.6) { //low
+		      		blue.push("Detected low amounts of " + JSON.stringify(response.document_tone.tones[i].tone_name));
+		      	}
+		      	else if (val < 0.7) { //slight
+		      		blue.push("Detected slight amounts of " + JSON.stringify(response.document_tone.tones[i].tone_name));
+		      	}
+		      	else if (val < 0.8) { //medium
+		      		blue.push("Detected medium amounts of " + JSON.stringify(response.document_tone.tones[i].tone_name));
+		      	}
+		      	else if (val < 0.9) { //moderate
+		      		blue.push("Detected moderate amounts of " + JSON.stringify(response.document_tone.tones[i].tone_name));
+		      	}
+		      	else { //high
+		      		blue.push("Detected high amounts of " + JSON.stringify(response.document_tone.tones[i].tone_name));
+		      	}
 	      	}	
 	    }
-	    return new Map(blue);
+	    if (blue.length == 0) {
+	    	callback("No detectable tones")
+	    }
+	    else {
+	    	callback(blue);
+		}
+	    //return new Map(blue);
 	});
 }
 /*ANALYZING TEXT USING IBM WATSON*/
