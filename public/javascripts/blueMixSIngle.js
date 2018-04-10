@@ -15,5 +15,5 @@ function doTheBlue(obj, query) {
 			console.log("Error was: " + status);
 		}
 	});
-  return false;
+  return false; 
 }
