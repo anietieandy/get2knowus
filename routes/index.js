@@ -266,7 +266,7 @@ router.post('/submit_query', function (req, res, next) {
 										if (err) {
 											console.log(err); 
 										}						
-											res.render('query_results', { title: 'Get2KnowUS', all_queries: all_queries, results: rows, bluemix_results: [], bluemix_data: [], bluemix_name: [] }); 
+											analyzeTone(rows, res, all_queries, rows); 
 									}); 
 								}
 							});
@@ -324,13 +324,12 @@ router.post('/classify_query', function (req, res, next) {
 
 
 router.post('/blueMixSingle', function(req, res, next) {
-	var query = req.body.query
-	analyzeIndiv(query, function(result) {
-		res.status(200).send(result);
-	});
+	var single_blue = req.body.test; 
 	console.log("in blue");
-	//res.render('query_results', { title: 'Get2KnowUS', all_queries: all_queries, results: rows, bluemix_results: blue });
+	console.log(single_blue);
+	res.render('query_results', { title: 'Get2KnowUS', all_queries: all_queries, results: rows, bluemix_results: blue });
 });
+
 
 // I'll be a given a list of (%, word type) to print out. 
 // Look at how natasha handled sdg and all_posts.txt
@@ -601,80 +600,58 @@ function analyzeTone(text, res, all_queries, rows) {
   'tone_input': {'text': input},
   'content_type': 'application/json'
 };
-  // tone_analyzer.tone(param, function(error, response) {
-  // 	var blue = []; 
-  //   if (error)
-  //     console.log('error:', error);
-  //   else
-  // 	  var blue = [];
-  // 	  var blueData = [];
-  // 	  var blueName = [];
-  //     for (var i = 0; i < response.document_tone.tones.length; i++) { 
-  //     	var val = parseFloat(JSON.stringify(response.document_tone.tones[i].score));
-  //     	if (val < 0.6) { //low
-  //     		blue.push("Detected low amounts of " + JSON.stringify(response.document_tone.tones[i].tone_name));
-  //     	}
-  //     	else if (val < 0.7) { //slight
-  //     		blue.push("Detected slight amounts of " + JSON.stringify(response.document_tone.tones[i].tone_name));
-  //     	}
-  //     	else if (val < 0.8) { //medium
-  //     		blue.push("Detected medium amounts of " + JSON.stringify(response.document_tone.tones[i].tone_name));
-  //     	}
-  //     	else if (val < 0.9) { //moderate
-  //     		blue.push("Detected moderate amounts of " + JSON.stringify(response.document_tone.tones[i].tone_name));
-  //     	}
-  //     	else { //high
-  //     		blue.push("Detected high amounts of " + JSON.stringify(response.document_tone.tones[i].tone_name));
-  //     	}
-  //     	//blue.push("Tone: " + JSON.stringify(response.document_tone.tones[i].tone_name) + " Score: " + JSON.stringify(response.document_tone.tones[i].score))
-  //     	//blueData.push([JSON.stringify(response.document_tone.tones[i].tone_name), JSON.stringify(response.document_tone.tones[i].score)])
-  //     	blueData.push(JSON.stringify(response.document_tone.tones[i].score))
-  //     	blueName.push(response.document_tone.tones[i].tone_name)
-  //     }	
-  // 	  //var blue = JSON.stringify(response.document_tone.tones[0]);
-  // 	  res.render('query_results', { title: 'Get2KnowUS', all_queries: all_queries, results: rows, bluemix_results: blue, bluemix_data: blueData, bluemix_name: blueName });
-  //   }
-  // );
-   res.render('query_results', { title: 'Get2KnowUS', all_queries: all_queries, results: rows, bluemix_results: [], bluemix_data: [], bluemix_name: [] });
-
+  tone_analyzer.tone(param, function(error, response) {
+  	var blue = []; 
+    if (error)
+      console.log('error:', error);
+    else
+  	  var blue = [];
+  	  var blueData = [];
+  	  var blueName = [];
+      for (var i = 0; i < response.document_tone.tones.length; i++) { 
+      	var val = parseFloat(JSON.stringify(response.document_tone.tones[i].score));
+      	if (val < 0.6) { //low
+      		blue.push("Detected low amounts of " + JSON.stringify(response.document_tone.tones[i].tone_name));
+      	}
+      	else if (val < 0.7) { //slight
+      		blue.push("Detected slight amounts of " + JSON.stringify(response.document_tone.tones[i].tone_name));
+      	}
+      	else if (val < 0.8) { //medium
+      		blue.push("Detected medium amounts of " + JSON.stringify(response.document_tone.tones[i].tone_name));
+      	}
+      	else if (val < 0.9) { //moderate
+      		blue.push("Detected moderate amounts of " + JSON.stringify(response.document_tone.tones[i].tone_name));
+      	}
+      	else { //high
+      		blue.push("Detected high amounts of " + JSON.stringify(response.document_tone.tones[i].tone_name));
+      	}
+      	//blue.push("Tone: " + JSON.stringify(response.document_tone.tones[i].tone_name) + " Score: " + JSON.stringify(response.document_tone.tones[i].score))
+      	//blueData.push([JSON.stringify(response.document_tone.tones[i].tone_name), JSON.stringify(response.document_tone.tones[i].score)])
+      	blueData.push(JSON.stringify(response.document_tone.tones[i].score))
+      	blueName.push(response.document_tone.tones[i].tone_name)
+      }	
+  	  //var blue = JSON.stringify(response.document_tone.tones[0]);
+  	  res.render('query_results', { title: 'Get2KnowUS', all_queries: all_queries, results: rows, bluemix_results: blue, bluemix_data: blueData, bluemix_name: blueName });
+    }
+  );
 }
 
-function analyzeIndiv(text, callback) {
+function analyzeInDiv(text) {
 	var param = {
 		'tone_input': {'text': text},
 		'content_type': 'application/json'
 	};
 	tone_analyzer.tone(param, function(error, response) {
-		var blue = [];
 		if (error)
 			console.log('error: ', error);
 		else {
+			var blue = [];
 	      	for (var i = 0; i < response.document_tone.tones.length; i++) {
-		      	var val = parseFloat(JSON.stringify(response.document_tone.tones[i].score));
-		      	if (val < 0.6) { //low
-		      		blue.push("Detected low amounts of " + JSON.stringify(response.document_tone.tones[i].tone_name));
-		      	}
-		      	else if (val < 0.7) { //slight
-		      		blue.push("Detected slight amounts of " + JSON.stringify(response.document_tone.tones[i].tone_name));
-		      	}
-		      	else if (val < 0.8) { //medium
-		      		blue.push("Detected medium amounts of " + JSON.stringify(response.document_tone.tones[i].tone_name));
-		      	}
-		      	else if (val < 0.9) { //moderate
-		      		blue.push("Detected moderate amounts of " + JSON.stringify(response.document_tone.tones[i].tone_name));
-		      	}
-		      	else { //high
-		      		blue.push("Detected high amounts of " + JSON.stringify(response.document_tone.tones[i].tone_name));
-		      	}
+		      	//blue.push("Tone: " + JSON.stringify(response.document_tone.tones[i].tone_name) + " Score: " + JSON.stringify(response.document_tone.tones[i].score))
+		      	blue.push([JSON.stringify(response.document_tone.tones[i].tone_name), JSON.stringify(response.document_tone.tones[i].score)])
 	      	}	
 	    }
-	    if (blue.length == 0) {
-	    	callback("No detectable tones")
-	    }
-	    else {
-	    	callback(blue);
-		}
-	    //return new Map(blue);
+	    return new Map(blue);
 	});
 }
 /*ANALYZING TEXT USING IBM WATSON*/
