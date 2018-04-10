@@ -100,8 +100,6 @@ router.post('/api/add_classification', function (req, res, next) {
 router.post('/submit_cross_group_query', function (req, res, next) {
 	var group_one = req.body.query_field1;
 	var group_two = req.body.query_field2;
-	console.log(group_one);
-	console.log(group_two);
 
 	// group one's queries
 	var group_one_queries = [group_one.replace(/'/gi, "\\'")]
@@ -131,6 +129,7 @@ router.post('/submit_cross_group_query', function (req, res, next) {
 			for (var i = 0; i < rows_two.length; i++) {
 				group_two_text += rows_two[i].body.replace(/(\r\n|\n|\r)/gm, "") + "\n";
 			}
+
 			// tokenize all text
 			var group_one_tokens = group_one_text.split(new RegExp('\w+\'*\w*'));
 			var group_two_tokens = group_two_text.split(new RegExp('\w+\'*\w*'));	
@@ -163,6 +162,10 @@ router.post('/submit_cross_group_query', function (req, res, next) {
 			});
 
 			sorted_tuples = sorted_tuples.filter(item => isNaN(item[1]) != true);
+
+
+
+			console.log(sorted_tuples);
 
 			var highest_log_scores = items.slice(0, 10);
 			var lowest_log_scores = items.slice(-10);
@@ -262,10 +265,8 @@ router.post('/submit_query', function (req, res, next) {
 									exec('python2 NLPMaybe/wordCloud2.py all_posts.txt', (err, stdout, stderr) => {
 										if (err) {
 											console.log(err); 
-										}
-											console.log("analyzing tone now...");						
-											res.render('query_results', { title: 'Get2KnowUS', all_queries: all_queries, results: rows, bluemix_results: [], bluemix_data: [], bluemix_name: [] });
-
+										}						
+											analyzeTone(rows, res, all_queries, rows); 
 									}); 
 								}
 							});
