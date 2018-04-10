@@ -635,7 +635,7 @@ function analyzeTone(text, res, all_queries, rows) {
   // 	  res.render('query_results', { title: 'Get2KnowUS', all_queries: all_queries, results: rows, bluemix_results: blue, bluemix_data: blueData, bluemix_name: blueName });
   //   }
   // );
-   res.render('query_results', { title: 'Get2KnowUS', all_queries: all_queries, results: rows, bluemix_results: [], bluemix_data: [], bluemix_name: []] });
+   res.render('query_results', { title: 'Get2KnowUS', all_queries: all_queries, results: rows, bluemix_results: [], bluemix_data: [], bluemix_name: [] });
 
 }
 
