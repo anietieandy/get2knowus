@@ -3,7 +3,7 @@ function doTheBlue(obj, query) {
   var list_elem = document.getElementById("blue-" + obj.id);
   var to_hide = document.getElementById(obj.id);
   to_hide.style.display = 'none';
-  $.post("/blueMixSingle", {
+  $.post("/blueMixSingle", { 
 		query: query,
 	}, function(data, status) {
 		if (status == "success") {
