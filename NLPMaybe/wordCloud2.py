@@ -5,6 +5,8 @@ Masked wordcloud
 Using a mask you can generate wordclouds in arbitrary shapes.
 """
 import sys
+import matplotlib
+matplotlib.use('Agg')
 from os import path
 from PIL import Image
 import numpy as np

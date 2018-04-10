@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 
 import sys
+import matplotlib
+matplotlib.use('Agg')
 from os import path
 import numpy as np
 from PIL import Image

@@ -6,6 +6,8 @@ Generating a square wordcloud from the US constitution using default arguments.
 """
 
 from os import path
+import matplotlib
+matplotlib.use('Agg')
 import numpy as np
 from wordcloud import WordCloud
 
