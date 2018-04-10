@@ -264,7 +264,8 @@ router.post('/submit_query', function (req, res, next) {
 											console.log(err); 
 										}
 											console.log("analyzing tone now...");						
-											analyzeTone(rows, res, all_queries, rows); 
+											res.render('query_results', { title: 'Get2KnowUS', all_queries: all_queries, results: rows, bluemix_results: [], bluemix_data: [], bluemix_name: [] });
+
 									}); 
 								}
 							});
