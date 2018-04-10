@@ -100,14 +100,14 @@ router.post('/api/add_classification', function (req, res, next) {
 router.post('/submit_cross_group_query', function (req, res, next) {
 	var group_one = req.body.query_field1;
 	var group_two = req.body.query_field2;
+	console.log(group_one);
+	console.log(group_two);
 
 	// group one's queries
-	console.log("before group 1");
 	var group_one_queries = [group_one.replace(/'/gi, "\\'")]
 	var query_one_entered = sqlQuery + group_one_queries[0] + "%'" + " LIMIT 500;";
 
 	// group two's queries
-	console.log("before group 2");
 	var group_two_queries = [group_two.replace(/'/gi, "\\'")]
 	var query_two_entered = sqlQuery + group_two_queries[0] + "%'" + " LIMIT 500;";
 
@@ -126,13 +126,11 @@ router.post('/submit_cross_group_query', function (req, res, next) {
 		for (var i = 0; i < rows_one.length; i++) {
 			group_one_text += rows_one[i].body.replace(/(\r\n|\n|\r)/gm, "") + "\n";
 		}
-		console.log("after group 1");
 		runQuery(options_two, (rows_two) => {
 			var group_two_text = "";
 			for (var i = 0; i < rows_two.length; i++) {
 				group_two_text += rows_two[i].body.replace(/(\r\n|\n|\r)/gm, "") + "\n";
 			}
-			console.log("after group 2");
 			// tokenize all text
 			var group_one_tokens = group_one_text.split(new RegExp('\w+\'*\w*'));
 			var group_two_tokens = group_two_text.split(new RegExp('\w+\'*\w*'));	
@@ -165,10 +163,6 @@ router.post('/submit_cross_group_query', function (req, res, next) {
 			});
 
 			sorted_tuples = sorted_tuples.filter(item => isNaN(item[1]) != true);
-
-
-
-			console.log(sorted_tuples);
 
 			var highest_log_scores = items.slice(0, 10);
 			var lowest_log_scores = items.slice(-10);
@@ -268,7 +262,8 @@ router.post('/submit_query', function (req, res, next) {
 									exec('python2 NLPMaybe/wordCloud2.py all_posts.txt', (err, stdout, stderr) => {
 										if (err) {
 											console.log(err); 
-										}						
+										}
+											console.log("analyzing tone now...");						
 											analyzeTone(rows, res, all_queries, rows); 
 									}); 
 								}
