@@ -332,23 +332,6 @@ router.post('/blueMixSingle', function(req, res, next) {
 	//res.render('query_results', { title: 'Get2KnowUS', all_queries: all_queries, results: rows, bluemix_results: blue });
 });
 
-// router.post('/api/add_classification', function (req, res, next) {
-// 	var post_data = {
-// 		query: req.body.query,
-// 		post: req.body.post,
-// 		user: req.body.user,
-// 		valid: req.body.valid
-// 	};
-// 	classificationDb.addClassification(post_data, function (err) {
-// 		if (err) {
-// 			res.status(500).send("Error adding new classification to database.");
-// 		} else {
-// 			res.status(200).send("Successfully added classification to database.");
-// 		}
-// 	});
-// });
-
-
 // I'll be a given a list of (%, word type) to print out. 
 // Look at how natasha handled sdg and all_posts.txt
 router.post('/deep_dive', function(req, res, next) {
@@ -618,40 +601,42 @@ function analyzeTone(text, res, all_queries, rows) {
   'tone_input': {'text': input},
   'content_type': 'application/json'
 };
-  tone_analyzer.tone(param, function(error, response) {
-  	var blue = []; 
-    if (error)
-      console.log('error:', error);
-    else
-  	  var blue = [];
-  	  var blueData = [];
-  	  var blueName = [];
-      for (var i = 0; i < response.document_tone.tones.length; i++) { 
-      	var val = parseFloat(JSON.stringify(response.document_tone.tones[i].score));
-      	if (val < 0.6) { //low
-      		blue.push("Detected low amounts of " + JSON.stringify(response.document_tone.tones[i].tone_name));
-      	}
-      	else if (val < 0.7) { //slight
-      		blue.push("Detected slight amounts of " + JSON.stringify(response.document_tone.tones[i].tone_name));
-      	}
-      	else if (val < 0.8) { //medium
-      		blue.push("Detected medium amounts of " + JSON.stringify(response.document_tone.tones[i].tone_name));
-      	}
-      	else if (val < 0.9) { //moderate
-      		blue.push("Detected moderate amounts of " + JSON.stringify(response.document_tone.tones[i].tone_name));
-      	}
-      	else { //high
-      		blue.push("Detected high amounts of " + JSON.stringify(response.document_tone.tones[i].tone_name));
-      	}
-      	//blue.push("Tone: " + JSON.stringify(response.document_tone.tones[i].tone_name) + " Score: " + JSON.stringify(response.document_tone.tones[i].score))
-      	//blueData.push([JSON.stringify(response.document_tone.tones[i].tone_name), JSON.stringify(response.document_tone.tones[i].score)])
-      	blueData.push(JSON.stringify(response.document_tone.tones[i].score))
-      	blueName.push(response.document_tone.tones[i].tone_name)
-      }	
-  	  //var blue = JSON.stringify(response.document_tone.tones[0]);
-  	  res.render('query_results', { title: 'Get2KnowUS', all_queries: all_queries, results: rows, bluemix_results: blue, bluemix_data: blueData, bluemix_name: blueName });
-    }
-  );
+  // tone_analyzer.tone(param, function(error, response) {
+  // 	var blue = []; 
+  //   if (error)
+  //     console.log('error:', error);
+  //   else
+  // 	  var blue = [];
+  // 	  var blueData = [];
+  // 	  var blueName = [];
+  //     for (var i = 0; i < response.document_tone.tones.length; i++) { 
+  //     	var val = parseFloat(JSON.stringify(response.document_tone.tones[i].score));
+  //     	if (val < 0.6) { //low
+  //     		blue.push("Detected low amounts of " + JSON.stringify(response.document_tone.tones[i].tone_name));
+  //     	}
+  //     	else if (val < 0.7) { //slight
+  //     		blue.push("Detected slight amounts of " + JSON.stringify(response.document_tone.tones[i].tone_name));
+  //     	}
+  //     	else if (val < 0.8) { //medium
+  //     		blue.push("Detected medium amounts of " + JSON.stringify(response.document_tone.tones[i].tone_name));
+  //     	}
+  //     	else if (val < 0.9) { //moderate
+  //     		blue.push("Detected moderate amounts of " + JSON.stringify(response.document_tone.tones[i].tone_name));
+  //     	}
+  //     	else { //high
+  //     		blue.push("Detected high amounts of " + JSON.stringify(response.document_tone.tones[i].tone_name));
+  //     	}
+  //     	//blue.push("Tone: " + JSON.stringify(response.document_tone.tones[i].tone_name) + " Score: " + JSON.stringify(response.document_tone.tones[i].score))
+  //     	//blueData.push([JSON.stringify(response.document_tone.tones[i].tone_name), JSON.stringify(response.document_tone.tones[i].score)])
+  //     	blueData.push(JSON.stringify(response.document_tone.tones[i].score))
+  //     	blueName.push(response.document_tone.tones[i].tone_name)
+  //     }	
+  // 	  //var blue = JSON.stringify(response.document_tone.tones[0]);
+  // 	  res.render('query_results', { title: 'Get2KnowUS', all_queries: all_queries, results: rows, bluemix_results: blue, bluemix_data: blueData, bluemix_name: blueName });
+  //   }
+  // );
+   res.render('query_results', { title: 'Get2KnowUS', all_queries: all_queries, results: rows, bluemix_results: [], bluemix_data: [], bluemix_name: []] });
+
 }
 
 function analyzeIndiv(text, callback) {
