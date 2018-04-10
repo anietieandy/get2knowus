@@ -15,6 +15,7 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.pipeline import Pipeline
 from pymongo import MongoClient  # pymongo>=3.2
 from datetime import datetime
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import warnings
 import seaborn as sns
