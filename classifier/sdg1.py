@@ -1,5 +1,7 @@
 
 from __future__ import print_function
+import matplotlib
+matplotlib.use('Agg')
 import sys
 import pandas as pd
 import numpy as np
@@ -15,7 +17,6 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.pipeline import Pipeline
 from pymongo import MongoClient  # pymongo>=3.2
 from datetime import datetime
-matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import warnings
 import seaborn as sns
