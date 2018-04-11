@@ -201,6 +201,16 @@ router.post('/submit_query', function (req, res, next) {
 						choice: 1
 					}
 				});
+			} else {
+				res.render('index', {
+					title: 'Get2KnowUS',
+					args: {
+						help: "No helpful suggestions for this one - move on to analyze!",
+						other_queries: new_options,
+						query_to_enter: curr_query, 
+						choice: 1
+					}
+				});				
 			}
 		});
 	} else {
