@@ -297,7 +297,7 @@ router.post('/classify_query', function (req, res, next) {
 				args: {
 					help: "We found some other queries you may want to classify - check to see if you'd like to add them!",
 					other_queries: new_options,
-					query_to_enter: query_to_enter,
+					query_to_enter: curr_query,
 					choice: 2
 				}
 			})
