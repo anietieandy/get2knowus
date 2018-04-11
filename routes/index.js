@@ -327,6 +327,7 @@ router.post('/blueMixSingle', function(req, res, next) {
 	var query = req.body.query
 	console.log(query);
 	analyzeInDiv(query, function(result) {
+		console.log(result);
 		res.status(200).send(result);
 	});
 	//res.render('query_results', { title: 'Get2KnowUS', all_queries: all_queries, results: rows, bluemix_results: blue });
@@ -639,6 +640,7 @@ function analyzeTone(text, res, all_queries, rows) {
 }
 
 function analyzeInDiv(text) {
+	console.log("analyzing in Div");
 	var param = {
 		'tone_input': {'text': text},
 		'content_type': 'application/json'
@@ -651,7 +653,8 @@ function analyzeInDiv(text) {
 	      	for (var i = 0; i < response.document_tone.tones.length; i++) {
 		      	//blue.push("Tone: " + JSON.stringify(response.document_tone.tones[i].tone_name) + " Score: " + JSON.stringify(response.document_tone.tones[i].score))
 		      	blue.push([JSON.stringify(response.document_tone.tones[i].tone_name), JSON.stringify(response.document_tone.tones[i].score)])
-	      	}	
+	      	}
+	      	console.log(response.document_tone.tones.length);	
 	    }
 	    return new Map(blue);
 	});
