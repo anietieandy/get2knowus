@@ -325,10 +325,10 @@ router.post('/classify_query', function (req, res, next) {
 
 router.post('/blueMixSingle', function(req, res, next) {
 	var query = req.body.query
-	analyzeIndiv(query, function(result) {
+	console.log(query);
+	analyzeInDiv(query, function(result) {
 		res.status(200).send(result);
 	});
-	console.log("in blue");
 	//res.render('query_results', { title: 'Get2KnowUS', all_queries: all_queries, results: rows, bluemix_results: blue });
 });
 
