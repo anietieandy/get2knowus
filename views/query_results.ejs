@@ -160,7 +160,7 @@
             <% for(var i = 0; i < results.length; i++) {%>
             <div id = <%= "blue-br_" + i %> class="list-group-item">
             	<li class="list-group-item-text"><strong>Post:</strong> <%= results[i].body %>
-                    <button id=<%= "br_" + i %> class="btn btn-success" onclick="doTheBlue(this, '<%= results[i].body.replace(/[^\w\s]/gi, '') %>');">Analyze</button>
+                    <button id=<%= "br_" + i %> class="btn btn-success" onclick="doTheBlue(this, '<%= results[i].body.replace(/[^\w\s]/gi, '').replace(/\s+$/,'') %>');">Analyze</button>
                 </li>
             </div>
         	<% } %>
