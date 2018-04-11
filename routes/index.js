@@ -324,7 +324,7 @@ router.post('/classify_query', function (req, res, next) {
 
 
 router.post('/blueMixSingle', function(req, res, next) {
-	var single_blue = req.body.test; 
+	var single_blue = req.body.query; 
 	console.log("in blue");
 	console.log(single_blue);
 	res.render('query_results', { title: 'Get2KnowUS', all_queries: all_queries, results: rows, bluemix_results: blue });
