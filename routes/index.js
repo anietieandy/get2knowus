@@ -640,7 +640,7 @@ function analyzeTone(text, res, all_queries, rows) {
   );
 }
 
-function analyzeIndiv(text, callback) {
+function analyzeInDiv(text, callback) {
 	var param = {
 		'tone_input': {'text': text},
 		'content_type': 'application/json'
