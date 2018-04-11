@@ -327,6 +327,7 @@ router.post('/blueMixSingle', function(req, res, next) {
 	var query = req.body.query
 	console.log(query);
 	analyzeInDiv(query, function(result) {
+		console.log("DID I MAKE IT HERE");
 		console.log(result);
 		res.status(200).send(result);
 	});
@@ -639,24 +640,42 @@ function analyzeTone(text, res, all_queries, rows) {
   );
 }
 
-function analyzeInDiv(text) {
-	console.log("analyzing in Div");
+function analyzeIndiv(text, callback) {
 	var param = {
 		'tone_input': {'text': text},
 		'content_type': 'application/json'
 	};
 	tone_analyzer.tone(param, function(error, response) {
+		var blue = [];
 		if (error)
 			console.log('error: ', error);
 		else {
-			var blue = [];
 	      	for (var i = 0; i < response.document_tone.tones.length; i++) {
-		      	//blue.push("Tone: " + JSON.stringify(response.document_tone.tones[i].tone_name) + " Score: " + JSON.stringify(response.document_tone.tones[i].score))
-		      	blue.push([JSON.stringify(response.document_tone.tones[i].tone_name), JSON.stringify(response.document_tone.tones[i].score)])
-	      	}
-	      	console.log(response.document_tone.tones.length);	
+		      	var val = parseFloat(JSON.stringify(response.document_tone.tones[i].score));
+		      	if (val < 0.6) { //low
+		      		blue.push("Detected low amounts of " + JSON.stringify(response.document_tone.tones[i].tone_name));
+		      	}
+		      	else if (val < 0.7) { //slight
+		      		blue.push("Detected slight amounts of " + JSON.stringify(response.document_tone.tones[i].tone_name));
+		      	}
+		      	else if (val < 0.8) { //medium
+		      		blue.push("Detected medium amounts of " + JSON.stringify(response.document_tone.tones[i].tone_name));
+		      	}
+		      	else if (val < 0.9) { //moderate
+		      		blue.push("Detected moderate amounts of " + JSON.stringify(response.document_tone.tones[i].tone_name));
+		      	}
+		      	else { //high
+		      		blue.push("Detected high amounts of " + JSON.stringify(response.document_tone.tones[i].tone_name));
+		      	}
+	      	}	
 	    }
-	    return new Map(blue);
+	    if (blue.length == 0) {
+	    	callback("No detectable tones")
+	    }
+	    else {
+	    	callback(blue);
+		}
+	    //return new Map(blue);
 	});
 }
 /*ANALYZING TEXT USING IBM WATSON*/
