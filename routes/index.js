@@ -473,10 +473,6 @@ function runClassifier() {
 	});
 }
 
-function getNouns(word, i, ar) {
-	return (word[1] == "NN")
-}
-
 function listCombos(opts, i, tokens) {
 	var combos = []
 	var keys = Object.keys(opts);
@@ -518,6 +514,7 @@ function getOptions(curr_query, callback) {
 	var tokens = tokenizer.tokenize(curr_query);
 	var clean_tokens = []
 	for (var t = 0; t < tokens.length; t++) {
+		console.log(" t = " + t); 
 		if (tokens[t] == '\'') {
 			var new_t = tokens[t - 1] + '\'' + tokens[t + 1];
 			t++;
@@ -531,24 +528,27 @@ function getOptions(curr_query, callback) {
 
 	var tagged_tokens = tagger.tag(clean_tokens)
 
-	var num_nouns = tagged_tokens.filter(getNouns).length
-
 	var options = {};
 	var curr_opts = [];
 	tagged_tokens.forEach(function (tok, t) {
-		if (tok[1] == "NN") {
-			wordnet.lookup(tok[0], function (results) {
+		var word = tok[0]; 
+		var tag = tok[1]; 
+		if (tag == "NN" || tag == "JJ") {
+			wordnet.lookup(word, function (results) {
 				results.forEach(function (result) {
 					var syns = result.synonyms;
-					var tok_idx = syns.indexOf(tok[0]);
+					console.log("syns = " + syns); 
+					var tok_idx = syns.indexOf(word);
+					console.log("tok idx " + tok_idx); 
 					syns.splice(tok_idx, 1)
-					curr_opts = syns.slice();
+					console.log("syns after splice = " + syns);
+					if (syns.length > 0) { 
+						curr_opts.push(syns);
+					}
 				})
-				options[t] = curr_opts;
-				if (Object.keys(options).length == num_nouns) {
-					combos = listCombos(options, 0, clean_tokens);
-					callback(combos);
-				}
+				options[t] = [].concat.apply([],curr_opts);
+				combos = listCombos(options, 0, clean_tokens);
+				callback(combos);
 			});
 		}
 	})
