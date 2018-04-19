@@ -39,7 +39,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
-app.use('/users', users);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -91,58 +90,8 @@ const sqlQuery =
 function printResult (rows) {
   console.log('Query Results:');
   for (var i = 0; i < rows.length; i++) {
-  	row = rows[i];
-  	// console.log("\n---------------------");
-  	// console.log("Author: " + row.author);
-  	// console.log("Name: " + row.name);
-  	// console.log("Subreddit: " + row.subreddit);
-  	// console.log("Body: " + row.body);  	
+  	row = rows[i];	
   }
 }
-/*ANALYZING TEXT USING IBM WATSON*/
-// var input1 = 'UPenn is an amazing school. It is the best school ever. Harvard on the other hand is iffy and not that great. Plus, it\'s in Boston which is too cold'
-// var input2 = 'Do you ever feel like breaking down? Do you ever feel out of place? Like somehow you just don\'t belong and no one understands you.'
-
-// function analyzeText(text) {
-//   var param = {
-//     'text': text,
-//     'features': {
-//       'entities': {
-//         'emotion': true,
-//         'sentiment': true,
-//         'limit': 2
-//       },
-//       'keywords': {
-//         'emotion': true,
-//         'sentiment': true,
-//         //'limit': 5
-//       }
-//     }
-//   }
-//   natural_language_understanding.analyze(param, function(err, response) {
-//     if (err)
-//       console.log('error:', err);
-//     else
-//       console.log(JSON.stringify(response.keywords, null, 2));
-//   });
-// }
-
-// function analyzeTone(text) {
-//   var param = {
-//   'tone_input': {'text': text},
-//   'content_type': 'application/json'
-// };
-//   tone_analyzer.tone(param, function(error, response) {
-//     if (error)
-//       console.log('error:', error);
-//     else
-//       console.log(JSON.stringify(response.document_tone, null, 2));
-//     }
-//   );
-// }
-
-// analyzeText(input1);
-// analyzeTone(input2);
-/*ANALYZING TEXT USING IBM WATSON*/
 
 module.exports = app

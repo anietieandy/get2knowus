@@ -8,6 +8,7 @@ var natural_language_understanding = new NaturalLanguageUnderstandingV1({
   'password': 'VMCZS5242eXl',
   'version_date': '2017-02-27'
 });
+
 // Used for BlueMix API
 var tone_analyzer = new ToneAnalyzerV3({
   username: 'b75c30c3-1875-42ca-8bf2-f1b9c317a0e4',
@@ -16,7 +17,7 @@ var tone_analyzer = new ToneAnalyzerV3({
 });
 
 var bigNum = 20000;
-//" + Math.floor(Math.random() * bigNum) + "
+
 var sqlQuery = "SELECT author, name, subreddit, body FROM `fh-bigquery.reddit_comments.2015_05` WHERE author != '[deleted]' AND LENGTH(body) < 255 AND LENGTH(body) > 30 AND body LIKE '%";
 var sqlQueryClassify = "SELECT author, name, subreddit, body, rand() as rand FROM `fh-bigquery.reddit_comments.2015_05` WHERE author != '[deleted]' AND LENGTH(body) < 255 AND LENGTH(body) > 30 AND body LIKE '%";
 var usernameQuery = "SELECT body FROM `fh-bigquery.reddit_comments.2015_05` WHERE LENGTH(body) < 255 AND LENGTH(body) > 30 AND author IN (";
@@ -71,14 +72,6 @@ router.get('/', function (req, res, next) {
 
 router.get('/download', function (req, res) {
 	res.download("all_posts.txt", "post_data.txt");
-});
-
-router.get('/vis', function (req, res, next) {
-	res.render('vis', {
-		title: 'Get2KnowUS',
-		words: [{ text: "Chair", size: 40 }, { text: "Vivian", size: 25 }, { text: "Devesh", size: 25 }, { text: "Forever", size: 15 }, { text: "Friends", size: 10 }],
-		err: ''
-	});
 });
 
 router.post('/api/add_classification', function (req, res, next) {
@@ -163,10 +156,6 @@ router.post('/submit_cross_group_query', function (req, res, next) {
 
 			sorted_tuples = sorted_tuples.filter(item => isNaN(item[1]) != true);
 
-
-
-			console.log(sorted_tuples);
-
 			var highest_log_scores = items.slice(0, 10);
 			var lowest_log_scores = items.slice(-10);
 			res.render('cross_group', {
@@ -182,8 +171,6 @@ router.post('/submit_cross_group_query', function (req, res, next) {
 			});
 		})
 	})
-
-
 });
 
 router.post('/submit_query', function (req, res, next) {
@@ -341,12 +328,10 @@ router.post('/blueMixSingle', function(req, res, next) {
 		console.log(result);
 		res.status(200).send(result);
 	});
-	//res.render('query_results', { title: 'Get2KnowUS', all_queries: all_queries, results: rows, bluemix_results: blue });
 });
 
 
-// I'll be a given a list of (%, word type) to print out. 
-// Look at how natasha handled sdg and all_posts.txt
+// Given a list of (%, word type) to print out. 
 router.post('/deep_dive', function(req, res, next) {
 	var deep_query = req.body.deep_dive_field; 
 	var new_queries = [];
@@ -452,7 +437,6 @@ router.get('/download_csv', function (req, res) {
 });
 
 router.get('/show_tone', function (req, res) {
-	console.log("hi"); 
 }); 
 
 function runQuery(options, callback) {
@@ -520,7 +504,6 @@ function getOptions(curr_query, callback) {
 			t++;
 			clean_tokens[t - 1] = new_t;
 			clean_tokens.splice(0, t - 1);
-
 		} else {
 			clean_tokens.push(tokens[t])
 		}
@@ -537,11 +520,8 @@ function getOptions(curr_query, callback) {
 			wordnet.lookup(word, function (results) {
 				results.forEach(function (result) {
 					var syns = result.synonyms;
-					console.log("syns = " + syns); 
 					var tok_idx = syns.indexOf(word);
-					console.log("tok idx " + tok_idx); 
 					syns.splice(tok_idx, 1)
-					console.log("syns after splice = " + syns);
 					if (syns.length > 0) { 
 						curr_opts.push(syns);
 					}
@@ -573,10 +553,6 @@ function getImportance(text, callback) {
 	});
 }
 
-/*ANALYZING TEXT USING IBM WATSON*/
-// var input1 = 'UPenn is an amazing school. It is the best school ever. Harvard on the other hand is iffy and not that great. Plus, it\'s in Boston which is too cold'
-// var input2 = 'Do you ever feel like breaking down? Do you ever feel out of place? Like somehow you just don\'t belong and no one understands you.'
-
 function analyzeText(text) {
   var param = {
     'text': text,
@@ -604,12 +580,9 @@ function analyzeText(text) {
 function analyzeTone(text, res, all_queries, rows) {
 	var input = "";
 	var outputs = [];
-	//var mapList = [];
 	for (var i = 0; i < text.length; i++) {
-		//console.log(text[i].body);
 		input = input + " " + text[i].body
 	}
-	//console.log(mapList)
   var param = {
   'tone_input': {'text': input},
   'content_type': 'application/json'
@@ -639,12 +612,9 @@ function analyzeTone(text, res, all_queries, rows) {
       	else { //high
       		blue.push("Detected high amounts of " + JSON.stringify(response.document_tone.tones[i].tone_name));
       	}
-      	//blue.push("Tone: " + JSON.stringify(response.document_tone.tones[i].tone_name) + " Score: " + JSON.stringify(response.document_tone.tones[i].score))
-      	//blueData.push([JSON.stringify(response.document_tone.tones[i].tone_name), JSON.stringify(response.document_tone.tones[i].score)])
       	blueData.push(JSON.stringify(response.document_tone.tones[i].score))
       	blueName.push(response.document_tone.tones[i].tone_name)
       }	
-  	  //var blue = JSON.stringify(response.document_tone.tones[0]);
   	  res.render('query_results', { title: 'Get2KnowUS', all_queries: all_queries, results: rows, bluemix_results: blue, bluemix_data: blueData, bluemix_name: blueName });
     }
   );
@@ -685,9 +655,9 @@ function analyzeInDiv(text, callback) {
 	    else {
 	    	callback(blue);
 		}
-	    //return new Map(blue);
 	});
 }
+
 /*ANALYZING TEXT USING IBM WATSON*/
 
 function flatten_phrases(sentence_list) {
@@ -838,7 +808,5 @@ function log_odds_results(group_one, group_two) {
 
 	return zscore_freqs;
 }
-
-
 
 module.exports = router;

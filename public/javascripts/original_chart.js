@@ -53,7 +53,6 @@ function makeChart(dataset, highestLogs, lowestLogs) {
                  .attr("height", height)
                  .attr("class", "graph-svg")
                  .append("g");
-                 // .attr("transform", "translate(20, 20)");
 
     var logScale = d3.scaleLinear()
                     .domain([minLog, maxLog])
@@ -86,9 +85,6 @@ function makeChart(dataset, highestLogs, lowestLogs) {
                 .scale(logScale)
                 .ticks(3);
 
-    // d.value[0] = log score
-    // d.value[1] = frequency
-    // d.key = token string
     var circles = canvas.selectAll("circle")
                   .data(jsData)
                   .enter()
