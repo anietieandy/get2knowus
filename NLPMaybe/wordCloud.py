@@ -15,12 +15,9 @@ d = path.dirname(__file__)
 fname = sys.argv[1] #if len(sys.argv)>1 else 'output1.txt'
 
 text = open(fname).read()#open(path.join(d, fname)).read()
-
 wordcloud = WordCloud().generate(text)
-
 with open("NLPMaybe/log.txt", "a") as myfile:
     myfile.write("\n" + datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " WordCloud ran!")
-
 f = plt.figure()
 plt.imshow(wordcloud, interpolation='bilinear')
 plt.axis("off")

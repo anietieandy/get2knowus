@@ -1,8 +1,3 @@
-# Author: Olivier Grisel <olivier.grisel@ensta.org>
-#         Peter Prettenhofer <peter.prettenhofer@gmail.com>
-#         Mathieu Blondel <mathieu@mblondel.org>
-# License: BSD 3 clause
-
 from __future__ import print_function
 
 
@@ -72,7 +67,6 @@ if __name__ == "__main__":
     grid_search.fit(data_new, data_target)
     print("done in %0.3fs" % (time() - t0))
     print()
-
     print("Best score: %0.3f" % grid_search.best_score_)
     print("Best parameters set:")
     
