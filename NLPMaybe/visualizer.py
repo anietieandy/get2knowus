@@ -13,15 +13,6 @@ import argparse
 
 LAMBDA = 0
 
-# sent_tokenize is an nltk function that splits the input string into a list of sentences based
-# on an some machine learning that smart people did
-#
-# regexp_tokenize tokenizes based on what the user defines as a token. it is currently defined
-# \w+\'*\w*
-#
-# yes: normal words, contracted words
-# no:  extraneous punctuation
-
 def generate_tokens(text1, text2):
 	tokens1 = [regexp_tokenize(t, '\w+\'*\w*') for t in sent_tokenize(text1)]
 	tokens2 = [regexp_tokenize(t, '\w+\'*\w*') for t in sent_tokenize(text2)]
@@ -125,7 +116,5 @@ for word in sorted(results, key=lambda x: -results[x][0]):
     print word + '\t' + str(results[word])
 print(sortedResults)
 
-#    for word in results:
-#        print word + '\t' + str(results[word])
     
 

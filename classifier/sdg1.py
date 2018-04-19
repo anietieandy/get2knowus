@@ -20,7 +20,6 @@ from datetime import datetime
 import matplotlib.pyplot as plt
 import warnings
 import seaborn as sns
-
 # sns.set_style("darkgrid")
 # warnings.simplefilter(action='ignore', category=FutureWarning)
 
@@ -54,25 +53,23 @@ if __name__ == "__main__":
             for line in f:
                 input0.append(line)
     else: 
-        # input0 = ["I\'m gay", "I\'m a dad", 'I\'m a daddy, looking for a little girl who is 18', 'When I\'m a dad i will use this']
         input0 = ["I\'m gay", "I don\'t really think i\'m \"gay\""]
 
 
     if len(sys.argv) > 2: 
         queryPhrase = ' '.join(sys.argv[2:]);
         queryPhrase = queryPhrase.replace("\'","")
-        # print(queryPhrase)
     else:
-        # queryPhrase = 'm a straight woman';
         queryPhrase = 'Im a lesbian';
+        ###### code for testing specific queries #######
         # queryPhrase = 'Im a straight man';
         # queryPhrase = 'Im a student';
         # queryPhrase = 'Im a teacher';
         # queryPhrase = 'm a vegetarian';
         # queryPhrase = 'Im gay';
-
-
+        # queryPhrase = 'm a straight woman';
     data = json.load(open('credentials.json'))
+
 
     ########## database connection ###############
     uri = 'mongodb://' + data['MLAB_USERNAME']+ ':' + data['MLAB_PASSWORD'] + '@ds221228.mlab.com:21228/' + data['MLAB_DB_NAME']
@@ -82,7 +79,6 @@ if __name__ == "__main__":
     queries = db.classifications.find({'query': queryPhrase})
     with open("classifier/log.txt", "a") as myfile:
         myfile.write("\n" + datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " queryCount: " + queryPhrase + " : " + str(queries.count()))
-
     if queries.count() < 100:
         print('##########')
         ones = [1 for i in input0]
@@ -93,40 +89,31 @@ if __name__ == "__main__":
             d.append({'body': doc['post'], 'classification': doc['valid']})
         dbData = pd.DataFrame(d, columns = ['body', 'classification'])
         dbData.classification = dbData.classification.astype(int)
-        # print (dbData.head(10))
     ################################################
-
-
-        # datadf = pd.read_csv('Classyfications.csv')
-        # datadf.body = datadf.body.apply(lambda x : unicode(x, errors='replace'))
+    # use following if reading from csv: datadf = pd.read_csv('Classyfications.csv')
+    ################################################
         datadf = dbData
-
         data_new = list(datadf.body)
         data_target = np.array(datadf.classification)
         
-        
         grid_search = GridSearchCV(pipeline, parameters, n_jobs=-1, verbose=1)
-        # pprint(parameters)
-        # t0 = time()
         grid_search.fit(data_new, data_target)
-
+        best_parameters = grid_search.best_estimator_.get_params()
+    ############ information about classifier ######################################
+    # print(parameters)
     #    print("done in %0.3fs" % (time() - t0))
     #    print("Best score: %0.3f" % grid_search.best_score_)
     #    print("Best parameters set:")
-
-        best_parameters = grid_search.best_estimator_.get_params()
-
     #    for param_name in sorted(parameters.keys()):
     #        print("\t%s: %r" % (param_name, best_parameters[param_name]))
-
+    ################################################################################
         with open("classifier/log.txt", "a") as myfile:
             myfile.write("\n" + datetime.now().strftime('%Y-%m-%d %H:%M:%S') + " accuracy: " + str(grid_search.best_score_))
             
         results = grid_search.predict(input0)
         print('##########')
         print(results)
-
-#####################  Accuracy vs Samples ###################################################
+    #####################  Accuracy vs Samples ###################################################
     # scores = []
     # xTicks = []
     # n = 5;

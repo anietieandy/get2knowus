@@ -6,6 +6,7 @@ Created on Tue Nov  7 22:10:33 2017
 @author: mattCohen
 """
 
+############### UNUSED, but if desired could be substituted for SDG1 
 from sklearn.naive_bayes import GaussianNB, MultinomialNB
 
 import pandas as pd
@@ -58,12 +59,11 @@ pipeline = Pipeline([
 ])
 
 parameters = {
-}
 #    'vect__max_df': (0.5, 0.75, 1.0),
 #    'vect__ngram_range': ((1, 1), (1, 2)),  # unigrams or bigrams
 #    'clf__alpha': (0.00001, 0.000001),
 #    'clf__penalty': ('l2', 'elasticnet'),
-#}
+}
 
 if __name__ == "__main__":
     datadf = pd.read_csv('Classyfications.csv')

@@ -51,10 +51,6 @@ for k in countDict.keys():
   difDict[k] =  pctDict[k] - count2Dict[k]/float(count2)
 
 
-# for i in sorted( ((v,k) for k,v in pctDict.iteritems()), reverse=True):
-#   print(i[1] + ": " + str(i[0]))
-# for i in sorted( ((v,k) for k,v in difDict.iteritems()), reverse=True):
-#   print(i[1] + ": " + str(i[0]))
 helper = [];
 for k in sorted(pctDict, key = pctDict.get, reverse = True):  
   print(k + "++" + str(pctDict.get(k)) + "++" + str(difDict.get(k)))
