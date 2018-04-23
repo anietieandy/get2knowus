@@ -10,9 +10,6 @@ var app = express();
 
 var routes = require('./routes/index');
 
-// The project ID to use, e.g. "your-project-id"
-const projectId = "green-entity-183800";
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -65,19 +62,8 @@ if (!process.env.PRODUCTION) {
 
 //add credentials for Google Cloud
 var config = {
-	projectId: projectId,
+	projectId: credentials.project_id,
 	credentials: credentials
 };
-
-// The SQL query to run
-const sqlQuery = 
-"SELECT author, name, subreddit, body FROM `fh-bigquery.reddit_comments.2015_05` WHERE author != '[deleted]' AND author IN (SELECT author FROM `fh-bigquery.reddit_comments.2015_05` WHERE LENGTH(body) < 255 AND LENGTH(body) > 30 AND body LIKE '%m a dad%') LIMIT 500;";
-
-function printResult (rows) {
-  console.log('Query Results:');
-  for (var i = 0; i < rows.length; i++) {
-  	row = rows[i];	
-  }
-}
 
 module.exports = app
