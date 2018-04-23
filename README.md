@@ -17,7 +17,7 @@ The final tab is a “Cross-Group Analysis” feature that allows you to compare
 
 
 
-Note: To get started, first fork your own copy of the project and take a look at credentials.json, to fill in all the relevant credentials with your own personal accounts.
+Note: To get started, first fork your own copy of the project and take a look at credentials.json, to fill in all the relevant credentials with your own personal accounts. The first set of credentials refers to the BigQuery setup for the Reddit database. Talk to Chris Callison-Burch for access to that dataset. The next set of credentials (labeled in uppercase) refers to the different API keys used.
 
 API Keys:
 BlueMix API is located here: https://www.ibm.com/watson/developercloud/tone-analyzer/api/v3/curl.html?curl#versioning
