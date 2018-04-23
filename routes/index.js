@@ -3,18 +3,24 @@ var NaturalLanguageUnderstandingV1 = require('watson-developer-cloud/natural-lan
 var ToneAnalyzerV3 = require('watson-developer-cloud/tone-analyzer/v3');
 var router = express.Router();
 
-var natural_language_understanding = new NaturalLanguageUnderstandingV1({
-  'username': '7a5ee176-5c44-4860-b347-1e0761c93172',
-  'password': 'VMCZS5242eXl',
-  'version_date': '2017-02-27'
-});
+var credentials = process.env;
+
+if (!process.env.PRODUCTION) {
+	credentials = require('../credentials.json');
+}
 
 // Used for BlueMix API
+// var tone_analyzer = new ToneAnalyzerV3({
+//   username: 'b75c30c3-1875-42ca-8bf2-f1b9c317a0e4',
+//   password: '2GXhXCY3jq88',
+//   version_date: '2017-09-21'
+// });
+
 var tone_analyzer = new ToneAnalyzerV3({
-  username: 'b75c30c3-1875-42ca-8bf2-f1b9c317a0e4',
-  password: '2GXhXCY3jq88',
-  version_date: '2017-09-21'
-});
+	username: credentials.BLUEMIX_USERNAME,
+	password: credentials.BLUEMIX_PASSWORD,
+	version_date: credentials.BLUEMIX_VERSION
+  });
 
 var bigNum = 20000;
 

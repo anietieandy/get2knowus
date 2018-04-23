@@ -6,23 +6,9 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var MongoClient = require('mongodb').MongoClient
   , assert = require('assert');
-var NaturalLanguageUnderstandingV1 = require('watson-developer-cloud/natural-language-understanding/v1.js');
-var ToneAnalyzerV3 = require('watson-developer-cloud/tone-analyzer/v3');
 var app = express();
 
 var routes = require('./routes/index');
-var users = require('./routes/users');
-var natural_language_understanding = new NaturalLanguageUnderstandingV1({
-  'username': '7a5ee176-5c44-4860-b347-1e0761c93172',
-  'password': 'VMCZS5242eXl',
-  'version_date': '2017-02-27'
-});
-// Used for BlueMix API
-var tone_analyzer = new ToneAnalyzerV3({
-  username: '768d89c3-05a2-4b88-95ea-9addf4e3c125',
-  password: 'NyPHlxJNZIqq',
-  version_date: '2017-09-21'
-});
 
 // The project ID to use, e.g. "your-project-id"
 const projectId = "green-entity-183800";
